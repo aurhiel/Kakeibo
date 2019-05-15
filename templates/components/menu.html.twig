@@ -1,46 +1,46 @@
 {% set size_display_menu = 'md' %}
 
 <nav class="navbar navbar-default">
-    <div class="container">
-        <a class="navbar-brand" href="{{ path('dashboard') }}">
-            {% include 'components/logo.html.twig' with { logo_text : 'K', custom_class : 'text-primary' } %}
-        </a>
+  <div class="container">
+    <a class="navbar-brand" href="{{ path('dashboard') }}">
+      {% include 'components/logo.html.twig' with { logo_text : 'K', custom_class : 'text-primary' } %}
+    </a>
 
-        <button class="navbar-toggler mr-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+    <button class="navbar-toggler mr-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-        {# Select (BS dropdown) used to change / add bank account #}
-        {% include 'components/menu/bank-account-select.html.twig' %}
+    {# Select (BS dropdown) used to change / add bank account #}
+    {% include 'components/menu/bank-account-select.html.twig' %}
 
-        {# User's shortcuts (BS dropdown) #}
-        {% include 'components/menu/user.html.twig' %}
+    {# User's shortcuts (BS dropdown) #}
+    {% include 'components/menu/user.html.twig' %}
 
-        <div class="collapse navbar-collapse order-{{ size_display_menu }}-1" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                {#<li class="nav-item d-block d-{{ size_display_menu }}-none">
-                    {% include 'components/logo.html.twig' with { custom_class : 'text-primary' } %}
-                </li>#}
-                <li class="nav-item{# active#}">
-                    <a class="nav-link" href="{{ path('statistics') }}">
-                        <span class="icon icon-bar-chart"></span>
-                        Statistiques
-                        {#<span class="sr-only">(current)</span>#}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#opé-auto">
-                        <span class="icon icon-command"></span>
-                        Récurrences
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('demo') }}">
-                        <span class="icon icon-save"></span>
-                        Démo
-                    </a>
-                </li>
-            </ul>
-        </div>
+    <div class="collapse navbar-collapse order-{{ size_display_menu }}-1" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        {#<li class="nav-item d-block d-{{ size_display_menu }}-none">
+          {% include 'components/logo.html.twig' with { custom_class : 'text-primary' } %}
+        </li>#}
+        <li class="nav-item{# active#}">
+          <a class="nav-link" href="{{ path('statistics') }}">
+            <span class="icon icon-bar-chart"></span>
+            Statistiques
+            {#<span class="sr-only">(current)</span>#}
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#opé-auto">
+            <span class="icon icon-command"></span>
+            Récurrences
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ path('demo') }}">
+            <span class="icon icon-save"></span>
+            Démo
+          </a>
+        </li>
+      </ul>
     </div>
+  </div>
 </nav>

@@ -14,25 +14,25 @@
 
 {% block body %}
 <div class="vertical-container">
-    <div class="vertical-col vertical-col-illustration">
-        <div class="_inner">
-            {% include 'components/logo.html.twig' with { custom_class : 'text-primary' } %}
-            <div class="brand-speech">Reprenez le contrôle de vos dépenses !</div>
-        </div>
+  <div class="vertical-col vertical-col-illustration">
+    <div class="_inner">
+      {% include 'components/logo.html.twig' with { custom_class : 'text-primary' } %}
+      <div class="brand-speech">Reprenez le contrôle de vos dépenses !</div>
     </div>
+  </div>
 
-    <div class="vertical-col vertical-col-content">
-        <div class="_inner">
-            {% include 'components/flashes.html.twig' %}
+  <div class="vertical-col vertical-col-content">
+    <div class="_inner">
+      {% include 'components/flashes.html.twig' %}
 
-            <h1>Hello {{ controller_name }}! ✅</h1>
+      <h1>Hello {{ controller_name }}! ✅</h1>
 
-            This friendly message is coming from:
-            <ul>
-                <li>Your controller at <code><a href="{{ 'src/Controller/IgnitionController.php'|file_link(0) }}">src/Controller/IgnitionController.php</a></code></li>
-                <li>Your template at <code><a href="{{ 'templates/ignition/index.html.twig'|file_link(0) }}">templates/ignition/index.html.twig</a></code></li>
-            </ul>
-        </div>
+      This friendly message is coming from:
+      <ul>
+          <li>Your controller at <code><a href="{{ 'src/Controller/IgnitionController.php'|file_link(0) }}">src/Controller/IgnitionController.php</a></code></li>
+          <li>Your template at <code><a href="{{ 'templates/ignition/index.html.twig'|file_link(0) }}">templates/ignition/index.html.twig</a></code></li>
+      </ul>
     </div>
+  </div>
 </div>
 {% endblock %}

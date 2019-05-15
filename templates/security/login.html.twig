@@ -3,54 +3,54 @@
 
 {% block body_vertical_content %}
 <form class="mb-5" action="{{ path('login') }}" method="post">
-    {% include 'components/flashes.html.twig' %}
-    <h2 class="page-header h3">Identification</h2>
+  {% include 'components/flashes.html.twig' %}
+  <h2 class="page-header h3">Identification</h2>
 
-    {% if error %}
-    <div class="alert alert-warning">
-        {{ error.messageKey|trans(error.messageData, 'security') }}
+  {% if error %}
+  <div class="alert alert-warning">
+    {{ error.messageKey|trans(error.messageData, 'security') }}
+  </div>
+  {% endif %}
+
+  <label for="username" class="sr-only">Nom d'utilisateur ou adresse email</label>
+  <div class="input-group input-group--icon mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text">
+        <span class="icon-at-sign"></span>
+      </span>
     </div>
-    {% endif %}
+    <input class="form-control" type="text" id="username" name="_username" placeholder="Nom d'utilisateur ou adresse email" value="{{ last_username }}" />
+  </div>
 
-    <label for="username" class="sr-only">Nom d'utilisateur ou adresse email</label>
-    <div class="input-group input-group--icon mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text">
-                <span class="icon-at-sign"></span>
-            </span>
-        </div>
-        <input class="form-control" type="text" id="username" name="_username" placeholder="Nom d'utilisateur ou adresse email" value="{{ last_username }}" />
+  <label for="password" class="sr-only">Mot de passe</label>
+  <div class="input-group input-group--icon mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text">
+        <span class="icon-lock"></span>
+      </span>
+    </div>
+    <input class="form-control" type="password" id="password" name="_password" placeholder="Mot de passe" />
+  </div>
+
+  <div class="row">
+    <div class="col-7 pt-2 pr-0">
+      <div class="custom-control custom-checkbox">
+        <input class="custom-control-input" type="checkbox" id="remember_me" name="_remember_me" checked>
+        <label class="custom-control-label" for="remember_me">Rester connecté</label>
+      </div>
     </div>
 
-    <label for="password" class="sr-only">Mot de passe</label>
-    <div class="input-group input-group--icon mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text">
-                <span class="icon-lock"></span>
-            </span>
-        </div>
-        <input class="form-control" type="password" id="password" name="_password" placeholder="Mot de passe" />
+    <div class="col-5 pl-0 text-right">
+      <button class="btn btn-primary" type="submit" name="login">
+        Connexion
+      </button>
     </div>
-
-    <div class="row">
-        <div class="col-7 pt-2 pr-0">
-            <div class="custom-control custom-checkbox">
-                <input class="custom-control-input" type="checkbox" id="remember_me" name="_remember_me" checked>
-                <label class="custom-control-label" for="remember_me">Rester connecté</label>
-            </div>
-        </div>
-
-        <div class="col-5 pl-0 text-right">
-            <button class="btn btn-primary" type="submit" name="login">
-                Connexion
-            </button>
-        </div>
-    </div>
+  </div>
 </form>
 
 <div>
-    <h2 class="page-header h3">Pas encore inscrit&middot;e ?</h2>
+  <h2 class="page-header h3">Pas encore inscrit&middot;e ?</h2>
 
-    <a href="{{ path('user_registration') }}" class="btn btn-secondary">Inscrivez-vous !</a>
+  <a href="{{ path('user_registration') }}" class="btn btn-secondary">Inscrivez-vous !</a>
 </div>
 {% endblock %}

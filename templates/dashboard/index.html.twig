@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container">
+  {% if has_transactions %}
+    {# TODO add transactions list #}
+  {% else %}
+    <div class="card card--first-transactions my-5">
+      <div class="card-body">
+        <div>
+          <u>Aucune transaction</u> pour le compte "{{ current_bank_account.label }}",
+          vous pouvez au choix&nbsp;:
+        </div>
+
+        <div class="mt-4">
+          <button type="button" name="button" class="btn btn-primary">
+            <span class="icon icon-download"></span>
+            Importer un fichier de banque <small>(format&nbsp;.csv)</small>
+          </button>
+
+          <div class="my-1">ou</div>
+
+          <button type="button" name="button" class="btn btn-primary">
+            <span class="icon icon-plus-square"></span>
+            Ajouter une 1ère transaction
+          </button>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+{% set body_class = 'vertical-container' %}
+
+{# Remove default flashes to change their position #}
+{% block flashes %}{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block footer %}{% endblock %}
+
+{% block body %}
+<div class="vertical-col vertical-col-illustration">
+  <div class="_inner">
+    {% block body_vertical_illus %}
+      {% include 'components/logo.html.twig' with { custom_class : 'text-primary' } %}
+      <div class="brand-speech">Reprenez le contrôle de vos dépenses !</div>
+    {% endblock %}
+  </div>
+</div>
+
+<div class="vertical-col vertical-col-content">
+  <div class="_inner">
+    {% block body_vertical_content %}
+      <h1 class="page-header">Hello world !</h1>
+    {% endblock %}
+  </div>
+</div>
+{% endblock %}

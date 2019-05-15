@@ -1,0 +1,37 @@
+###############################################################################
+#                          Generated on phpdocker.io                          #
+###############################################################################
+version: "2"
+services:
+
+    mysql:
+      image: mysql:5.7
+      container_name: kakeibo-mysql
+      working_dir: /application
+      volumes:
+        - .:/application
+      environment:
+        - MYSQL_ROOT_PASSWORD=dbrootpw
+        - MYSQL_DATABASE=sf_kakeibo
+        - MYSQL_USER=dbuser
+        - MYSQL_PASSWORD=dbuserpw
+      ports:
+        - "8003:3306"
+
+    webserver:
+      image: nginx:alpine
+      container_name: kakeibo-webserver
+      working_dir: /application
+      volumes:
+          - .:/application
+          - ./phpdocker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      ports:
+       - "8001:80"
+
+    php-fpm:
+      build: phpdocker/php-fpm
+      container_name: kakeibo-php-fpm
+      working_dir: /application
+      volumes:
+        - .:/application
+        - ./phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/7.2/fpm/conf.d/99-overrides.ini

@@ -1,0 +1,98 @@
+// Avatar
+//
+
+
+
+//
+// Variables
+//
+
+$avatar-title-color:    $light !default;
+$avatar-title-bg:       $secondary !default;
+
+$avatar-size-xs:        1.625rem !default;
+$avatar-text-size-xs:   .6rem !default;
+
+$avatar-size-sm:        2.3rem !default;
+$avatar-text-size-sm:   .8rem !default;
+
+$avatar-size:           3rem !default;
+$avatar-text-size:      1rem !default;
+
+$avatar-size-lg:        4rem !default;
+$avatar-text-size-lg:   1.325rem !default;
+
+$avatar-size-xl:        8rem !default;
+$avatar-text-size-xl:   2.5rem !default;
+
+
+
+//
+// Mixins
+//
+
+@mixin avatar-size($size, $text-size) {
+    width: $size;
+    height: $size;
+
+    .avatar-text {
+        font-size: $text-size;
+    }
+}
+
+
+
+//
+// Main + sizes
+//
+
+.avatar {
+    position: relative;
+    display: inline-block;
+    @include avatar-size($avatar-size, $avatar-text-size);
+
+    &-xs {
+        @include avatar-size($avatar-size-xs, $avatar-text-size-xs);
+    }
+
+    &-sm {
+        @include avatar-size($avatar-size-sm, $avatar-text-size-sm);
+    }
+
+    &-lg {
+        @include avatar-size($avatar-size-lg, $avatar-text-size-lg);
+    }
+
+    &-xl {
+        @include avatar-size($avatar-size-xl, $avatar-text-size-xl);
+    }
+}
+
+
+
+//
+// Avatar image
+//
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    -o-object-fit: cover;
+    object-fit: cover;
+}
+
+
+
+//
+// Avatar text
+//
+
+.avatar-text {
+    background-color: $avatar-title-bg;
+    color: $avatar-title-color;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}

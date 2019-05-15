@@ -1,0 +1,26 @@
+// Reboot
+//
+
+
+
+//
+// Images and content
+//
+
+svg:not(:root) {
+  vertical-align: inherit;
+} 
+
+
+
+//
+// Text selection
+//
+
+::selection {
+    background: $text-selection-bg;
+}
+
+::-moz-selection {
+    background: $text-selection-bg;
+}

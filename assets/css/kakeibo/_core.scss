@@ -1,0 +1,29 @@
+// Core (header+body+footer+everything else)
+//
+
+
+html, body {
+  height: 100%;
+}
+
+.app-core {
+  min-width: 320px;
+
+  &--merge-body-in-header {
+    .app-header {
+      padding-bottom: 2rem;
+
+      .header-title {
+        padding-bottom: .8rem;
+      }
+    }
+
+    .app-body {
+      margin-top: -2rem;
+    }
+  }
+}
+
+.app-body {
+  overflow: hidden; // Prevent margin top/bottom children's issue
+}

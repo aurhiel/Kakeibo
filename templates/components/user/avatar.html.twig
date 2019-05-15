@@ -1,0 +1,13 @@
+{% set size = (size is defined) ? size : 'sm' %}
+
+<span class="avatar avatar-{{ size }}">
+{# TODO : add user img #}
+{% if app.user.avatar is defined %}
+    {#<img src="{{ app.user.avatar }}" alt="{{ app.user.username }}" />#}
+    <img class="avatar-img rounded-circle" src="{{ asset('build/avatars/avatar-2.png') }}" alt="{{ app.user.username }}" />
+{% else %}
+    <span class="avatar-text rounded-circle">
+        {{ app.user.username|first|upper }}
+    </span>
+{% endif %}
+</span>

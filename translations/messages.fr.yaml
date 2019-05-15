@@ -1,0 +1,23 @@
+## MENU
+# User's menu
+"menu.user.profile.label": Profil
+"menu.user.logout.label": Déconnexion
+# Bank account's menu
+"menu.bank_accounts.title": Mes comptes
+
+## FORMS
+# Form user's register
+"form_user.username.label": Nom d'utilisateur
+"form_user.email.label": E-mail
+"form_user.first_password.label": Mot de passe
+"form_user.second_password.label": Répéter le mot de passe
+# Form admin edit user's settings
+"form_user.roles.label": Droits
+"form_user.is_active.label": Actif(ve)
+
+# Form bank account
+"form_bank_account.label.label": Intitulé du compte
+"form_bank_account.label.placeholder": "ex: Compte courant"
+"form_bank_account.bank_brand.label": Etablissement bancaire
+"form_bank_account.bank_brand.placeholder": Choisissez un établissement
+"form_bank_account.currency.label": Monnaie

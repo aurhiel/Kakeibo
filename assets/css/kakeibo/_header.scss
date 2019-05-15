@@ -1,0 +1,58 @@
+// Header
+//
+
+.app-header {
+  background-color: $header-bg;
+  color: $header-color;
+}
+
+
+// Header title part
+
+.header-title {
+  padding-top: $header-title-padding-y;
+  padding-bottom: $header-title-padding-y;
+
+  .page-header {
+    color: inherit;
+    font-size: 2rem;
+    margin-bottom: $header-title-margin-bottom;
+  }
+}
+
+
+
+//
+// Responsive
+//
+
+
+@include media-breakpoint-up(md) {
+
+  // Header title part
+
+  .header-title {
+    padding-top: $header-title-padding-y-md;
+    padding-bottom: $header-title-padding-y-md;
+
+    .page-header {
+      margin-bottom: $header-title-margin-bottom-md;
+    }
+  }
+}
+
+
+@include media-breakpoint-up(lg) {
+
+  // Header title part
+
+  .header-title {
+    padding-top: $header-title-padding-y-lg;
+    padding-bottom: $header-title-padding-y-lg;
+
+    .page-header {
+      font-size: 2.4rem;
+      margin-bottom: $header-title-margin-bottom-lg;
+    }
+  }
+}

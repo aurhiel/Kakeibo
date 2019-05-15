@@ -1,0 +1,51 @@
+security:
+    always_authenticate_before_granting: true
+    encoders:
+      App\Entity\User: bcrypt
+
+    # HIERARCHY
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
+
+    # PROVIDERS
+    providers:
+        # in_memory: { memory: ~ }
+        # own user provider
+        our_db_provider:
+            entity:
+                class: App\Entity\User
+                # Restrict login to one field
+                # property: username
+
+    # FIREWALLS
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            pattern: ^/
+            logout_on_user_change: true
+            anonymous: true
+            provider: our_db_provider
+            form_login:
+                login_path: login
+                check_path: login
+                default_target_path: /
+            logout:
+                path:   /logout
+                target: /connexion
+            # Remember
+            remember_me:
+                secret:   '%kernel.secret%'
+                lifetime: 604800 # 1 week in seconds
+                path:     /
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+        # - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/connexion,    roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/inscription,  roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/logout,       roles: IS_AUTHENTICATED_REMEMBERED }
+        - { path: ^/,             roles: IS_AUTHENTICATED_FULLY }

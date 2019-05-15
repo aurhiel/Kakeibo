@@ -1,0 +1,10 @@
+// Ignition pages
+//
+
+.app-core--ignition-page {
+  .vertical-col-content {
+    > ._inner {
+      max-width: 32rem;
+    }
+  }
+}

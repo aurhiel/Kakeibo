@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{# delete errors from label ! #}
+{% form_theme form _self %}
+{% block form_label_errors %}{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="col-md-9 col-lg-7 p-0">
+        <div class="card">
+            <div class="card-body">
+                {{ form_start(form) }}
+                <div class="form-row">
+                    <div class="col-sm-6 mb-3">
+                        {{ form_label(form.username) }}
+                        {{ form_widget(form.username) }}
+                        {{ form_errors(form.username) }}
+                    </div>
+
+                    <div class="col-sm-6 mb-3">
+                        {{ form_label(form.email) }}
+                        {{ form_widget(form.email) }}
+                        {{ form_errors(form.email) }}
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-sm-6 mb-3">
+                        {{ form_label(form.plainPassword.first) }}
+                        {{ form_widget(form.plainPassword.first) }}
+                        {{ form_errors(form.plainPassword.first) }}
+                    </div>
+
+                    <div class="col-sm-6 mb-3">
+                        {{ form_label(form.plainPassword.second) }}
+                        {{ form_widget(form.plainPassword.second) }}
+                        {{ form_errors(form.plainPassword.second) }}
+                    </div>
+                </div>
+
+                <div class="col-7 col-md-4 py-2 px-0 mt-2 mb-3 border-top small required required--prepend">
+                    Champs obligatoires
+                </div>
+
+                <button class="btn btn-primary" type="submit" name="register">
+                    Valider les modifications
+                </button>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

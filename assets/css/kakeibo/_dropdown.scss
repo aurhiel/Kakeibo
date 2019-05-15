@@ -1,0 +1,56 @@
+// Dropdown
+//
+
+
+// Toggle (+ caret)
+
+.dropdown-toggle {
+    cursor: pointer;
+}
+
+.dropdown, .dropup, .dropright {
+    .dropdown-toggle {
+        &:after {
+            font-family: $icomoon-font-family;
+            width: auto;
+            height: auto;
+            vertical-align: middle;
+            border: none !important;
+        }
+    }
+}
+
+.dropdown {
+    .dropdown-toggle { &:after { content: $icon-chevron-down; } }
+}
+
+.dropup {
+    .dropdown-toggle { &:after { content: $icon-chevron-up; } }
+}
+
+.dropright {
+    .dropdown-toggle { &:after { content: $icon-chevron-right; } }
+}
+
+.dropleft {
+    .dropdown-toggle {
+        &:before {
+            content: $icon-chevron-left;
+            font-family: $icomoon-font-family;
+            width: auto;
+            height: auto;
+            vertical-align: middle;
+            border: none;
+        }
+    }
+}
+
+
+
+
+// Header
+
+.dropdown-header {
+    font-size: .65rem;
+    text-transform: uppercase;
+}

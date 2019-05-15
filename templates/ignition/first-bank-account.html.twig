@@ -1,0 +1,39 @@
+{% extends 'vertically.html.twig' %}
+{% set core_class = 'app-core--ignition-page' %}
+
+{% block body_vertical_content %}
+{# Display global errors/messages #}
+{% include 'components/flashes.html.twig' %}
+
+<div class="mb-5 pb-4 border-bottom">
+  {% include 'components/user/avatar.html.twig' with { size : 'lg' }%}
+
+  <span class="ml-2 h4">
+    Bienvenue, <b>{{ app.user.username }}</b>
+  </span>
+</div>
+
+<h1 class="page-header h3">Créez votre 1er compte</h1>
+<p class="text-muted text-justify small mb-4">
+  Avant de pouvoir utiliser Kakeibo, vous devez d'abord créer votre premier compte (ex: Compte courant)
+  pour commencer à gérer vos dépenses.
+</p>
+
+{{ form_start(form_bank_account) }}
+  {% include 'components/forms/bank-account.html.twig' %}
+
+  <div class="row">
+    <div class="col">
+      <a class="btn btn-outline-secondary btn-sm mt-1" href="{{ path('logout') }}">
+        <span class="icon icon-log-out"></span>
+        {{ 'menu.user.logout.label'|trans }}
+      </a>
+    </div>
+    <div class="col text-right">
+      <button class="btn btn-primary" type="submit" name="submit">
+        Créer le compte
+      </button>
+    </div>
+  </div>
+{{ form_end(form_bank_account) }}
+{% endblock %}

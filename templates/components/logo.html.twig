@@ -1,0 +1,13 @@
+{% set logo_text = (logo_text is defined) ? logo_text : 'Kakeibo' %}
+{% set hide_text = (hide_text is defined) ? hide_text : false %}
+{% set custom_class = (custom_class is defined) ? ' ' ~ custom_class : '' %}
+{% set type_text  = (type_text is defined) ? type_text : 'sub' %}
+
+<span class="brand-logo{{ custom_class }}">
+    <span class="icon icon-calendar"></span>
+    {% if hide_text == false %}
+    <span class="_text _text-{{ type_text }}">
+      {{ logo_text }}
+    </span>
+    {% endif %}
+</span>

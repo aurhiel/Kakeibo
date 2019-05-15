@@ -6,19 +6,19 @@
 //
 
 .brand-logo {
-    font-family: $brand-font-family;
-    line-height: 1em;
-    border: .05em solid;
-    border-radius: .2em;
-    display: inline-block;
-    padding: .3em .4em .17em .4em; // padding-{top/bottom} may change according to $brand-font-family
-    text-shadow: 0 .06em 0 rgba(0, 0, 0, .1);
-    box-shadow: .04em .04em 0 rgba(0, 0, 0, .1);
-    user-select: none;
+  font-family: $brand-font-family;
+  line-height: 1em;
+  border: .05em solid;
+  border-radius: .2em;
+  display: inline-block;
+  padding: .3em .45em; // padding-{top/bottom} may change according to $brand-font-family
+  text-shadow: 0 .06em 0 rgba(0, 0, 0, .1);
+  box-shadow: .04em .04em 0 rgba(0, 0, 0, .1);
+  user-select: none;
 
-    ~ .brand-speech {
-        margin-top: .6rem;
-    }
+  ~ .brand-speech {
+    margin-top: .6rem;
+  }
 }
 
 
@@ -27,5 +27,5 @@
 //
 
 .brand-speech {
-    text-shadow: 0 .06rem 0 rgba(0, 0, 0, .2);
+  text-shadow: 0 .06rem 0 rgba(0, 0, 0, .2);
 }

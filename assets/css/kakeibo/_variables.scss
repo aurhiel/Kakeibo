@@ -6,8 +6,8 @@
 
 
 
-// Bootstrap's variables ----------------
 // --------------------------------------
+// Bootstrap's variables ----------------
 
 
 //
@@ -55,7 +55,7 @@ $header-bg:                     $dark !default;
 $header-color:                  $white !default;
 $header-title-padding-y:        .8rem;
 $header-title-padding-y-md:     1rem;
-$header-title-padding-y-lg:     1.2rem;
+$header-title-padding-y-lg:     1rem;
 $header-title-margin-bottom:    .6rem;
 $header-title-margin-bottom-md: .8rem;
 $header-title-margin-bottom-lg: 1rem;
@@ -92,17 +92,17 @@ $dropdown-border-color: rgba($black, .075) !default;
 
 // Text selection
 
-$text-selection-bg:     rgba($primary, .5);
+$text-selection-bg:     rgba($primary, .5) !default;
 
 
-// --------------------------------------
 // Bootstrap's variables ----------------
-
-
-
-
-// Kakeibo's variables ------------------
 // --------------------------------------
+
+
+
+
+// --------------------------------------
+// Kakeibo's variables ------------------
 
 
 //
@@ -138,5 +138,5 @@ $vertical-illustration-color:  $white !default;
 $vertical-content-bg:          $body-bg !default;
 
 
-// --------------------------------------
 // Kakeibo's variables ------------------
+// --------------------------------------

@@ -33,8 +33,11 @@ $icomoon-font-path: "/build/fonts/icomoon";
 @import 'kakeibo/type';
 @import 'kakeibo/brand';
 @import 'kakeibo/avatar';
+@import 'kakeibo/lists';
 @import 'kakeibo/navbar';
+@import 'kakeibo/more-dots';
 @import 'kakeibo/dropdown';
+@import 'kakeibo/panel';
 @import 'kakeibo/footer';
 // Specific pages styles
 @import 'kakeibo/page-login';

@@ -1,0 +1,3 @@
+<span class="text-price text-{% if amount > 0 %}success{% elseif amount == 0 %}warning{% else %}danger{% endif %}">
+  {{ amount|number_format(2, ',', ' ') }}{{ currency }}
+</span>

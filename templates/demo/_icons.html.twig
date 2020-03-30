@@ -1,0 +1,30 @@
+{# OLD ICONS set icons = [ 'code', 'coffee', 'at-sign', 'bar-chart', 'chevron-down', 'chevron-left', 'chevron-right',
+  'chevron-up', 'clock', 'command', 'download', 'edit', 'home', 'lock', 'log-in',
+  'log-out', 'plus-square', 'save', 'cog', 'settings', 'trash', 'user', 'apparel',
+  'beverage', 'credit-card', 'currency-dollar', 'gift', 'globe', 'library', 'light-bulb', 'food',
+  'gas-station', 'marina', 'portfolio', 'refresh', 'shopping-cart', 'stethoscope', 'travel-bus', 'travel-car',
+  'wallet', 'yin-yang' ]  #}
+{% set icons = [ 'code', 'coffee', 'at-sign', 'bar-chart', 'chevron-down', 'chevron-left', 'chevron-right',
+  'chevron-up', 'clock', 'command', 'download', 'edit', 'home', 'key', 'lock', 'log-in',
+  'log-out', 'plus-square', 'save', 'cog', 'settings', 'trash', 'user', 'security', 'rotate-right',
+  'travel-bus', 'travel-car', 'gas-station', 'hospital', 'food', 'bank',
+  'wallet', 'credit-card', 'gift', 'cases', 'housing', 'clothes',
+  'nightlife', 'donation' ] %}
+
+<h2 class="h3">Icons ({{ icons|length }})</h2>
+<p class="text-muted">Lorem ipsum !</p>
+
+<div class="row mx-0">
+  {% for icon_slug in icons %}
+  <div class="col-12 col-sm-4 col-md-3 col-lg-2 px-0">
+    <div class="card text-center" style="border-radius:0">
+      <div class="card-body">
+        <span class="h2 icon-{{ icon_slug }}"></span>
+      </div>
+      <div class="card-footer small">
+        .icon-{{ icon_slug }}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>

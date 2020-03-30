@@ -27,8 +27,16 @@ $gray-800:      #343a40 !default;
 $black:         #000 !default;
 
 // $purple:      #6f42c1 !default;
-$primary:     #1bbc9c !default; //#3ecc9e !default; // $purple !default; // #7bc755 !default;
+$primary:     #1bbc9c !default; //#3ecc9e !default; // #7bc755 !default;
+$light:       $gray-100 !default;
 $dark:        $gray-800 !default;
+
+$red:     #ee5253;
+$orange:  #ff9f43;
+$yellow:  #feca57;
+$green:   #2ecc71;
+$cyan:    #00a8ff;
+// $teal: #20c997;
 
 $body-bg:     $gray-100 !default;
 $body-color:  $gray-800 !default;
@@ -41,6 +49,7 @@ $border-radius-sm:  .25rem !default;
 
 
 // Fonts
+$font-family-base:          "Cabin", Arial, sans-serif;
 
 $text-muted:                inherit !default;
 $text-muted-opacity:        .6 !default;
@@ -56,6 +65,12 @@ $header-color:                  $white !default;
 $header-title-padding-y:        .8rem;
 $header-title-padding-y-md:     1rem;
 $header-title-padding-y-lg:     1rem;
+$header-title-padding-top:        1rem;
+$header-title-padding-top-md:     1.4rem;
+$header-title-padding-top-lg:     1.4rem;
+$header-title-padding-bottom:     .8rem;
+$header-title-padding-bottom-md:  1rem;
+$header-title-padding-bottom-lg:  1rem;
 $header-title-margin-bottom:    .6rem;
 $header-title-margin-bottom-md: .8rem;
 $header-title-margin-bottom-lg: 1rem;
@@ -73,7 +88,7 @@ $navbar-default-hover-color:            rgba($white, .95) !default;
 $navbar-default-active-color:           $white !default;
 $navbar-default-disabled-color:         rgba($white, .25) !default;
 $navbar-default-toggler-border-color:   rgba($white, .1) !default;
-$navbar-default-toggler-lines-height:   .125rem;
+$navbar-default-toggler-lines-height:   .15rem;
 
 
 
@@ -103,6 +118,14 @@ $text-selection-bg:     rgba($primary, .5) !default;
 
 // --------------------------------------
 // Kakeibo's variables ------------------
+
+
+//
+// Globals
+//
+
+$animation-duration: 400ms;
+
 
 
 //
@@ -136,6 +159,36 @@ $brand-font-family: "Montserrat", cursive !default;
 $vertical-illustration-bg:     $dark !default;
 $vertical-illustration-color:  $white !default;
 $vertical-content-bg:          $body-bg !default;
+
+
+
+//
+// Panel
+//
+
+$panel-bg:      $dark !default;
+$panel-color:   $white !default;
+
+
+
+//
+// List
+//
+
+// Transactions list
+$list-trans-border-width:             1px !default;
+// Trans:Item
+$list-trans--item-date-bg:            $light !default;
+// Trans:Columns:Icon
+$list-trans--col-icon-size:           1rem !default;
+$list-trans--col-icon-size-md:        1.2rem !default;
+$list-trans--col-icon-max-width:      2.4em !default;
+$list-trans--col-icon-avatar-size:    .778em !default;
+// Trans:Columns:Price
+$list-trans--col-price-max-width:     6.4em !default;
+// Trans:Columns:More
+$list-trans--col-more-max-width:      2.2em !default;
+
 
 
 // Kakeibo's variables ------------------

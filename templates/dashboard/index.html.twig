@@ -1,32 +1,79 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<div class="container">
-  {% if has_transactions %}
-    {# TODO add transactions list #}
-  {% else %}
-    <div class="card card--first-transactions my-5">
-      <div class="card-body">
-        <div>
-          <u>Aucune transaction</u> pour le compte "{{ current_bank_account.label }}",
-          vous pouvez au choix&nbsp;:
-        </div>
+  {% set default_bank_account = app.user.getDefaultBankAccount() %}
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-md-7">
+        {% embed 'components/transactions/list.html.twig' with {
+          title: 'Vos dernières transactions',
+          transactions: last_transactions
+        } %}
+          {% block footer %}
+            <div class="card-footer">
+              <div class="row align-items-center">
+                <div class="col">
+                  <small class="d-block text-muted"><b>{{ last_trans_amount }}</b> dernière{% if last_trans_amount > 1 %}s{% endif %} transaction{% if last_trans_amount > 1 %}s{% endif %} </small>
+                </div>
+                <div class="col text-right">
+                  <a href="{{ path('transactions') }}" class="btn btn-sm btn-outline-primary">
+                    Transactions supp. <span class="icon icon-chevron-right"></span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          {% endblock %}
+        {% endembed %}
+      </div>
 
-        <div class="mt-4">
-          <button type="button" name="button" class="btn btn-primary">
-            <span class="icon icon-download"></span>
-            Importer un fichier de banque <small>(format&nbsp;.csv)</small>
-          </button>
+      <hr class="w-75 my-4 d-md-none" />
 
-          <div class="my-1">ou</div>
+      <div class="col-12 col-md-5">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="h5 mb-0">
+              Statistiques du mois <small>({{ 'now'|localizeddate('none', 'none', 'fr', 'Europe/Paris', 'MMMM')|capitalize }})</small>
+              <span class="badge badge-warning text-price">TODO</span>
+            </h3>
+          </div>
+          <div class="card-body text-center">
+            <div class="mb-4">
+              {% include 'components/price.html.twig' with {
+                amount    : total_incomes,
+                currency  : default_bank_account.currency.label } %} /
+              {% include 'components/price.html.twig' with {
+                amount    : total_expenses,
+                currency  : default_bank_account.currency.label } %}
+            </div>
 
-          <button type="button" name="button" class="btn btn-primary">
-            <span class="icon icon-plus-square"></span>
-            Ajouter une 1ère transaction
-          </button>
+            <div class="chart-js" data-chartjs-type="radar" data-chartjs-data-name="steps_answers"
+              data-chartjs-min="0" data-chartjs-max="10">
+              <canvas></canvas>
+            </div>
+            <script type="text/javascript">
+              var steps_answers = {
+                labels    : ['Yay', 'meh', 'pouet', 'oupsi'],
+                datasets  : [{
+                    label           : 'Moyenne',
+                    backgroundColor : 'rgba(74, 165, 230, .5)',
+                    borderColor     : 'rgba(74, 165, 230, .75)',
+                    data            : [5, 3, 5, 6]
+                  },{
+                    label           : 'Écart-type',
+                    backgroundColor : 'rgba(111, 66, 193, .5)',
+                    borderColor     : 'rgba(111, 66, 193, .75)',
+                    data            : [2, 7, 4, 10]
+                  }]
+                };
+            </script>
+          </div>
+          <div class="card-footer text-right">
+            <a href="{{ path('statistics')}}" class="btn btn-sm btn-outline-primary">
+              Voir plus <span class="icon-chevron-right"></span>
+            </a>
+          </div>
         </div>
       </div>
     </div>
-  {% endif %}
-</div>
+  </div>
 {% endblock %}

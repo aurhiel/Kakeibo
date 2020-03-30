@@ -1,0 +1,83 @@
+{# NOTE: Block used to display transactions #}
+{% if transactions is defined and transactions is not empty %}
+  {% set default_bank_account = app.user.getDefaultBankAccount() %}
+  <div class="card">
+    <div class="card-header">
+      <div class="row align-items-center">
+        <div class="col-9 pr-0">
+          <h3 class="h5 mb-0">
+            {% if title is defined and title is not empty %}{{ title }}{% else %}Liste de transactions{% endif %}
+            <small>({{ default_bank_account.label }})</small>
+          </h3>
+        </div>
+        <div class="col-3 pl-0 text-right">
+          <button type="button" name="button" class="btn btn-sm btn-primary toggle-panel-transaction" data-panel-type="add">
+            <span class="icon icon-plus-square"></span><span class="sr-only{#d-none d-sm-inline#}"> Ajouter une transaction</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    {% set last_date = null %}
+    <div class="list-transactions">
+      {% for transac in transactions %}
+        {% if last_date != transac.date %}
+          <div class="-item -item-date">
+            {{ transac.date|localizeddate('long', 'none') }}
+          </div>
+        {% endif %}
+        <div class="-item -item-transac">
+          {# TRANS:CATEGORY/ICON & COLOR #}
+          <div class="col col-icon">
+            <span class="avatar" title="{{ transac.category.label }}">
+              <span class="avatar-text rounded-circle" style="background-color: {{ transac.category.color }};">
+                <span class="icon-{{ transac.category.icon }}"></span>
+              </span>
+            </span>
+          </div>
+          {# TRANS:TEXT #}
+          <div class="col col-text">
+            {{ transac.label }}
+            {% if transac.details is not empty %}
+              <div class="-more-info small text-muted">{{ transac.details }}</div>
+            {% endif %}
+          </div>
+          {# TRANS:AMOUNT/PRICE #}
+          <div class="col col-price">
+            {% include 'components/price.html.twig' with {
+              amount    : transac.amount,
+              currency  : transac.bankAccount.currency.label } %}
+          </div>
+          {# TRANS:ACTIONS #}
+          <div class="col col-more">
+            {# absolute version #}
+            {#<a class="btn btn-secondary btn-edit-transac" href="#{{ transac.id }}">
+              <span class="sr-only">Modifier</span>
+              <span class="icon icon-edit"></span>
+            </a>
+            <a class="btn btn-danger btn-delete-transac" href="#{{ transac.id }}">
+              <span class="sr-only">Supprimer</span>
+              <span class="icon icon-trash"></span>
+            </a>#}
+            <span class="kb-more-dots align-middle" data-toggle="dropdown" aria-expanded="false">
+              <span class="dot"></span>
+            </span>
+            <div class="dropdown-menu dropdown-menu-right text-right">
+              <a class="dropdown-item btn-edit-transac" href="#{{ transac.id }}">
+                Modifier
+                <span class="ml-1 icon icon-edit"></span>
+              </a>
+              <a class="dropdown-item btn-delete-transac" href="#{{ transac.id }}">
+                Supprimer
+                <span class="ml-1 icon icon-trash"></span>
+              </a>
+            </div>
+          </div>
+        </div>
+        {% set last_date = transac.date %}
+      {% endfor %}
+    </div>
+    {% block footer %}{# <div class="card-footer"></div> #}{% endblock %}
+  </div>
+{% else %}
+  <div class="alert alert-secondary">no transactions (add form ?)</div>
+{% endif %}

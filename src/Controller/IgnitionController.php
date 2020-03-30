@@ -4,9 +4,12 @@ namespace App\Controller;
 
 // Forms
 use App\Form\BankAccountType;
+use App\Form\TransactionType;
+use App\Form\TransactionImportType;
 
 // Entities
 use App\Entity\BankAccount;
+use App\Entity\Transaction;
 
 // Components
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -20,20 +23,14 @@ class IgnitionController extends Controller
     private $nb_steps = 2;
 
     /**
-    * @Route("/demarrage", name="ignition-home")
-    */
-    public function index()
-    {
-
-    }
-
-
-    /**
      * @Route("/demarrage/creation-premier-compte", name="ignition-first-bank-account")
      */
     public function first_bank_account(Security $security, Request $request)
     {
         $user = $security->getUser();
+
+        if (count($user->getBankAccounts()) > 0)
+            return $this->redirectToRoute('ignition-first-transaction');
 
         // 1) build the form
         $ba_entity  = new BankAccount($user);
@@ -58,9 +55,8 @@ class IgnitionController extends Controller
                 // Add success message
                 $request->getSession()->getFlashBag()->add('success', 'Création de votre 1er compte effectuée avec succès.');
 
-                // Redirect to dashboard
-                // TODO add step to add first or import first transaction(s), see first_transaction() above
-                return $this->redirectToRoute('dashboard');
+                // Redirect to first transaction
+                return $this->redirectToRoute('ignition-first-transaction');
             } catch (\Exception $e) {
                 // Something goes wrong
                 $request->getSession()->getFlashBag()->add('error', 'Une erreur inconnue est survenue, veuillez essayer de nouveau.');
@@ -73,6 +69,8 @@ class IgnitionController extends Controller
             'meta' => [
                 'title' => 'Création du 1er compte'
             ],
+            'step'      => 1,
+            'nb_steps'  => $this->nb_steps,
             'form_bank_account' => $ba_form->createView(),
         ]);
     }
@@ -85,6 +83,57 @@ class IgnitionController extends Controller
     {
         $user = $security->getUser();
 
-        dump($user);
+        // Force user to create at least ONE bank account !
+        if (count($user->getBankAccounts()) < 1)
+            return $this->redirectToRoute('ignition-first-bank-account');
+
+        // User has a bank account
+        $default_bank_account = $user->getDefaultBankAccount();
+
+        // 1) Build the form
+        $trans_entity = new Transaction($user);
+        $trans_form   = $this->createForm(TransactionType::class, $trans_entity);
+
+        // 2) Handle the submit (will only happen on POST)
+        $trans_form->handleRequest($request);
+        if ($trans_form->isSubmitted() && $trans_form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+
+            // 3) Add some data to entity
+            $trans_entity->setBankAccount($default_bank_account);
+
+            // 4) Save by persisting entity
+            $em->persist($trans_entity);
+
+            // 5) Try or clear
+            try {
+                // Flush OK !
+                $em->flush();
+
+                // Add success message
+                $request->getSession()->getFlashBag()->add('success', 'Ajout de votre 1ère transaction effectuée avec succès.');
+
+                // Redirect to Dashboard
+                return $this->redirectToRoute('dashboard');
+            } catch (\Exception $e) {
+                dump($e);
+
+                // Something goes wrong
+                $request->getSession()->getFlashBag()->add('error', 'Une erreur inconnue est survenue, veuillez essayer de nouveau.');
+                $em->clear();
+            }
+        }
+
+        return $this->render('ignition/first-transaction-or-import.html.twig', [
+            // Metas
+            'meta' => [
+                'title' => 'Ajouter ou importer une 1ère transaction'
+            ],
+            'step'      => 2,
+            'nb_steps'  => $this->nb_steps,
+            'current_bank_account'        => $default_bank_account,
+            'form_transaction_submitted'  => $trans_form->isSubmitted(),
+            'form_transaction'            => $trans_form->createView()
+        ]);
     }
 }

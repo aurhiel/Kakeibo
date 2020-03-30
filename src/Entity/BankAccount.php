@@ -25,22 +25,25 @@ class BankAccount
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Transaction", mappedBy="bank_account", orphanRemoval=true)
+     * @ORM\JoinColumn(nullable=true)
+     * @ORM\OrderBy({"date" = "DESC"})
      */
     private $transactions;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\BankBrand")
+     * @ORM\ManyToOne(targetEntity="App\Entity\BankBrand", fetch="EAGER")
+     * @ORM\JoinColumn(nullable=true)
      */
     private $bank_brand;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Currency")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Currency", fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
      */
     private $currency;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="bankAccounts")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="bankAccounts", fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
@@ -53,7 +56,7 @@ class BankAccount
     /**
     * According to transactions sum
     */
-    private $balance = 0;
+    private $balance = null;
 
     public function __construct($user)
     {
@@ -112,8 +115,10 @@ class BankAccount
 
     public function getBalance(): float
     {
-        foreach ($this->transactions as $key => $transaction) {
-            $this->balance += $transaction->getAmount();
+        if (is_null($this->balance) === true) {
+            foreach ($this->transactions as $key => $transaction) {
+                $this->balance += $transaction->getAmount();
+            }
         }
 
         return $this->balance;

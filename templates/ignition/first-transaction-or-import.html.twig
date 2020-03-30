@@ -1,0 +1,71 @@
+{% extends 'vertically.html.twig' %}
+{% set core_class = 'app-core--ignition-page' %}
+
+{% block body_vertical_content %}
+  <div class="mb-5 pb-4 border-bottom">
+    {% include 'components/user/avatar.html.twig' with { size : 'lg' }%}
+
+    <span class="ml-2 h4">
+      Bienvenue, <b>{{ app.user.username }}</b>
+    </span>
+  </div>
+
+  {# Display global errors/messages #}
+  {% include 'components/flashes.html.twig' %}
+
+  <h1 class="page-header h3">Ajoutez votre 1ère transaction</h1>
+  <p class="text-muted text-justify small mb-4">
+    Vous devez maintenant ajouter une première transaction ou vous pouvez aussi importer
+    des transactions à l'aide un fichier de banque (ou non) au format .csv.
+  </p>
+
+  <div class="card card--first-transactions{% if form_transaction_submitted == true %} card--first-transactions--choice-add{% endif %} my-5">
+    <div class="card-body">
+      <div class="my-3">
+        <div class="ft-choices-buttons">
+          <button class="btn btn-primary" type="button"
+            data-toggler-class="card--first-transactions--choice-add"
+            data-toggler-target=".card--first-transactions">
+            <span class="icon icon-plus-square"></span>
+            Ajouter une 1ère transaction
+          </button>
+
+          <div class="mt-1 mb-2">ou</div>
+
+          <form class="form form-trans-import" action="{{ path('transaction_import_csv') }}" method="post" enctype="multipart/form-data">
+            <label for="first-import-file" class="btn btn-primary mb-0">
+              <span class="icon icon-download"></span>
+              Importer un fichier de banque <small>(format&nbsp;.csv)</small>
+            </label>
+            <input name="first-import-file" id="first-import-file" class="first-import-file d-none" type="file"
+              accept=".csv" aria-describedby="first-import-file">
+          </form>
+        </div>
+
+        <div class="-choice -choice-add text-body text-left">
+          {{ form_start(form_transaction) }}
+            {% include 'components/forms/transaction.html.twig' %}
+
+            <div class="mt-2 text-center">
+              <button class="btn btn-sm btn-outline-secondary mx-1" type="button"
+                data-toggler-class="card--first-transactions--choice-add"
+                data-toggler-target=".card--first-transactions">
+                Retour
+              </button>
+
+              <button class="btn btn-primary mx-1" type="submit" name="submit">
+                <span class="icon icon-plus-square"></span>
+                Ajouter la transaction
+              </button>
+            </div>
+          {{ form_end(form_transaction) }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <a class="btn btn-outline-secondary btn-sm" href="{{ path('logout') }}">
+    <span class="icon icon-log-out"></span>
+    {{ 'menu.user.logout.label'|trans }}
+  </a>
+{% endblock %}

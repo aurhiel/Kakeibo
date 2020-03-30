@@ -20,39 +20,40 @@ Encore
       { from: './assets/static' }
     ]))
 
+    // Display notifications on webpack's builds
+    // .enableBuildNotifications()
+
     .enableSourceMaps(!Encore.isProduction())
 
     // the following line enables hashed filenames (e.g. app.abc123.css)
     .enableVersioning(Encore.isProduction())
 
-    // will create public/build/main.js and public/build/main.css
-    .addEntry('kakeibo', './assets/js/kakeibo.js')
+    // will create public/build/kakeibo.js and public/build/kakeibo.css
+    // .addEntry('kakeibo-app', './assets/vue/kakeibo.js')
+    .addEntry('kakeibo',      './assets/js/kakeibo.js')
+    .addEntry('kb-dashboard', './assets/js/kb-dashboard.js')
 
-    // Themes
-    .addStyleEntry('kakeibo-dark', './assets/css/kakeibo-dark.scss')
+    // CSS only
+    // .addStyleEntry('kakeibo',       './assets/css/kakeibo.scss')
+    .addStyleEntry('kakeibo-dark',  './assets/css/kakeibo-dark.scss')
 
     // Vendors
     .createSharedEntry('vendors', ['jquery', 'bootstrap'])
 
     // Google Fonts
-    // .addPlugin(new GoogleFontsPlugin({
-    //     fonts: [
-    //         { family: "Arvo", variants: [ "400", "700" ] },
-    //         { family: "Nova Mono", variants: [ "400" ] },
-    //         { family: "Comfortaa", variants: [ "300" ] },
-    //     ],
-    //     "path": "fonts/google/",
-    //     "filename": "google-fonts.css"
-    // }))
     .addPlugin(new GoogleFontsPlugin({
-        fonts: [
-            { family: "Arvo", variants: [ "400", "700" ] },
-            { family: "Nova Mono", variants: [ "400" ] },
-            { family: "Montserrat", variants: [ "300" ] },
-        ],
-        "path": "fonts/google/",
-        "filename": "google-fonts.css"
+      fonts: [
+          { family: "Cabin", variants: [ "400", "700" ] },
+          { family: "Arvo", variants: [ "400", "700" ] },
+          { family: "Nova Mono", variants: [ "400" ] },
+          { family: "Montserrat", variants: [ "300" ] },
+      ],
+      "path": "fonts/google/",
+      "filename": "google-fonts.css"
     }))
+
+    // enable Vue support
+    // .enableVueLoader()
 
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()

@@ -17,7 +17,7 @@ class Transaction
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=128)
+     * @ORM\Column(type="string", length=255)
      */
     private $label;
 
@@ -27,13 +27,14 @@ class Transaction
     private $amount;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\BankAccount", inversedBy="transactions")
+     * @ORM\ManyToOne(targetEntity="App\Entity\BankAccount", inversedBy="transactions", fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
      */
     private $bank_account;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Category")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Category", fetch="EAGER")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $category;
 
@@ -41,6 +42,11 @@ class Transaction
      * @ORM\Column(type="date")
      */
     private $date;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $details;
 
     public function getId()
     {
@@ -103,6 +109,18 @@ class Transaction
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getDetails(): ?string
+    {
+        return $this->details;
+    }
+
+    public function setDetails(?string $details): self
+    {
+        $this->details = $details;
 
         return $this;
     }

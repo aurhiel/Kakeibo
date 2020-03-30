@@ -4,14 +4,24 @@
 .app-header {
   background-color: $header-bg;
   color: $header-color;
+  margin-bottom: 1.6rem;
+  // loading animation
+  position: relative;
+  top: 0;
+  opacity: 1;
+  transition:
+    opacity $animation-duration*1.5 ease $animation-duration/2,
+    top $animation-duration*1.5 ease;
 }
 
 
 // Header title part
 
 .header-title {
-  padding-top: $header-title-padding-y;
-  padding-bottom: $header-title-padding-y;
+  padding-top: $header-title-padding-top;
+  padding-bottom: $header-title-padding-bottom;
+  border-top: 2px solid lighten($header-bg, 5%);
+  margin-top: .2rem;
 
   .page-header {
     color: inherit;
@@ -32,8 +42,8 @@
   // Header title part
 
   .header-title {
-    padding-top: $header-title-padding-y-md;
-    padding-bottom: $header-title-padding-y-md;
+    padding-top: $header-title-padding-top-md;
+    padding-bottom: $header-title-padding-bottom-md;
 
     .page-header {
       margin-bottom: $header-title-margin-bottom-md;
@@ -47,8 +57,8 @@
   // Header title part
 
   .header-title {
-    padding-top: $header-title-padding-y-lg;
-    padding-bottom: $header-title-padding-y-lg;
+    padding-top: $header-title-padding-top-lg;
+    padding-bottom: $header-title-padding-bottom-lg;
 
     .page-header {
       font-size: 2.4rem;

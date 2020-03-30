@@ -3,7 +3,7 @@
 <nav class="navbar navbar-default">
   <div class="container">
     <a class="navbar-brand" href="{{ path('dashboard') }}">
-      {% include 'components/logo.html.twig' with { logo_text : 'K', custom_class : 'text-primary' } %}
+      {% include 'components/logo.html.twig' with { logo_text : 'K', custom_class : (app.request.attributes.get('_route') == 'dashboard' ? 'text-white bg-primary border-primary' : 'text-primary') } %}
     </a>
 
     <button class="navbar-toggler mr-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,22 +22,25 @@
           {% include 'components/logo.html.twig' with { custom_class : 'text-primary' } %}
         </li>#}
         <li class="nav-item{# active#}">
-          <a class="nav-link" href="{{ path('statistics') }}">
+          <a class="nav-link{% if app.request.attributes.get('_route') == 'transactions' %} active{% endif %}"
+              href="{{ path('transactions') }}">
+            <span class="icon icon-edit"></span>
+            Transactions
+            {% if app.request.attributes.get('_route') == 'transactions' %} <span class="sr-only">(current)</span>{% endif %}
+          </a>
+        </li>
+        <li class="nav-item{# active#}">
+          <a class="nav-link{% if app.request.attributes.get('_route') == 'statistics' %} active{% endif %}"
+              href="{{ path('statistics') }}">
             <span class="icon icon-bar-chart"></span>
             Statistiques
-            {#<span class="sr-only">(current)</span>#}
+            {% if app.request.attributes.get('_route') == 'statistics' %} <span class="sr-only">(current)</span>{% endif %}
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#opé-auto">
             <span class="icon icon-command"></span>
             Récurrences
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{ path('demo') }}">
-            <span class="icon icon-save"></span>
-            Démo
           </a>
         </li>
       </ul>

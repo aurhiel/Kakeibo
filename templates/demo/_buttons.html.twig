@@ -3,22 +3,23 @@
 
 <h3 class="h5">Colors</h3>
 <div class="card mb-4">
-    <div class="card-body">
-    {% for color in ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link'] %}
-        <button type="button" class="btn btn-{{ color }} my-1">{{ color|capitalize }}</button>
-    {% endfor %}
-    </div>
+  <div class="card-body">
+  {% for color in theme_colors %}
+    <button type="button" class="btn btn-{{ color }} my-1">{{ color|capitalize }}</button>
+  {% endfor %}
+    <button type="button" class="btn btn-link my-1">Link</button>
+  </div>
 </div>
 
 <hr class="my-4">
 
 <h3 class="h5">Outlined colors</h3>
 <div class="card mb-4">
-    <div class="card-body">
-    {% for color in ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark'] %}
-        <button type="button" class="btn btn-outline-{{ color }} my-1">{{ color|capitalize }}</button>
+  <div class="card-body">
+    {% for color in theme_colors %}
+      <button type="button" class="btn btn-outline-{{ color }} my-1">{{ color|capitalize }}</button>
     {% endfor %}
-    </div>
+  </div>
 </div>
 
 <hr class="my-5">

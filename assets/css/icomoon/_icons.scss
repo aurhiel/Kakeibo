@@ -1,13 +1,3 @@
-.icon-code {
-  &:before {
-    content: $icon-code;
-  }
-}
-.icon-coffee {
-  &:before {
-    content: $icon-coffee;
-  }
-}
 .icon-at-sign {
   &:before {
     content: $icon-at-sign;
@@ -43,6 +33,16 @@
     content: $icon-clock;
   }
 }
+.icon-code {
+  &:before {
+    content: $icon-code;
+  }
+}
+.icon-coffee {
+  &:before {
+    content: $icon-coffee;
+  }
+}
 .icon-command {
   &:before {
     content: $icon-command;
@@ -61,6 +61,11 @@
 .icon-home {
   &:before {
     content: $icon-home;
+  }
+}
+.icon-key {
+  &:before {
+    content: $icon-key;
   }
 }
 .icon-lock {
@@ -108,79 +113,14 @@
     content: $icon-user;
   }
 }
-.icon-apparel {
+.icon-security {
   &:before {
-    content: $icon-apparel;
+    content: $icon-security;
   }
 }
-.icon-beverage {
+.icon-rotate-right {
   &:before {
-    content: $icon-beverage;
-  }
-}
-.icon-credit-card {
-  &:before {
-    content: $icon-credit-card;
-  }
-}
-.icon-currency-dollar {
-  &:before {
-    content: $icon-currency-dollar;
-  }
-}
-.icon-gift {
-  &:before {
-    content: $icon-gift;
-  }
-}
-.icon-globe {
-  &:before {
-    content: $icon-globe;
-  }
-}
-.icon-library {
-  &:before {
-    content: $icon-library;
-  }
-}
-.icon-light-bulb {
-  &:before {
-    content: $icon-light-bulb;
-  }
-}
-.icon-food {
-  &:before {
-    content: $icon-food;
-  }
-}
-.icon-gas-station {
-  &:before {
-    content: $icon-gas-station;
-  }
-}
-.icon-marina {
-  &:before {
-    content: $icon-marina;
-  }
-}
-.icon-portfolio {
-  &:before {
-    content: $icon-portfolio;
-  }
-}
-.icon-refresh {
-  &:before {
-    content: $icon-refresh;
-  }
-}
-.icon-shopping-cart {
-  &:before {
-    content: $icon-shopping-cart;
-  }
-}
-.icon-stethoscope {
-  &:before {
-    content: $icon-stethoscope;
+    content: $icon-rotate-right;
   }
 }
 .icon-travel-bus {
@@ -193,13 +133,63 @@
     content: $icon-travel-car;
   }
 }
+.icon-gas-station {
+  &:before {
+    content: $icon-gas-station;
+  }
+}
+.icon-hospital {
+  &:before {
+    content: $icon-hospital;
+  }
+}
+.icon-food {
+  &:before {
+    content: $icon-food;
+  }
+}
+.icon-bank {
+  &:before {
+    content: $icon-bank;
+  }
+}
 .icon-wallet {
   &:before {
     content: $icon-wallet;
   }
 }
-.icon-yin-yang {
+.icon-credit-card {
   &:before {
-    content: $icon-yin-yang;
+    content: $icon-credit-card;
+  }
+}
+.icon-gift {
+  &:before {
+    content: $icon-gift;
+  }
+}
+.icon-cases {
+  &:before {
+    content: $icon-cases;
+  }
+}
+.icon-housing {
+  &:before {
+    content: $icon-housing;
+  }
+}
+.icon-clothes {
+  &:before {
+    content: $icon-clothes;
+  }
+}
+.icon-nightlife {
+  &:before {
+    content: $icon-nightlife;
+  }
+}
+.icon-donation {
+  &:before {
+    content: $icon-donation;
   }
 }

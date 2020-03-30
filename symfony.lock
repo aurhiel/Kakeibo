@@ -1,4 +1,7 @@
 {
+    "beberlei/doctrineextensions": {
+        "version": "v1.2.6"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -103,6 +106,9 @@
     },
     "ocramius/proxy-manager": {
         "version": "2.0.4"
+    },
+    "php": {
+        "version": "7.2"
     },
     "phpdocumentor/reflection-common": {
         "version": "1.0.1"
@@ -287,8 +293,14 @@
     "symfony/polyfill-intl-icu": {
         "version": "v1.8.0"
     },
+    "symfony/polyfill-intl-idn": {
+        "version": "v1.15.0"
+    },
     "symfony/polyfill-mbstring": {
         "version": "v1.8.0"
+    },
+    "symfony/polyfill-php72": {
+        "version": "v1.15.0"
     },
     "symfony/process": {
         "version": "v3.4.12"
@@ -328,6 +340,9 @@
     },
     "symfony/serializer-pack": {
         "version": "v1.0.1"
+    },
+    "symfony/service-contracts": {
+        "version": "v2.0.1"
     },
     "symfony/stopwatch": {
         "version": "v3.4.12"
@@ -403,6 +418,18 @@
     },
     "symfony/yaml": {
         "version": "v3.4.12"
+    },
+    "twig/extensions": {
+        "version": "1.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.0",
+            "ref": "a86723ee8d8b2f9437c8ce60a5546a1c267da5ed"
+        },
+        "files": [
+            "config/packages/twig_extensions.yaml"
+        ]
     },
     "twig/twig": {
         "version": "v2.5.0"

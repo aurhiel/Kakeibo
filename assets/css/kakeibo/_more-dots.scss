@@ -1,0 +1,62 @@
+// More dot icon
+//
+
+.kb-more-dots {
+  display: inline-block;
+  position: relative;
+  z-index: 0;
+  padding: 8px;
+  cursor: pointer;
+
+  &:after {
+    content: '';
+    position: absolute;
+    background-color: rgba(0, 0, 0, .1);
+    z-index: 1;
+    height: 150%;
+    width: 150%;
+    top: 50%;
+    left: 50%;
+    margin-top: -75%;
+    margin-left: -75%;
+    border-radius: 50%;
+    transform: scale(.5);
+    opacity: 0;
+    transition: transform 400ms ease, opacity 400ms ease;
+  }
+
+  &:hover, &[aria-expanded="true"] {
+    &:after {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .dot {
+    position: relative;
+    z-index: 5;
+
+    &, &:before, &:after {
+      background-color: currentcolor;
+      line-height: 0;
+      display: block;
+      height: 4px;
+      width: 4px;
+      border-radius: 50%;
+    }
+
+    &:before, &:after {
+      content: '';
+      position: absolute;
+      left: 0;
+    }
+
+    &:before {
+      top: -6px;
+    }
+
+    &:after {
+      top: 6px;
+    }
+  }
+}

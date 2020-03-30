@@ -24,7 +24,7 @@ $body-bg:     lighten($dark, 4%);
 // Bootstrap's variables ----------------
 // --------------------------------------
 
-
+$card-bg: #303534;
 
 
 // --------------------------------------
@@ -37,6 +37,13 @@ $body-bg:     lighten($dark, 4%);
 
 // Page header
 $page-header-color:             $white;
+
+
+//
+// Lists
+//
+
+$list-trans--item-date-bg:      #2d3130;
 
 
 // Kakeibo's variables ------------------

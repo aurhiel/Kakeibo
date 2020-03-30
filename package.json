@@ -1,6 +1,7 @@
 {
     "devDependencies": {
-        "@symfony/webpack-encore": "^0.20.0"
+        "@symfony/webpack-encore": "^0.20.0",
+        "webpack-notifier": "^1.7.0"
     },
     "license": "UNLICENSED",
     "private": true,
@@ -12,6 +13,7 @@
     },
     "dependencies": {
         "bootstrap": "^4.1.2",
+        "chart.js": "^2.9.3",
         "copy-webpack-plugin": "^4.5.2",
         "google-fonts-webpack-plugin": "^0.4.4",
         "jquery": "^3.3.1",

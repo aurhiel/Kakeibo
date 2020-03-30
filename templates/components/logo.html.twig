@@ -4,10 +4,5 @@
 {% set type_text  = (type_text is defined) ? type_text : 'sub' %}
 
 <span class="brand-logo{{ custom_class }}">
-    <span class="icon icon-calendar"></span>
-    {% if hide_text == false %}
-    <span class="_text _text-{{ type_text }}">
-      {{ logo_text }}
-    </span>
-    {% endif %}
+  <span class="_text _text-{{ type_text }}">{{ logo_text }}</span>
 </span>

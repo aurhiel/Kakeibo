@@ -43,7 +43,7 @@ class SecurityController extends Controller
             // 4) Set default role
             $user->setRoles(array('ROLE_USER'));
 
-            // 5) save the User!
+            // 5) Save the User!
             $entityManager = $this->getDoctrine()->getManager();
             $repoUser = $entityManager->getRepository('App:User');
             $entityManager->persist($user);
@@ -59,7 +59,7 @@ class SecurityController extends Controller
 
                     // Send email to user
                     // $message = (new \Swift_Message('Confirmation d\'inscription'))
-                    //     ->setFrom(array('ne-pas-repondre@ateliers-ingeneria.fr' => 'Les Ateliers Ingeneria'))
+                    //     ->setFrom(array('ne-pas-repondre@kakeibo.fr' => 'Kakeibo'))
                     //     ->setTo($user->getEmail())
                     //     ->setBody(
                     //         $this->renderView(

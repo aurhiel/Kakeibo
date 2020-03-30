@@ -1,7 +1,8 @@
 <?php
+
 namespace App\DataFixtures;
 
-// User entity
+// Entity
 use App\Entity\Currency;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -15,18 +16,9 @@ class CurrencyFixtures extends Fixture implements OrderedFixtureInterface
     public function load(ObjectManager $manager)
     {
         $currencies = [
-            [
-                'name' => "Euro",
-                'label' => "€"
-            ],
-            [
-                'name' => "Dollar",
-                'label' => "$"
-            ],
-            [
-                'name' => "Livre sterling",
-                'label' => "£"
-            ],
+            [ 'name' => "Euro",           'label' => "€" ],
+            [ 'name' => "Dollar",         'label' => "$" ],
+            [ 'name' => "Livre sterling", 'label' => "£" ],
         ];
 
         foreach ($currencies as $currency)

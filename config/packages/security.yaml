@@ -11,7 +11,7 @@ security:
     providers:
         # in_memory: { memory: ~ }
         # own user provider
-        our_db_provider:
+        pdo:
             entity:
                 class: App\Entity\User
                 # Restrict login to one field
@@ -27,7 +27,7 @@ security:
             pattern: ^/
             logout_on_user_change: true
             anonymous: true
-            provider: our_db_provider
+            provider: pdo
             form_login:
                 login_path: login
                 check_path: login

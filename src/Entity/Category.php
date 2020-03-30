@@ -22,9 +22,9 @@ class Category
     private $label;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="string", length=128)
      */
-    private $is_default;
+    private $slug;
 
     /**
      * @ORM\Column(type="string", length=32)
@@ -32,16 +32,25 @@ class Category
     private $color;
 
     /**
+     * @ORM\Column(type="string", length=64)
+     */
+    private $icon;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $import_regex;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $is_default;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="categories")
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Icon")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $icon;
 
     public function getId()
     {
@@ -96,14 +105,38 @@ class Category
         return $this;
     }
 
-    public function getIcon(): ?Icon
+    public function getIcon(): ?string
     {
         return $this->icon;
     }
 
-    public function setIcon(?Icon $icon): self
+    public function setIcon(string $icon): self
     {
         $this->icon = $icon;
+
+        return $this;
+    }
+
+    public function getImportRegex(): ?string
+    {
+        return $this->import_regex;
+    }
+
+    public function setImportRegex(?string $import_regex): self
+    {
+        $this->import_regex = $import_regex;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }

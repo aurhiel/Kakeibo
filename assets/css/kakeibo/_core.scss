@@ -11,6 +11,7 @@ html, body {
 
   &--merge-body-in-header {
     .app-header {
+      margin-bottom: 0;
       padding-bottom: 2rem;
 
       .header-title {
@@ -22,8 +23,46 @@ html, body {
       margin-top: -2rem;
     }
   }
+
+  &--is-loading {
+    .app-loader {
+      opacity: 1;
+      transition: none;
+      pointer-events: auto;
+    }
+
+    .app-header {
+      top: -6rem;
+      opacity: 0;
+    }
+
+    .app-body:not(.vertical-container) {
+      top: 2rem;
+      opacity: 0;
+    }
+  }
 }
 
 .app-body {
   overflow: hidden; // Prevent margin top/bottom children's issue
+  // loading animation
+  position: relative;
+  top: 0;
+  opacity: 1;
+  transition:
+    opacity $animation-duration*1.5 ease $animation-duration/2,
+    top $animation-duration*1.5 ease;
+}
+
+.app-loader {
+  background-color: $dark;
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  transition: opacity 1s ease;
+  pointer-events: none;
 }

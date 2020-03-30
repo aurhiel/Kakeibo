@@ -74,7 +74,6 @@ class User implements AdvancedUserInterface, \Serializable
     private $bankAccounts;
 
 
-
     public function __construct()
     {
         $this->isActive = true;

@@ -7,6 +7,11 @@
 //
 
 .card {
+  .list-transactions {
+    max-height: 24rem;
+    overflow: auto;
+  }
+
   &--first-transactions {
     color: $gray-500;
     text-align: center;
@@ -15,5 +20,28 @@
     max-width: 32rem;
     margin-left: auto;
     margin-right: auto;
+
+    .-choice {
+      display: none;
+    }
+
+    &.card--first-transactions--choice-add,
+    &.card--first-transactions--choice-import {
+      .ft-choices-buttons {
+        display: none;
+      }
+    }
+
+    &.card--first-transactions--choice-add {
+      .-choice-add {
+        display: block;
+      }
+    }
+
+    &.card--first-transactions--choice-import {
+      .-choice-import {
+        display: block;
+      }
+    }
   }
 }

@@ -21,3 +21,12 @@
 "form_bank_account.bank_brand.label": Etablissement bancaire
 "form_bank_account.bank_brand.placeholder": Choisissez un établissement
 "form_bank_account.currency.label": Monnaie
+
+# Form transaction
+"form_transaction.label.label": Intitulé de la transaction
+"form_transaction.label.placeholder": "ex: Courses au marché"
+"form_transaction.amount.label": Montant
+"form_transaction.amount.placeholder": "ex: 256,52"
+"form_transaction.date.label": Date de la transaction
+"form_transaction.category.label": Catégorie
+"form_transaction.category.placeholder": Choisissez une catégorie

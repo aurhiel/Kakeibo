@@ -1,4 +1,0 @@
-<span class="text-price text-{% if balance > 0 %}success{% else %}danger{% endif %}">
-  {% if balance > 0 %}+{% elseif balance < 0 %}-{% endif %}
-  {{ balance|number_format(2, '.', ',') }} {{ currency }}
-</span>

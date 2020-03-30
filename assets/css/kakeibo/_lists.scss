@@ -1,0 +1,153 @@
+// Lists
+//
+
+.list-transactions {
+  .-item {
+    border-bottom: $list-trans-border-width solid $card-border-color;
+    padding: .6rem 0;
+    margin: 0 1rem;
+    position: relative;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  .-item-date {
+    background-color: $list-trans--item-date-bg;
+    color: $gray-600;
+    font-weight: bold;
+    margin: 0;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    z-index: 5;
+  }
+
+  .-item-transac {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    + .-item-date {
+      margin-top: -$list-trans-border-width;
+      border-top: $list-trans-border-width solid $card-border-color;
+    }
+  }
+}
+
+.-item-transac {
+  // absolute version
+  // &:hover, &:focus {
+  //   .col {
+  //     &-price {
+  //       left: -6em;
+  //       transition: left $animation-duration ease;
+  //     }
+  //     &-more {
+  //       pointer-events: auto;
+  //       opacity: 1;
+  //       right: 0;
+  //       transition: opacity $animation-duration ease $animation-duration/2,
+  //         right $animation-duration ease;
+  //     }
+  //   }
+  // }
+
+  .col {
+    &-icon {
+      font-size: $list-trans--col-icon-size;
+      text-align: center;
+      max-width: $list-trans--col-icon-max-width;
+      padding-left: 0;
+      padding-right: 0;
+
+      .avatar {
+        font-size: $list-trans--col-icon-avatar-size;
+      }
+    }
+
+    &-text {
+      line-height: 1.2em;
+      .-more-info {
+        display: none;
+        line-height: 1.1em;
+        margin-top: .2em;
+      }
+    }
+
+    &-price {
+      text-align: right;
+      max-width: $list-trans--col-price-max-width;
+      padding-right: 0;
+      padding-left: 0;
+      // absolute version
+      // position: relative;
+      // z-index: 5;
+      // left: 0;
+      // transition: left $animation-duration ease $animation-duration/2;
+    }
+
+    &-more {
+      max-width: $list-trans--col-more-max-width;
+      padding-right: 0;
+    }
+    // absolute version
+    // &-more {
+    //   text-align: right;
+    //   white-space: nowrap;
+    //   max-width: 100%;
+    //   height: 100%;
+    //   position: absolute;
+    //   z-index: 0;
+    //   top: 0;
+    //   right: -1.8em;
+    //   left: auto;
+    //   // hide
+    //   pointer-events: none;
+    //   opacity: 0;
+    //   transition: opacity $animation-duration ease,
+    //     right $animation-duration ease;
+    //
+    //   .btn {
+    //     font-size: 1.4em;
+    //     line-height: 1;
+    //     text-align: center;
+    //     padding: .8em .4em;
+    //     border-radius: 0;
+    //     height: 100%;
+    //     position: absolute;
+    //     right: 0;
+    //     &-edit-transac {
+    //       right: 1.8889em;
+    //     }
+    //   }
+    // }
+  }
+}
+
+//
+// Responsive
+//
+
+
+@include media-breakpoint-up(md) {
+  .-item-transac {
+    .col {
+      &-icon {
+        font-size: $list-trans--col-icon-size-md;
+      }
+    }
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  .-item-transac {
+    .col {
+      &-text {
+        .-more-info {
+          display: block;
+        }
+      }
+    }
+  }
+}

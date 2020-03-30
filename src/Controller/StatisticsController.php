@@ -27,6 +27,7 @@ class StatisticsController extends Controller
         }
 
         return $this->render('statistics/index.html.twig', [
+            'page_title'      => '<span class="icon-bar-chart"></span> Statistiques',
             'controller_name' => 'StatisticsController',
         ]);
     }

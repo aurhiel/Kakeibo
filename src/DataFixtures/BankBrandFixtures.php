@@ -1,7 +1,8 @@
 <?php
+
 namespace App\DataFixtures;
 
-// User entity
+// Entity
 use App\Entity\BankBrand;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -15,30 +16,14 @@ class BankBrandFixtures extends Fixture implements OrderedFixtureInterface
     public function load(ObjectManager $manager)
     {
         $bank_brands = [
-            [
-                'label' => "BNP Paribas"
-            ],
-            [
-                'label' => "Crédit agricole"
-            ],
-            [
-                'label' => "Caisse d'épargne"
-            ],
-            [
-                'label' => "Crédit mutuel - CIC"
-            ],
-            [
-                'label' => "HSBC"
-            ],
-            [
-                'label' => "Monabanq"
-            ],
-            [
-                'label' => "Société générale"
-            ],
-            [
-                'label' => "Autre"
-            ],
+            [ 'label' => "BNP Paribas" ],
+            [ 'label' => "Crédit agricole" ],
+            [ 'label' => "Caisse d'épargne" ],
+            [ 'label' => "Crédit mutuel - CIC" ],
+            [ 'label' => "HSBC" ],
+            [ 'label' => "Monabanq" ],
+            [ 'label' => "Société générale" ],
+            [ 'label' => "Autre" ],
         ];
 
         foreach ($bank_brands as $bank_brand_data)

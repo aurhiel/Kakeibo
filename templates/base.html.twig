@@ -62,13 +62,13 @@
       {% include 'components/footer.html.twig' %}
     {% endblock %}
 
-    {# <span class="viewport-sizes">
-        <span class="d-block d-sm-none" data-viewport-size-slug="xs"></span>
-        <span class="d-none d-sm-block d-md-none" data-viewport-size-slug="sm"></span>
-        <span class="d-none d-md-block d-lg-none" data-viewport-size-slug="md"></span>
-        <span class="d-none d-lg-block d-xl-none" data-viewport-size-slug="lg"></span>
-        <span class="d-none d-xl-block" data-viewport-size-slug="xl"></span>
-    </span> #}
+    <span class="viewport-sizes">
+      <span class="d-block d-sm-none" data-viewport-size-slug="xs"></span>
+      <span class="d-none d-sm-block d-md-none" data-viewport-size-slug="sm"></span>
+      <span class="d-none d-md-block d-lg-none" data-viewport-size-slug="md"></span>
+      <span class="d-none d-lg-block d-xl-none" data-viewport-size-slug="lg"></span>
+      <span class="d-none d-xl-block" data-viewport-size-slug="xl"></span>
+    </span>
 
     {% if app.user is defined and app.user is not null and form_transaction is defined %}
       <div class="app-panel app-panel--top app-panel--transaction-form">

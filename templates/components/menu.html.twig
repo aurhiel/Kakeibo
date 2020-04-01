@@ -21,24 +21,22 @@
         {#<li class="nav-item d-block d-{{ size_display_menu }}-none">
           {% include 'components/logo.html.twig' with { custom_class : 'text-primary' } %}
         </li>#}
-        <li class="nav-item{# active#}">
-          <a class="nav-link{% if app.request.attributes.get('_route') == 'transactions' %} active{% endif %}"
-              href="{{ path('transactions') }}">
+        <li class="nav-item{% if app.request.attributes.get('_route') == 'transactions' %} active{% endif %}">
+          <a class="nav-link" href="{{ path('transactions') }}">
             <span class="icon icon-edit"></span>
             Transactions
             {% if app.request.attributes.get('_route') == 'transactions' %} <span class="sr-only">(current)</span>{% endif %}
           </a>
         </li>
-        <li class="nav-item{# active#}">
-          <a class="nav-link{% if app.request.attributes.get('_route') == 'statistics' %} active{% endif %}"
-              href="{{ path('statistics') }}">
+        <li class="nav-item{% if app.request.attributes.get('_route') == 'statistics' %} active{% endif %}">
+          <a class="nav-link" href="{{ path('statistics') }}">
             <span class="icon icon-bar-chart"></span>
             Statistiques
             {% if app.request.attributes.get('_route') == 'statistics' %} <span class="sr-only">(current)</span>{% endif %}
           </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#opé-auto">
+        <li class="nav-item{% if app.request.attributes.get('_route') == 'automaton' %} active{% endif %}">
+          <a class="nav-link" href="{{ path('automaton') }}">
             <span class="icon icon-command"></span>
             Récurrences
           </a>

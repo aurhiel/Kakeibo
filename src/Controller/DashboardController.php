@@ -44,13 +44,21 @@ class DashboardController extends Controller
         $r_trans  = $em->getRepository(Transaction::class);
         $last_trans = $r_trans->findLastByBankAccount($default_bank_account, self::NB_LAST_TRANS);
 
-        $curr_month = (int) 3;
+        $curr_month = (int) date('m');
         $curr_year  = (int) date('Y');
-        $total_incomes = $r_trans->findTotalIncomes($default_bank_account, $curr_year, $curr_month);
-        $total_expenses = $r_trans->findTotalExpenses($default_bank_account, $curr_year, $curr_month);
+        $total_incomes  = (float) $r_trans->findTotal($default_bank_account, $curr_year, $curr_month, 'incomes');
+        $total_expenses = (float) $r_trans->findTotal($default_bank_account, $curr_year, $curr_month, 'expenses');
 
-        $total_incomes = isset($total_incomes['total_incomes']) ? (float)$total_incomes['total_incomes'] : 0;
-        $total_expenses = isset($total_expenses['total_expenses']) ? (float)$total_expenses['total_expenses'] : 0;
+        // NOTE If there is no expenses and incomes in the current month, try
+        //  to get last month expenses and incomes.
+        if ($total_incomes == 0 && $total_expenses == 0) {
+            $curr_month = (($curr_month - 1) < 0) ? 12 : ($curr_month - 1);
+            $total_incomes  = (float) $r_trans->findTotal($default_bank_account, $curr_year, $curr_month, 'incomes');
+            $total_expenses = (float) $r_trans->findTotal($default_bank_account, $curr_year, $curr_month, 'expenses');
+        }
+
+        $total_incomes_by_cats = $r_trans->findTotalGroupBy($default_bank_account, $curr_year, $curr_month, 'category', 'incomes');
+        $total_expenses_by_cats = $r_trans->findTotalGroupBy($default_bank_account, $curr_year, $curr_month, 'category', 'expenses');
 
         return $this->render('dashboard/index.html.twig', [
             'page_title'            => 'Dashboard',
@@ -61,8 +69,12 @@ class DashboardController extends Controller
             'current_bank_account'  => $default_bank_account,
             'last_transactions'     => $last_trans,
             'last_trans_amount'     => self::NB_LAST_TRANS,
+            'totals_month'          => $curr_month,
+            'totals_year'           => $curr_year,
             'total_incomes'         => $total_incomes,
             'total_expenses'        => $total_expenses,
+            'total_incomes_by_cats'   => $total_incomes_by_cats,
+            'total_expenses_by_cats'  => $total_expenses_by_cats,
             'form_transaction'      => $trans_form->createView()
         ]);
     }

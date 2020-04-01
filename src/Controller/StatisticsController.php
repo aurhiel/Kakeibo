@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\Security;
 class StatisticsController extends Controller
 {
     /**
-     * @Route("/stats", name="statistics")
+     * @Route("/statistics", name="statistics")
      */
     public function index(Security $security)
     {
@@ -27,7 +27,7 @@ class StatisticsController extends Controller
         }
 
         return $this->render('statistics/index.html.twig', [
-            'page_title'      => '<span class="icon-bar-chart"></span> Statistiques',
+            'page_title'      => '<span class="icon icon-bar-chart"></span> Statistiques',
             'controller_name' => 'StatisticsController',
         ]);
     }

@@ -56,7 +56,7 @@ class ProfileController extends Controller
         return $this->render(
             'profile/index.html.twig',
             array(
-                'page_title'  => 'Profil',
+                'page_title'  => '<span class="icon icon-user"></span> Profil',
                 'core_class'  => 'app-core--merge-body-in-header',
                 'meta'        => array('title' => 'Profil'),
                 'form'        => $form->createView()

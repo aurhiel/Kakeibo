@@ -20,7 +20,7 @@ class CategoryFixtures extends Fixture implements OrderedFixtureInterface
 
           [ 'label' => 'Banque',          'slug' => 'bank',
             'icon'  => 'bank',            'color' => '#fc5c65',
-            'regex' => '(frais retrait)|(retrait dab)|enjoy|(comm intervention carte)' ],
+            'regex' => '(frais retrait)|enjoy|(comm intervention carte)' ],
 
           [ 'label' => 'Travail',         'slug' => 'work',
             'icon'  => 'cases',           'color' => '#778ca3' ],

@@ -34,17 +34,18 @@ class TransactionRepository extends ServiceEntityRepository
         ;
     }
 
-    /**
-     * @return Transaction[] Returns an array of Transaction objects
-     */
-    public function findTotalExpenses($bank_account, $year = null, $month = null)
+    public function findTotal($bank_account, $year = null, $month = null, $spent_type = 'incomes')
     {
         $qb = $this->createQueryBuilder('t')
-            ->select('SUM(t.amount) AS total_expenses')
+            ->select('SUM(t.amount) AS amount_sum')
             ->andWhere('t.bank_account = :bank_account')
-            ->setParameter('bank_account', $bank_account)
-            ->andWhere('t.amount < 0');
+            ->setParameter('bank_account', $bank_account);
 
+        // WHERE: Incomes or Expenses ?
+        if ($spent_type == 'incomes') $qb->andWhere('t.amount > 0');
+        else $qb->andWhere('t.amount < 0');
+
+        // WHERE: date
         if (!is_null($month) && !is_null($year)) {
             $qb->andWhere('MONTH(t.date) = :month AND YEAR(t.date) = :year')
                 ->setParameter('month', $month)
@@ -52,28 +53,37 @@ class TransactionRepository extends ServiceEntityRepository
         }
 
         return $qb->getQuery()
-            ->getOneOrNullResult();
+            ->getSingleScalarResult();
     }
 
-    /**
-     * @return Transaction[] Returns an array of Transaction objects
-     */
-    public function findTotalIncomes($bank_account, $year = null, $month = null)
+    public function findTotalGroupBy($bank_account, $year = null, $month = null, $group_by = 'category', $spent_type = 'incomes')
     {
         $qb = $this->createQueryBuilder('t')
-            ->select('SUM(t.amount) AS total_incomes')
+            ->select('SUM(t.amount) AS amount_sum')
             ->andWhere('t.bank_account = :bank_account')
-            ->setParameter('bank_account', $bank_account)
-            ->andWhere('t.amount > 0');
+            ->setParameter('bank_account', $bank_account);
 
+        // WHERE: Incomes or Expenses ?
+        if ($spent_type == 'incomes') $qb->andWhere('t.amount > 0');
+        else $qb->andWhere('t.amount < 0');
+
+        // WHERE: Date
         if (!is_null($month) && !is_null($year)) {
             $qb->andWhere('MONTH(t.date) = :month AND YEAR(t.date) = :year')
                 ->setParameter('month', $month)
                 ->setParameter('year', $year);
         }
 
+        // GROUP BY: Category
+        if (!is_null($group_by) && $group_by == 'category') {
+            $qb->join('t.category', 'c')
+                ->addSelect('c.id, c.label, c.color, c.icon')
+                ->groupBy('t.category');
+        }
+
+        // return result
         return $qb->getQuery()
-            ->getOneOrNullResult();
+            ->getResult();
     }
 
 //    /**

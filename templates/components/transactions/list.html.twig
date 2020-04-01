@@ -20,7 +20,7 @@
     {% set last_date = null %}
     <div class="list-transactions">
       {% for transac in transactions %}
-        {% if last_date != transac.date %}
+        {% if last_date != transac.date|date('Y-m-d') %}
           <div class="-item -item-date">
             {{ transac.date|localizeddate('long', 'none') }}
           </div>
@@ -36,7 +36,7 @@
           </div>
           {# TRANS:TEXT #}
           <div class="col col-text">
-            {{ transac.label }}
+            {{ transac.label }}<br>
             {% if transac.details is not empty %}
               <div class="-more-info small text-muted">{{ transac.details }}</div>
             {% endif %}
@@ -73,7 +73,7 @@
             </div>
           </div>
         </div>
-        {% set last_date = transac.date %}
+        {% set last_date = transac.date|date('Y-m-d') %}
       {% endfor %}
     </div>
     {% block footer %}{# <div class="card-footer"></div> #}{% endblock %}

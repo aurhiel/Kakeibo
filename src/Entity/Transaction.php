@@ -39,7 +39,7 @@ class Transaction
     private $category;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="datetime")
      */
     private $date;
 

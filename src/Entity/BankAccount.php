@@ -26,7 +26,7 @@ class BankAccount
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Transaction", mappedBy="bank_account", orphanRemoval=true)
      * @ORM\JoinColumn(nullable=true)
-     * @ORM\OrderBy({"date" = "DESC"})
+     * @ORM\OrderBy({"date" = "DESC", "id" = "DESC"})
      */
     private $transactions;
 

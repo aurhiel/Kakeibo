@@ -2,6 +2,12 @@
 
 {% block body %}
 <div class="container">
-  {% include 'components/transactions/list.html.twig' %}
+  {% embed 'components/transactions/list.html.twig' %}
+    {% block footer %}
+      <div class="card-footer">
+        <span class="badge badge-warning text-price">TODO (pagination & filters)</span>
+      </div>
+    {% endblock %}
+  {% endembed %}
 </div>
 {% endblock %}

@@ -116,75 +116,77 @@
 
 
 @include media-breakpoint-up(sm) {
-    // Bank account
-    .bank-account-label {
-        max-width: 9rem;
-    }
+  // Bank account
+  .bank-account-label {
+    max-width: 8rem;
+  }
 }
 
 @include media-breakpoint-down(xs) {
     .navbar {
-        > .container,
-        > .container-fluid {
-            padding-right: 0;
-            padding-left: 0;
-        }
+      > .container,
+      > .container-fluid {
+        padding-right: 0;
+        padding-left: 0;
+      }
     }
 }
 
 @include media-breakpoint-up(md) {
-    .navbar {
-        flex-flow: row nowrap;
-        justify-content: flex-start;
+  .navbar {
+    flex-flow: row nowrap;
+    justify-content: flex-start;
 
-        .navbar-nav {
-            flex-direction: row;
+    .navbar-nav {
+      flex-direction: row;
 
-            .dropdown-menu {
-                position: absolute;
-            }
+      .dropdown-menu {
+        position: absolute;
+      }
 
-            .nav-link {
-                padding-right: $navbar-nav-link-padding-x;
-                padding-left: $navbar-nav-link-padding-x;
-            }
-        }
-
-        // For nesting containers, have to redeclare for alignment purposes
-        > .container,
-        > .container-fluid {
-            flex-wrap: nowrap;
-        }
-
-        .navbar-collapse {
-            display: flex !important;  // stylelint-disable-line declaration-no-important
-
-            // Changes flex-bases to auto because of an IE10 bug
-            flex-basis: auto;
-        }
-
-        .navbar-toggler {
-            display: none;
-        }
+      .nav-link {
+        padding-right: $navbar-nav-link-padding-x;
+        padding-left: $navbar-nav-link-padding-x;
+      }
     }
 
-
-    // Navbar
-    .navbar {
-        padding-top: 1rem;
-        padding-bottom: 1rem;
+    // For nesting containers, have to redeclare for alignment purposes
+    > .container,
+    > .container-fluid {
+      flex-wrap: nowrap;
     }
 
-    // Bank account
-    .bank-account-label {
-        max-width: 12rem;
+    .navbar-collapse {
+      display: flex !important;  // stylelint-disable-line declaration-no-important
+
+      // Changes flex-bases to auto because of an IE10 bug
+      flex-basis: auto;
     }
+
+    .navbar-toggler {
+      display: none;
+    }
+  }
+
+
+  // Navbar
+  .navbar {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
 }
 
 
 @include media-breakpoint-up(lg) {
-    // Bank account
-    .bank-account-label {
-        max-width: 16rem;
-    }
+  // Bank account
+  .bank-account-label {
+    max-width: 16rem;
+  }
+}
+
+@include media-breakpoint-up(xl) {
+  // Bank account
+  .bank-account-label {
+    max-width: 20rem;
+  }
 }

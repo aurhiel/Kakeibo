@@ -90,6 +90,10 @@ class IgnitionController extends Controller
         // User has a bank account
         $default_bank_account = $user->getDefaultBankAccount();
 
+        // If user has some transactions > redirect to dashboard
+        if (count($default_bank_account->getTransactions()) > 0)
+            return $this->redirectToRoute('dashboard');
+
         // 1) Build the form
         $trans_entity = new Transaction($user);
         $trans_form   = $this->createForm(TransactionType::class, $trans_entity);

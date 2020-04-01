@@ -65,3 +65,11 @@
     }
   }
 }
+
+@include media-breakpoint-up(xxl) {
+  .card {
+    .list-transactions {
+      max-height: 35rem;
+    }
+  }
+}

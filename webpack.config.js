@@ -36,6 +36,8 @@ Encore
     // CSS only
     // .addStyleEntry('kakeibo',       './assets/css/kakeibo.scss')
     .addStyleEntry('kakeibo-dark',  './assets/css/kakeibo-dark.scss')
+    .addStyleEntry('kakeibo--blue',  './assets/css/kakeibo--blue.scss')
+    .addStyleEntry('kakeibo--blue-dark',  './assets/css/kakeibo--blue-dark.scss')
 
     // Vendors
     .createSharedEntry('vendors', ['jquery', 'bootstrap'])

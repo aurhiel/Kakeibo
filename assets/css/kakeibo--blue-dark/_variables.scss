@@ -13,17 +13,12 @@
 
 $white:       #fff;
 
-$purple:      #6f42c1;
-// $primary:     $purple;
-$dark:        #242424;
+// $purple:      #6f42c1;
+$primary:     #54a0ff;
+$dark:        #222;
 
 $body-color:  #fff;
 $body-bg:     lighten($dark, 4%);
-
-
-$dropdown-bg:         #2d3130;
-$dropdown-color:      $body-color;
-$dropdown-link-color: $dropdown-color;
 
 
 // Bootstrap's variables ----------------

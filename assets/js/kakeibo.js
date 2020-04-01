@@ -4,74 +4,128 @@ require('../css/kakeibo.scss');
 var ChartJS = require('chart.js');
 
 var kakeibo = {
+  // Viewport sizes
+  viewport: {
+    kb: null,
+    $sizes: null,
+    last_call_size: null,
+    init: function(kb) {
+      this.kb     = kb;
+      this.$sizes = this.kb.$body.find('.viewport-sizes > *');
+      this.last_call_size = this.$sizes.filter(':visible').data('viewport-size-slug');
+    },
+    current: function() {
+      return this.$sizes.filter(':visible').data('viewport-size-slug');
+    },
+    has_change: function() {
+      var new_size = this.$sizes.filter(':visible').data('viewport-size-slug');
+      var has_change = new_size != this.last_call_size;
+
+      this.last_call_size = new_size;
+
+      return has_change;
+    }
+  },
   // ChartJS
-  $chartsJS : null,
-  init_charts: function() {
-    this.$chartsJS.each(function() {
-      var $chart = $(this),
-          canvas = $chart.find('canvas')
-          data_name   = $chart.data('chartjs-data-name'),
-          data_type   = $chart.data('chartjs-data-type'),
-          chart_type  = $chart.data('chartjs-type'),
-          chart_min   = $chart.data('chartjs-min'),
-          chart_max   = $chart.data('chartjs-max'),
-          display_legend = $chart.data('chartjs-display-legend');
-
-      if (typeof data_name != 'undefined' && typeof window[data_name] != 'undefined') {
-        var opts = {};
-        var data = window[data_name];
-
-        if (typeof chart_min != 'undefined' && typeof chart_max != 'undefined') {
-          opts.scale = {
-            ticks : {
-              min : chart_min,
-              max : chart_max
-            }
-          };
+  chartJS: {
+    kb: null,
+    $items: null,
+    is_legend_visible: function(hide_sizes) {
+      var show = true;
+      for (var i = 0; i < hide_sizes.length; i++) {
+        if (kakeibo.viewport.current() == hide_sizes[i]) {
+          show = false;
+          break;
         }
+      }
+      return show;
+    },
+    init: function(kb) {
+      var self    = this;
+      this.kb     = kb;
+      this.$items = this.kb.$body.find('.chart-js');
 
-        if (typeof display_legend != 'undefined') {
-          opts.legend = {
-            display : display_legend
+      this.$items.each(function() {
+        var $chart = $(this),
+            canvas = $chart.find('canvas')
+            data_name   = $chart.data('chartjs-data-name'),
+            data_type   = $chart.data('chartjs-data-type'),
+            chart_type  = $chart.data('chartjs-type'),
+            chart_min   = $chart.data('chartjs-min'),
+            chart_max   = $chart.data('chartjs-max'),
+            legend_display    = (typeof $chart.data('chartjs-legend-display') != 'undefined') ? $chart.data('chartjs-legend-display') : true
+            legend_position   = $chart.data('chartjs-legend-position')
+            legend_hide_sizes = (typeof $chart.data('chartjs-legend-hide') == 'string') ? $chart.data('chartjs-legend-hide').split('|') : [];
+
+        if (typeof data_name != 'undefined' && typeof window[data_name] != 'undefined') {
+          var opts = {};
+          var data = window[data_name];
+
+          if (typeof chart_min != 'undefined' && typeof chart_max != 'undefined') {
+            opts.scale = {
+              ticks : {
+                min : chart_min,
+                max : chart_max
+              }
+            };
           }
-        }
 
-        // Custom tooltips
-        if (typeof data_type != 'undefined') {
-          opts.tooltips = {
-            callbacks: {
-              label: function(tooltipItem, data) {
-                // Add % character to percent data type values
-                if (data_type == 'percent') {
-                  var label = tooltipItem.value + '%';
-                  // Push counting things for percent values
-                  var datasets = data.datasets[tooltipItem.datasetIndex];
-                  if (typeof datasets != 'undefined' && typeof datasets.data_count != 'undefined') {
-                    label += ' (' + datasets.data_count[tooltipItem.index] + ' ' + datasets.label + ((datasets.data_count[tooltipItem.index] > 1) ? 's': '') + ')';
+          // Chart legend
+          if (legend_display)
+            legend_display = self.is_legend_visible(legend_hide_sizes);
+
+          opts.legend = {
+            display: legend_display
+          };
+
+          if (typeof legend_position != 'undefined')
+            opts.legend.position = legend_position;
+
+          // Custom tooltips
+          if (typeof data_type != 'undefined') {
+            opts.tooltips = {
+              callbacks: {
+                label: function(tooltipItem, data) {
+                  // Add % character to percent data type values
+                  if (data_type == 'percent') {
+                    var label = tooltipItem.value + '%';
+                    // Push counting things for percent values
+                    var datasets = data.datasets[tooltipItem.datasetIndex];
+                    if (typeof datasets != 'undefined' && typeof datasets.data_count != 'undefined') {
+                      label += ' (' + datasets.data_count[tooltipItem.index] + ' ' + datasets.label + ((datasets.data_count[tooltipItem.index] > 1) ? 's': '') + ')';
+                    }
+
+                    return label;
                   }
-
-                  return label;
                 }
               }
-            }
-          };
+            };
+          }
+
+          var chartJS = new Chart(canvas, {
+            type : chart_type,
+            data : data,
+            options : opts,
+            plugins: [{
+              resize: function() {
+                $chart.data('chartJS').options.legend.display = self.is_legend_visible(legend_hide_sizes);
+                $chart.data('chartJS').update();
+              }
+            }]
+          });
+
+          $chart.data('chartJS', chartJS);
         }
+      });
 
-        var chartJS = new Chart(canvas, {
-          type : chart_type,
-          data : data,
-          options : opts
-        });
+      // Fix for printing (NOTE: but doesn't work...)
+      function beforePrintHandler () {
+        for (var id in Chart.instances) {
+          Chart.instances[id].resize();
+        }
       }
-    });
-
-    // Fix for printing (NOTE: but doesn't work...)
-    function beforePrintHandler () {
-      for (var id in Chart.instances) {
-        Chart.instances[id].resize();
-      }
+      window.addEventListener("beforeprint", beforePrintHandler);
     }
-    window.addEventListener("beforeprint", beforePrintHandler);
   },
   // Transaction panel (add/edit transac.)
   $panel_transaction : null,
@@ -81,7 +135,7 @@ var kakeibo = {
     console.log('kakeibo.toggle_panel_transaction(' + type + ')');
 
     if (this.$panel_transaction != null && this.$panel_transaction.length > 0) {
-      // console.log('pouet: ' + type);
+      // console.log('type: ' + type);
       // console.log(this.$panel_transaction);
       // if (this.$panel_transaction.hasClass('app-panel--hide')) {
       //
@@ -105,14 +159,20 @@ var kakeibo = {
   },
   // = ~ init/construct
   launch: function() {
-    this.$body = $('body');
+    // Nodes
+    this.$body    = $('body');
+    this.$window  = $(window);
+
     this.load();
+
+    // Viewport
+    this.viewport.init(this);
 
     // Transactions
     this.$panel_transaction = this.$body.find('.app-panel--transaction-form');
 
     // Charts
-    this.$chartsJS = this.$body.find('.chart-js');
+    this.chartJS.init(this);
   }
 };
 
@@ -124,7 +184,17 @@ kakeibo.launch();
   console.log("Hi ! I'm kakeibo.js");
 
   // ====================================
-  // EVENTS =============================
+  // EVENTS / TRANSACTIONS ==============
+  kakeibo.$body.on('click', '.toggle-panel-transaction', function() {
+    kakeibo.toggle_panel_transaction($(this).data('panel-type'));
+  });
+  kakeibo.$trans_form_import = kakeibo.$body.find('.form-trans-import');
+  kakeibo.$trans_form_import.on('change', '.first-import-file', function() {
+    kakeibo.$trans_form_import.submit();
+  });
+
+  // ====================================
+  // EVENTS / TOGGLER ===================
   kakeibo.$body.on('click', '[data-toggler-class]', function(e) {
     var $this = $(this);
     var $target = (typeof $this.data('toggler-target') != 'undefined') ? kakeibo.$body.find($this.data('toggler-target')) : $this;
@@ -137,21 +207,10 @@ kakeibo.launch();
     return false;
   });
 
-
   // ====================================
-  // EVENTS / TRANSACTIONS ==============
-  kakeibo.$body.on('click', '.toggle-panel-transaction', function() {
-    kakeibo.toggle_panel_transaction($(this).data('panel-type'));
-  });
-  kakeibo.$trans_form_import = kakeibo.$body.find('.form-trans-import');
-  kakeibo.$trans_form_import.on('change', '.first-import-file', function() {
-    kakeibo.$trans_form_import.submit();
-  });
-
-
-  // ====================================
-  // CHART JS ===========================
-  kakeibo.init_charts();
+  // EVENTS / RESIZE ====================
+  // kakeibo.$window.on('resize', function(e) {
+  // });
 
 
   // ====================================

@@ -30,17 +30,19 @@ class TransactionsController extends Controller
         // User has a bank account
         $default_bank_account = $user->getDefaultBankAccount();
 
-        // Build the transaction form
-        $trans_entity = new Transaction();
-        $trans_form   = $this->createForm(TransactionType::class, $trans_entity);
-
         // Force user to add or import transaction(s) first
         if (count($default_bank_account->getTransactions()) < 1)
             return $this->redirectToRoute('ignition-first-transaction');
 
-        // $em = $this->getDoctrine()->getManager();
-        // $r_trans = $em->getRepository(Transaction::class);
-        // dump($r_trans->findByBankAccount($default_bank_account));
+        // Build the transaction form
+        $trans_entity = new Transaction();
+        $trans_form   = $this->createForm(TransactionType::class, $trans_entity);
+
+        $em = $this->getDoctrine()->getManager();
+        $r_trans  = $em->getRepository(Transaction::class);
+
+        $total_incomes  = (float) $r_trans->findTotal($default_bank_account, null, null, 'incomes');
+        $total_expenses = (float) $r_trans->findTotal($default_bank_account, null, null, 'expenses');
 
         return $this->render('transactions/index.html.twig', [
             'page_title'            => '<span class="icon icon-edit"></span> Transactions',
@@ -50,6 +52,8 @@ class TransactionsController extends Controller
             'user'                  => $user,
             'current_bank_account'  => $default_bank_account,
             'transactions'          => $default_bank_account->getTransactions(),
+            'total_incomes'         => $total_incomes,
+            'total_expenses'        => $total_expenses,
             'form_transaction'      => $trans_form->createView()
         ]);
     }

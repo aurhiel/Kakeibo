@@ -1,7 +1,6 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-  {% set default_bank_account = app.user.getDefaultBankAccount() %}
   <div class="container">
     <div class="row">
       <div class="col-12 col-md-7 col-xl-6 col-xxl-7">
@@ -28,16 +27,16 @@
 
       <hr class="w-75 my-4 d-md-none" />
 
-      <div class="col-12 col-md-5 col-xl-6 col-xxl-5">
+      <div class="col-12 col-md-5 col-xl-6 col-xxl-5 order-first order-md-last">
         {% include 'components/incomes-and-expenses.html.twig' with {
           expenses: total_expenses,
           incomes: total_incomes,
           month: totals_month,
           year: totals_year,
-          bank_account: default_bank_account
+          bank_account: current_bank_account
         } %}
 
-        <div class="card">
+        <div class="card d-none d-md-block">
           <div class="card-header d-flex align-items-center">
             <div class="col pl-0">
               <h3 class="h5 mb-0">

@@ -8,7 +8,6 @@
 
 .card {
   .list-transactions {
-    max-height: 25rem;
     overflow: auto;
   }
 
@@ -51,10 +50,18 @@
 // Responsive
 //
 
+@include media-breakpoint-up(sm) {
+  .card {
+    .list-transactions {
+      max-height: 28rem;
+    }
+  }
+}
+
 @include media-breakpoint-up(xl) {
   .card {
     .list-transactions {
-      max-height: 30rem;
+      max-height: 25rem;
     }
   }
 }

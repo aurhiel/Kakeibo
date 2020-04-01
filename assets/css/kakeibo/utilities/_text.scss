@@ -1,0 +1,41 @@
+// Text
+//
+
+
+// Muted
+.text-muted {
+  opacity: $text-muted-opacity;
+}
+
+// Price
+.text-price {
+  font-family: $price-font-family;
+}
+
+// Shadow
+.text-shadow {
+  text-shadow: .07em .07em 0 rgba(0, 0, 0, .05);
+}
+
+// No wrap
+.no-wrap {
+  white-space: nowrap;
+}
+
+// Required
+.required {
+    &:after, &:before {
+        color: $red;
+        font-weight: bold;
+        font-size: .75rem;
+        position: relative;
+        top: -.15rem;
+    }
+
+    &:after { content: ' *'; }
+
+    &--prepend {
+        &:after { content: ''; }
+        &:before { content: '* '; }
+    }
+}

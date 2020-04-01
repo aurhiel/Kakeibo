@@ -4,7 +4,7 @@
   {% set default_bank_account = app.user.getDefaultBankAccount() %}
   <div class="container">
     <div class="row">
-      <div class="col-12 col-md-7">
+      <div class="col-12 col-md-7 col-xl-6 col-xxl-7">
         {% embed 'components/transactions/list.html.twig' with {
           title: 'Vos dernières transactions',
           transactions: last_transactions
@@ -28,23 +28,29 @@
 
       <hr class="w-75 my-4 d-md-none" />
 
-      <div class="col-12 col-md-5">
+      <div class="col-12 col-md-5 col-xl-6 col-xxl-5">
+        {% include 'components/incomes-and-expenses.html.twig' with {
+          expenses: total_expenses,
+          incomes: total_incomes,
+          month: totals_month,
+          year: totals_year,
+          bank_account: default_bank_account
+        } %}
+
         <div class="card">
-          <div class="card-header">
-            <h3 class="h5 mb-0">
-              Statistiques de {{ date('01-' ~ totals_month ~ '-' ~ totals_month)|localizeddate('none', 'none', 'fr', 'Europe/Paris', 'MMMM')|capitalize }}
-            </h3>
+          <div class="card-header d-flex align-items-center">
+            <div class="col pl-0">
+              <h3 class="h5 mb-0">
+                Statistiques de {{ date('01-' ~ totals_month ~ '-' ~ totals_year)|localizeddate('none', 'none', 'fr', 'Europe/Paris', 'MMMM')|capitalize }}
+              </h3>
+            </div>
+            <div class="col-auto px-0">
+              <a href="{{ path('statistics')}}" class="btn btn-sm btn-outline-primary">
+                Voir plus <span class="icon-chevron-right"></span>
+              </a>
+            </div>
           </div>
           <div class="card-body text-center">
-            <div class="mb-4">
-              {% include 'components/price.html.twig' with {
-                amount    : total_incomes,
-                currency  : default_bank_account.currency.label } %} /
-              {% include 'components/price.html.twig' with {
-                amount    : total_expenses,
-                currency  : default_bank_account.currency.label } %}
-            </div>
-
             <div class="chart-js mb-3" data-chartjs-type="pie" data-chartjs-data-name="total_expenses"
               data-chartjs-legend-position="right" data-chartjs-legend-hide="xs|sm|md|lg">
               <canvas></canvas>
@@ -84,11 +90,6 @@
                 total_incomes.datasets[0].backgroundColor.push('{{ inc.color }}');
               { % endfor % #}
             </script>
-          </div>
-          <div class="card-footer text-right">
-            <a href="{{ path('statistics')}}" class="btn btn-sm btn-outline-primary">
-              Voir plus <span class="icon-chevron-right"></span>
-            </a>
           </div>
         </div>
       </div>

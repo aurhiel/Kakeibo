@@ -88,6 +88,11 @@
     content: $icon-plus-square;
   }
 }
+.icon-power {
+  &:before {
+    content: $icon-power;
+  }
+}
 .icon-save {
   &:before {
     content: $icon-save;

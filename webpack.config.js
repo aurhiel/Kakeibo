@@ -45,7 +45,7 @@ Encore
       fonts: [
           { family: "Cabin", variants: [ "400", "700" ] },
           { family: "Arvo", variants: [ "400", "700" ] },
-          { family: "Nova Mono", variants: [ "400" ] },
+          { family: "Roboto Mono", variants: [ "400", "700" ] },
           { family: "Montserrat", variants: [ "300" ] },
       ],
       "path": "fonts/google/",

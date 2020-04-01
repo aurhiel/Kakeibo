@@ -6,12 +6,10 @@ var ChartJS = require('chart.js');
 var kakeibo = {
   // Viewport sizes
   viewport: {
-    kb: null,
     $sizes: null,
     last_call_size: null,
-    init: function(kb) {
-      this.kb     = kb;
-      this.$sizes = this.kb.$body.find('.viewport-sizes > *');
+    init: function() {
+      this.$sizes = kakeibo.$body.find('.viewport-sizes > *');
       this.last_call_size = this.$sizes.filter(':visible').data('viewport-size-slug');
     },
     current: function() {
@@ -28,7 +26,6 @@ var kakeibo = {
   },
   // ChartJS
   chartJS: {
-    kb: null,
     $items: null,
     is_legend_visible: function(hide_sizes) {
       var show = true;
@@ -40,10 +37,9 @@ var kakeibo = {
       }
       return show;
     },
-    init: function(kb) {
+    init: function() {
       var self    = this;
-      this.kb     = kb;
-      this.$items = this.kb.$body.find('.chart-js');
+      this.$items = kakeibo.$body.find('.chart-js');
 
       this.$items.each(function() {
         var $chart = $(this),
@@ -131,8 +127,7 @@ var kakeibo = {
   $panel_transaction : null,
   toggle_panel_transaction : function(type) {
     type = (typeof type == 'undefined') ? 'add' : type;
-
-    console.log('kakeibo.toggle_panel_transaction(' + type + ')');
+    // console.log('kakeibo.toggle_panel_transaction(' + type + ')');
 
     if (this.$panel_transaction != null && this.$panel_transaction.length > 0) {
       // console.log('type: ' + type);

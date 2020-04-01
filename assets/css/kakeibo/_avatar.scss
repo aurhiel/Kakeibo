@@ -86,4 +86,8 @@ $avatar-height:         $avatar-width !default;
   height: 100%;
   align-items: center;
   justify-content: center;
+
+  &-big {
+    font-size: 1.4em
+  }
 }

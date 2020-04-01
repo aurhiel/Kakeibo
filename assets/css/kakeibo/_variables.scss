@@ -27,7 +27,7 @@ $gray-800:      #343a40 !default;
 $black:         #000 !default;
 
 // $purple:      #6f42c1 !default;
-$primary:     #1bbc9c !default; //#3ecc9e !default; // #7bc755 !default;
+$primary:     #1abc9c !default; //#3ecc9e !default; // #7bc755 !default;
 $light:       $gray-100 !default;
 $dark:        $gray-800 !default;
 
@@ -36,7 +36,7 @@ $orange:  #ff9f43;
 $yellow:  #feca57;
 $green:   #2ecc71;
 $cyan:    #00a8ff;
-// $teal: #20c997;
+$teal:    #1dd1a1;
 
 $body-bg:     $gray-100 !default;
 $body-color:  $gray-800 !default;
@@ -45,7 +45,6 @@ $body-color:  $gray-800 !default;
 $border-radius:     .375rem !default;
 $border-radius-lg:  .5rem !default;
 $border-radius-sm:  .25rem !default;
-
 
 
 // Fonts
@@ -59,7 +58,6 @@ $hr-border-color:           rgba($black, .05) !default;
 
 
 // Header
-
 $header-bg:                     $dark !default;
 $header-color:                  $white !default;
 $header-title-padding-y:        .8rem;
@@ -77,7 +75,6 @@ $header-title-margin-bottom-lg: 1rem;
 
 
 // Navbar
-
 $navbar-brand-font-size: 1.6rem !default;
 
 // Navbar Default
@@ -93,21 +90,44 @@ $navbar-default-toggler-lines-height:   .15rem;
 
 
 // Cards
-
 $card-border-color:     rgba($black, .075) !default;
 $card-border-radius:    $border-radius-lg !default;
 
 
 
 // Dropdowns
-
 $dropdown-border-color: rgba($black, .075) !default;
 
 
 
 // Text selection
-
 $text-selection-bg:     rgba($primary, .5) !default;
+
+
+
+// Grid breakpoints
+//
+// Define the minimum dimensions at which your layout will change,
+// adapting to different screen sizes, for use in media queries.
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px
+);
+
+// Grid containers
+//
+// Define the maximum width of `.container` for different screen sizes.
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px,
+  xxl: 1340px
+);
 
 
 // Bootstrap's variables ----------------
@@ -139,7 +159,7 @@ $page-header-decoration-width:  2.8em !default;
 $page-header-decoration-height: .16em !default;
 
 // Price text
-$price-font-family: "Nova Mono", monospace !default;
+$price-font-family: "Roboto Mono", monospace !default;
 
 
 
@@ -182,7 +202,6 @@ $list-trans--item-date-bg:            $light !default;
 // Trans:Columns:Icon
 $list-trans--col-icon-size:           1rem !default;
 $list-trans--col-icon-size-md:        1.2rem !default;
-$list-trans--col-icon-max-width:      2.4em !default;
 $list-trans--col-icon-avatar-size:    .778em !default;
 // Trans:Columns:Price
 $list-trans--col-price-max-width:     6.4em !default;

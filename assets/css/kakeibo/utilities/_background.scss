@@ -1,0 +1,15 @@
+.bg-gradient-danger {
+  background: linear-gradient(87deg, $red 0, $orange 100%) !important;
+}
+
+.bg-gradient-warning {
+  background: linear-gradient(87deg, $yellow 0, $orange 100%) !important;
+}
+
+.bg-gradient-success {
+  background: linear-gradient(87deg, $green 0, $teal 100%) !important;
+}
+
+.bg-gradient-primary {
+  background: linear-gradient(87deg, $primary 0, lighten($primary, 15%) 100%) !important;
+}

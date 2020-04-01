@@ -12,5 +12,5 @@ kb_dashboard.launch();
 
 // On doc ready
 (function() {
-  console.log("[dashboard] Yay !");
+  // console.log("[dashboard] Yay !");
 })();

@@ -154,6 +154,7 @@ var kakeibo = {
   },
   // = ~ init/construct
   launch: function() {
+    // console.log("Hi ! I'm kakeibo.js");
     // Nodes
     this.$body    = $('body');
     this.$window  = $(window);
@@ -176,8 +177,6 @@ kakeibo.launch();
 
 // On doc ready
 (function() {
-  console.log("Hi ! I'm kakeibo.js");
-
   // ====================================
   // EVENTS / TRANSACTIONS ==============
   kakeibo.$body.on('click', '.toggle-panel-transaction', function() {

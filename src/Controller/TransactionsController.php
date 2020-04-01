@@ -43,7 +43,7 @@ class TransactionsController extends Controller
         // dump($r_trans->findByBankAccount($default_bank_account));
 
         return $this->render('transactions/index.html.twig', [
-            'page_title'            => '<span class="icon-edit"></span> Transactions',
+            'page_title'            => '<span class="icon icon-edit"></span> Transactions',
             'core_class'            => 'app-core--transactions app-core--merge-body-in-header',
             // 'stylesheets'           => [ 'kb-dashboard.css' ],
             // 'scripts'               => [ 'kb-dashboard.js' ],
@@ -75,7 +75,13 @@ class TransactionsController extends Controller
         // 2) Handle the submit (will only happen on POST)
         $trans_form->handleRequest($request);
         if ($trans_form->isSubmitted() && $trans_form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+            $em   = $this->getDoctrine()->getManager();
+            $now  = new \DateTime();
+
+            // Force transaction time to the moment when user add it
+            $trans_date = $trans_entity->getDate();
+            $trans_date->setTime($now->format('H'), $now->format('i'), $now->format('s'));
+            $trans_entity->setDate($trans_date);
 
             // 3) Add some data to entity
             $trans_entity->setBankAccount($default_bank_account);
@@ -222,9 +228,20 @@ class TransactionsController extends Controller
             fclose($handle);
         }
 
-        // TODO Add a transaction to get $file_total = $bank_account_total
+        // Add a transaction to adjust the total to the bank account total
         if ($file_total != $bank_account_total) {
-            // CODE IT !!
+            $trans_adjustment = new Transaction();
+            $amount_adjust    = $bank_account_total - $file_total;
+            // Set adjustment data
+            $trans_adjustment
+              ->setBankAccount($default_bank_account)
+              ->setDate(new \DateTime())
+              ->setLabel("Ajustement suite à importation du fichier .csv")
+              ->setAmount($amount_adjust)
+              ->setCategory($default_category);
+
+            // Persist adjustment
+            $em->persist($trans_adjustment);
         }
 
         // 5) Try or clear the transactions

@@ -45,3 +45,16 @@
     }
   }
 }
+
+
+//
+// Responsive
+//
+
+@include media-breakpoint-up(xl) {
+  .card {
+    .list-transactions {
+      max-height: 30rem;
+    }
+  }
+}

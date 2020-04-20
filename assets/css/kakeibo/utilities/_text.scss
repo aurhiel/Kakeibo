@@ -16,6 +16,9 @@
 .text-shadow {
   text-shadow: .07em .07em 0 rgba(0, 0, 0, .1);
 }
+.text-shadow-none {
+  text-shadow: none !important;
+}
 
 // No wrap
 .no-wrap {
@@ -24,18 +27,18 @@
 
 // Required
 .required {
-    &:after, &:before {
-        color: $red;
-        font-weight: bold;
-        font-size: .75rem;
-        position: relative;
-        top: -.15rem;
-    }
+  &:after, &:before {
+    color: $red;
+    font-weight: bold;
+    font-size: .75rem;
+    position: relative;
+    top: -.15rem;
+  }
 
-    &:after { content: ' *'; }
+  &:after { content: ' *'; }
 
-    &--prepend {
-        &:after { content: ''; }
-        &:before { content: '* '; }
-    }
+  &--prepend {
+    &:after { content: ''; }
+    &:before { content: '* '; }
+  }
 }

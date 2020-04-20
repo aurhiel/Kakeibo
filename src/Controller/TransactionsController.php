@@ -63,7 +63,23 @@ class TransactionsController extends Controller
      */
     public function manage(Security $security, Request $request)
     {
-        $user = $security->getUser();
+        $user     = $security->getUser();
+        $em       = $this->getDoctrine()->getManager();
+        $id_trans = (int) $request->request->get('id');
+        $is_edit  = (!empty($id_trans) && $id_trans > 0); // Edit transaction ?
+
+        if($is_edit) {
+            // Get transaction to edit with id AND user (for security)
+            $r_trans      = $em->getRepository(Transaction::class);
+            $trans_entity = $r_trans->findOneByIdAndUser($id_trans, $user);
+            $message_status_ok  = 'Modificiation de la transaction effectuée.';
+            $message_status_nok = 'Un problème est survenu lors de la modification de la transaction';
+        } else {
+            // New Entity
+            $trans_entity = new Transaction();
+            $message_status_ok  = 'Ajout de la transaction effectuée.';
+            $message_status_nok = 'Un problème est survenu lors de l\'ajout de la transaction';
+        }
 
         // Force user to create at least ONE bank account !
         if (count($user->getBankAccounts()) < 1)
@@ -71,22 +87,20 @@ class TransactionsController extends Controller
 
         // User has a bank account
         $default_bank_account = $user->getDefaultBankAccount();
+        // Data to return/display
+        $return_data = array(
+            'query_status'      => 0,
+            'slug_status'       => 'error',
+            'message_status'    => $message_status_nok
+        );
 
         // 1) Build the form
-        $trans_entity = new Transaction();
-        $trans_form   = $this->createForm(TransactionType::class, $trans_entity);
+        $trans_form = $this->createForm(TransactionType::class, $trans_entity);
 
         // 2) Handle the submit (will only happen on POST)
         $trans_form->handleRequest($request);
+
         if ($trans_form->isSubmitted() && $trans_form->isValid()) {
-            $em   = $this->getDoctrine()->getManager();
-            $now  = new \DateTime();
-
-            // Force transaction time to the moment when user add it
-            $trans_date = $trans_entity->getDate();
-            $trans_date->setTime($now->format('H'), $now->format('i'), $now->format('s'));
-            $trans_entity->setDate($trans_date);
-
             // 3) Add some data to entity
             $trans_entity->setBankAccount($default_bank_account);
 
@@ -97,21 +111,54 @@ class TransactionsController extends Controller
             try {
                 // Flush OK !
                 $em->flush();
-
-                // Add success message
-                $request->getSession()->getFlashBag()->add('success', 'Ajout de la transaction effectuée avec succès.');
-
-                // Redirect to Dashboard
-                return $this->redirectToRoute('dashboard');
+                $return_data = array(
+                    'query_status'    => 1,
+                    'slug_status'     => 'success',
+                    'message_status'  => $message_status_ok,
+                    'entity'          => self::format_json($trans_entity)
+                );
             } catch (\Exception $e) {
                 // Something goes wrong
-                $request->getSession()->getFlashBag()->add('error', 'Une erreur inconnue est survenue, veuillez essayer de nouveau.');
                 $em->clear();
+                // Store exception message
+                $return_data['exception'] = $e->getMessage();
             }
         }
 
         if ($request->isXmlHttpRequest()) {
-            return $this->json($trans_entity);
+            return $this->json($return_data);
+        } else {
+            // Set message in flashbag on direct access
+            $request->getSession()->getFlashBag()->add($return_data['slug_status'], $return_data['message_status']);
+
+            // Redirect to dashboard
+            return $this->redirectToRoute('dashboard');
+        }
+    }
+
+    /**
+     * @Route("/trans/get/{id}", name="transaction_get")
+     */
+    public function retrieve($id, Security $security, Request $request)
+    {
+        $user     = $security->getUser();
+        $em       = $this->getDoctrine()->getManager();
+        $r_trans  = $em->getRepository(Transaction::class);
+        $data     = [ 'query_status' => 0, 'slug_status' => 'error', 'message_status' => 'Error...' ];
+        // Retrieve transaction with id AND user (for security)
+        $trans    = $r_trans->findOneByIdAndUser($id, $user);
+
+        if (!is_null($trans)) {
+            $data = [
+                'query_status'    => 1,
+                'slug_status'     => 'success',
+                'message_status'  => 'Success !',
+                'entity'          => self::format_json($trans)
+            ];
+        }
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->json($data);
         } else {
             // No direct access
             return $this->redirectToRoute('dashboard');
@@ -119,11 +166,58 @@ class TransactionsController extends Controller
     }
 
     /**
-     * @Route("/trans/remove", name="transaction_remove")
+     * @Route("/trans/delete/{id}", name="transaction_delete")
      */
-    public function remove()
+    public function delete($id, Security $security, Request $request)
     {
+        $user     = $security->getUser();
+        $em       = $this->getDoctrine()->getManager();
+        $r_trans  = $em->getRepository(Transaction::class);
+        // Retrieve transaction with id AND user (for security)
+        $trans    = $r_trans->findOneByIdAndUser($id, $user);
+        $return_data = [
+            'query_status'    => 0,
+            'slug_status'     => 'error',
+            'message_status'  => 'Un problème est survenu lors de la suppression de la transaction'
+        ];
 
+        if(!is_null($trans)) {
+            $em               = $this->getDoctrine()->getManager();
+            $trans_deleted    = $trans;
+            $id_trans_deleted = $trans_deleted->getId();
+
+            // Remove entity
+            $em->remove($trans);
+
+            // Try to save (flush) or clear entity remove
+            try {
+                // Flush OK !
+                $em->flush();
+
+                $return_data = [
+                    'query_status'    => 1,
+                    'slug_status'     => 'success',
+                    'message_status'  => 'Suppression de la transaction effectuée.',
+                    'entity'          => [ 'id' => $id_trans_deleted ]
+                ];
+            } catch (\Exception $e) {
+                // Something goes wrong
+                $em->clear();
+                // Store exception message
+                $return_data['exception'] = $e->getMessage();
+            }
+        } else {
+            $return_data['message_status'] = 'Aucune transaction n\'existe pour cet ID';
+        }
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->json($return_data);
+        } else {
+            // Set message in flashbag on direct access
+            $request->getSession()->getFlashBag()->add($return_data['slug_status'], $return_data['message_status']);
+            // Redirect to dashboard
+            return $this->redirectToRoute('dashboard');
+        }
     }
 
 
@@ -271,7 +365,7 @@ class TransactionsController extends Controller
         }
     }
 
-    public static function findCategoryAccordingToLabel($categories, $label)
+    private static function findCategoryAccordingToLabel($categories, $label)
     {
         $category = null;
         foreach($categories as $cat) {
@@ -286,5 +380,17 @@ class TransactionsController extends Controller
         }
 
         return $category;
+    }
+
+    private static function format_json($transaction)
+    {
+        return [
+            'id'        => $transaction->getId(),
+            'date'      => $transaction->getDate()->format('Y-m-d'),
+            'amount'    => $transaction->getAmount(),
+            'label'     => $transaction->getLabel(),
+            'details'   => $transaction->getDetails(),
+            'category'  => $transaction->getCategory()->getId(),
+        ];
     }
 }

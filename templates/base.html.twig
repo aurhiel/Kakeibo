@@ -50,7 +50,7 @@
     <div id="app" class="app-body{% if body_class is defined %} {{ body_class }}{% endif %}">
       {# Notices/Errors messages from "flashbag" #}
       {% block flashes %}
-        <div class="container">{% include 'components/flashes.html.twig' %}</div>
+        <div class="app-flashbags container">{% include 'components/flashes.html.twig' %}</div>
       {% endblock %}
 
       {# Body #}
@@ -73,17 +73,24 @@
     {% if app.user is defined and app.user is not null and form_transaction is defined %}
       <div class="app-panel app-panel--top app-panel--transaction-form">
         <div class="-inner container">
-          {{ form_start(form_transaction, { 'action': path('transaction_manage') }) }}
+          {{ form_start(form_transaction, { 'action': path('transaction_manage'), 'attr' : { 'class': '-use-ajax-submit' } }) }}
             {% include 'components/forms/transaction.html.twig' %}
 
             <div class="mt-2 text-center">
-              <button class="btn btn-sm btn-outline-light mx-1 toggle-panel-transaction" type="button">
+              <button class="btn btn-sm btn-outline-light mx-1 toggle-panel-transaction"
+                type="button" data-panel-type="close">
                 Annuler
               </button>
 
               <button class="btn btn-primary mx-1" type="submit" name="submit">
-                <span class="icon icon-plus-square"></span>
-                Ajouter
+                <span class="d-edit-none">
+                  <span class="icon icon-plus-square"></span>
+                  Ajouter
+                </span>
+                <span class="d-edit-inline-block">
+                  <span class="icon icon-edit"></span>
+                  Modifier
+                </span>
               </button>
             </div>
           {{ form_end(form_transaction) }}

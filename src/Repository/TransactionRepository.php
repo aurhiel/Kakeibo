@@ -19,6 +19,19 @@ class TransactionRepository extends ServiceEntityRepository
         parent::__construct($registry, Transaction::class);
     }
 
+    public function findOneByIdAndUser($id, $user)
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.id = :id')
+            ->setParameter('id', $id)
+            ->join('t.bank_account', 'ba')
+            ->andWhere('ba.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
     /**
      * @return Transaction[] Returns an array of Transaction objects
      */
@@ -27,6 +40,7 @@ class TransactionRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('t')
             ->andWhere('t.bank_account = :bank_account')
             ->setParameter('bank_account', $bank_account)
+            ->andWhere('t.date <= CURRENT_DATE()')
             ->orderBy('t.date', 'DESC')
             ->setMaxResults((int) $max_results)
             ->getQuery()
@@ -39,7 +53,8 @@ class TransactionRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('t')
             ->select('SUM(t.amount) AS amount_sum')
             ->andWhere('t.bank_account = :bank_account')
-            ->setParameter('bank_account', $bank_account);
+            ->setParameter('bank_account', $bank_account)
+            ->andWhere('t.date <= CURRENT_DATE()');
 
         // WHERE: Incomes or Expenses ?
         if ($spent_type == 'incomes') $qb->andWhere('t.amount > 0');
@@ -61,7 +76,8 @@ class TransactionRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('t')
             ->select('SUM(t.amount) AS amount_sum')
             ->andWhere('t.bank_account = :bank_account')
-            ->setParameter('bank_account', $bank_account);
+            ->setParameter('bank_account', $bank_account)
+            ->andWhere('t.date <= CURRENT_DATE()');
 
         // WHERE: Incomes or Expenses ?
         if ($spent_type == 'incomes') $qb->andWhere('t.amount > 0');

@@ -5,13 +5,13 @@
 {% block form_label_errors %}{% endblock %}
 
 <div class="form-row">
-  <div class="col-lg-6 mb-3">
+  <div class="col-sm-6 mb-3">
     {{ form_label(form_transaction.date) }}
     {{ form_widget(form_transaction.date) }}
     {{ form_errors(form_transaction.date) }}
   </div>
 
-  <div class="col-lg-6 mb-3">
+  <div class="col-sm-6 mb-3">
     {{ form_label(form_transaction.amount) }}
     <div class="input-group">
       {{ form_widget(form_transaction.amount) }}
@@ -24,13 +24,13 @@
 </div>
 
 <div class="form-row">
-  <div class="col-lg-6 mb-3">
+  <div class="col-sm-6 mb-3">
     {{ form_label(form_transaction.label) }}
     {{ form_widget(form_transaction.label) }}
     {{ form_errors(form_transaction.label) }}
   </div>
 
-  <div class="col-lg-6 mb-3">
+  <div class="col-sm-6 mb-3">
     {{ form_label(form_transaction.category) }}
     {{ form_widget(form_transaction.category) }}
     {{ form_errors(form_transaction.category) }}

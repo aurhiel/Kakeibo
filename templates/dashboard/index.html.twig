@@ -40,7 +40,9 @@
           <div class="card-header d-flex align-items-center">
             <div class="col pl-0">
               <h3 class="h5 mb-0">
-                Statistiques de {{ date('01-' ~ totals_month ~ '-' ~ totals_year)|localizeddate('none', 'none', 'fr', 'Europe/Paris', 'MMMM')|capitalize }}
+                {% set month_literal = date('01-' ~ totals_month ~ '-' ~ totals_year)|localizeddate('none', 'none', 'fr', 'Europe/Paris', 'MMMM') %}
+                {% set from_literal = month_literal|first in ['a', 'e', 'i', 'o', 'u'] ? "d'": "de " %}
+                Statistiques {{ from_literal }}{{ month_literal|capitalize }}
               </h3>
             </div>
             <div class="col-auto px-0">

@@ -116,8 +116,12 @@ class BankAccount
     public function getBalance(): float
     {
         if (is_null($this->balance) === true) {
+            $now = new \DateTime();
             foreach ($this->transactions as $key => $transaction) {
-                $this->balance += $transaction->getAmount();
+                // Add transaction only when < current date ($now)
+                //  (future transactions will be displayed elsewhere)
+                if ($transaction->getDate() <= $now)
+                    $this->balance += $transaction->getAmount();
             }
         }
 

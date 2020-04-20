@@ -2,20 +2,25 @@
 
 {% block body %}
 <div class="container">
-  {% include 'components/incomes-and-expenses.html.twig' with {
-    expenses: total_expenses,
-    incomes: total_incomes,
-    bank_account: current_bank_account
-  } %}
+  <div class="row">
+    <div class="col-12 col-md-7 col-xl-8 col-xxl-9 mb-4">
+      {% embed 'components/transactions/list.html.twig' %}
+        {% block footer %}
+          <div class="card-footer">
+            <span class="badge badge-warning text-price">TODO (pagination & filters)</span>
+          </div>
+        {% endblock %}
+      {% endembed %}
+    </div>
 
-  <div class="mb-4">
-    {% embed 'components/transactions/list.html.twig' %}
-      {% block footer %}
-        <div class="card-footer">
-          <span class="badge badge-warning text-price">TODO (pagination & filters)</span>
-        </div>
-      {% endblock %}
-    {% endembed %}
+    <div class="col-12 col-md-5 col-xl-4 col-xxl-3">
+      {% include 'components/incomes-and-expenses.html.twig' with {
+        expenses: total_expenses,
+        incomes: total_incomes,
+        bank_account: current_bank_account,
+        full_width: true
+      } %}
+    </div>
   </div>
 </div>
 {% endblock %}

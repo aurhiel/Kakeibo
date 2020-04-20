@@ -62,11 +62,12 @@
               <span class="dot"></span>
             </span>
             <div class="dropdown-menu dropdown-menu-right text-right">
-              <a class="dropdown-item btn-edit-transac" href="#edit-{{ transac.id }}">
+              <button class="dropdown-item btn-edit-transac toggle-panel-transaction"
+                type="button" data-panel-type="edit" data-panel-id-edit="{{ transac.id }}">
                 Modifier
                 <span class="ml-1 icon icon-edit"></span>
-              </a>
-              <a class="dropdown-item btn-delete-transac" href="#delete-{{ transac.id }}">
+              </button>
+              <a class="dropdown-item btn-delete-transac" href="{{ path('transaction_delete', { id: transac.id }) }}">
                 Supprimer
                 <span class="ml-1 icon icon-trash"></span>
               </a>

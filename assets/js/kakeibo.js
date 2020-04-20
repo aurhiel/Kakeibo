@@ -124,21 +124,116 @@ var kakeibo = {
     }
   },
   // Transaction panel (add/edit transac.)
-  $panel_transaction : null,
-  toggle_panel_transaction : function(type) {
-    type = (typeof type == 'undefined') ? 'add' : type;
-    // console.log('kakeibo.toggle_panel_transaction(' + type + ')');
+  transaction: {
+    $panel: null,
+    init: function() {
+      var self = this;
+      this.$panel = kakeibo.$body.find('.app-panel--transaction-form');
 
-    if (this.$panel_transaction != null && this.$panel_transaction.length > 0) {
-      // console.log('type: ' + type);
-      // console.log(this.$panel_transaction);
-      // if (this.$panel_transaction.hasClass('app-panel--hide')) {
-      //
-      // }
-      this.$body.toggleClass('app-panel--transaction-form--show');
-      // TODO : load transaction data when type = "edit"
-    } else {
-      console.warn('Must define a valid kakeibo.$panel_transaction');
+      kakeibo.$body.on('click', '.toggle-panel-transaction', function() {
+        var $btn = $(this);
+        self.toggle_panel($btn.data('panel-type'), $btn.data('panel-id-edit'));
+      });
+    },
+    url_load: '/trans/get/',
+    load: function(id_trans, callback) {
+      $.ajax({
+        url     : this.url_load + id_trans,
+        success : function(response) {
+          callback(response);
+        },
+        error   : function(response) {
+          console.warn(response);
+        }
+      });
+    },
+    update_entity_nodes: function(data) {
+      console.log('[transaction.update_entity_nodes]', data);
+      this.toggle_panel('close');
+    },
+    // toggle_panel = add / edit transaction (toggle_panel())
+    toggle_panel: function(type, id_edit) {
+      var self = this;
+      type = (typeof type == 'undefined') ? 'add' : type;
+
+      if (self.$panel!= null && self.$panel.length > 0) {
+        // Display/Hide panel
+        kakeibo.$body.toggleClass('app-panel--transaction-form--show');
+        self.$panel.removeClass('-is-edit');
+
+        // Load transaction data into form on edit
+        if (type == 'edit') {
+          id_edit = parseInt(id_edit);
+
+          if (id_edit > 0) {
+            self.$panel.addClass('-is-loading')
+              .addClass('-is-edit');
+
+            // load transaction data & fill form with them
+            self.load(id_edit, function(r) {
+              kakeibo.forms.fill('transaction', r.entity);
+              self.$panel.removeClass('-is-loading');
+            });
+          } else {
+            console.warn('[transaction.toggle_panel] invalid ID transaction, something went wrong...');
+          }
+        } else if (type == 'close') {
+          console.log('[transaction.toggle_panel] clear form ?');
+          kakeibo.forms.clear('transaction');
+        }
+      } else {
+        // console.warn('Must define a valid kakeibo.$transaction');
+      }
+    }
+  },
+  forms: {
+    $items : null,
+    init: function() {
+      var self = this;
+      this.$items = kakeibo.$body.find('form');
+
+      this.$items.filter('.-use-ajax-submit').on('submit', function(e) {
+        self.submit(this);
+
+        e.stopPropagation();
+        e.preventDefault();
+        return false;
+      });
+    },
+    // ajax submit
+    submit: function(form) {
+      var $form = $(form);
+      $.ajax({
+        method  : $form.attr('method'),
+        url     : $form.attr('action'),
+        data    : $form.serialize(),
+        success : function(r) {
+          // Call entity updater
+          if (typeof kakeibo[$form.attr('name')]['update_entity_nodes'] != 'undefined')
+            kakeibo[$form.attr('name')]['update_entity_nodes'](r);
+        },
+        error   : function() { /* TODO */ }
+      })
+    },
+    fill: function(name, data) {
+      var $form = this.$items.filter('[name="' + name + '"]');
+
+      // Force input hidden for id
+      $form.append($('<input type="hidden" name="id" id="' + name + '_id" required="required">'));
+
+      // Fill inputs
+      for (const property in data) {
+        $form.find('#'+ name +'_' + property).val(data[property]);
+      }
+    },
+    clear: function(name) {
+      var $form = this.$items.filter('[name="' + name + '"]');
+
+      // Delete hidden input for id
+      $form.find('#' + name + '_id').remove();
+
+      // Clear inputs (TODO)
+      console.log('TODO full clear form !');
     }
   },
   // Loader
@@ -152,68 +247,79 @@ var kakeibo = {
     this.is_loading = false;
     this.$body.removeClass(this.loading_class);
   },
-  // = ~ init/construct
-  launch: function() {
+  // = ~ preload
+  lock: function() {
     // console.log("Hi ! I'm kakeibo.js");
     // Nodes
     this.$body    = $('body');
     this.$window  = $(window);
 
+    // Set loading
     this.load();
+  },
+  // = ~ init/construct
+  launch: function() {
+    // ====================================
+    // PLUGINS ============================
+    // Forms
+    this.forms.init();
 
     // Viewport
-    this.viewport.init(this);
+    this.viewport.init();
 
-    // Transactions
-    this.$panel_transaction = this.$body.find('.app-panel--transaction-form');
+    // Wallet = Transactions manager
+    this.transaction.init();
 
     // Charts
-    this.chartJS.init(this);
+    this.chartJS.init();
+
+
+    // ====================================
+    // EVENTS / TRANSACTIONS ==============
+    kakeibo.$trans_form_import = this.forms.$items.filter('.form-trans-import');
+    kakeibo.$trans_form_import.on('change', '.first-import-file', function() {
+      kakeibo.$trans_form_import.submit();
+    });
+    // Close panel on click on loader
+    kakeibo.$body.on('click', '.app-loader', function() {
+      kakeibo.transaction.toggle_panel('close');
+    });
+
+    // ====================================
+    // EVENTS / TOGGLER ===================
+    kakeibo.$body.on('click', '[data-toggler-class]', function(e) {
+      var $this = $(this);
+      var $target = (typeof $this.data('toggler-target') != 'undefined') ? kakeibo.$body.find($this.data('toggler-target')) : $this;
+
+      // Toggle class from data attribute
+      $target.toggleClass($this.data('toggler-class'));
+
+      e.stopPropagation();
+      e.preventDefault();
+      return false;
+    });
+
+    // ====================================
+    // EVENTS / RESIZE ====================
+    // kakeibo.$window.on('resize', function(e) {
+    // });
+
+    // ====================================
+    // UNLOAD (delay before hide "loading")
+    setTimeout(function() {
+      kakeibo.unload();
+    }, 400);
   }
 };
 
-// Rocket launcher !
-kakeibo.launch();
+// Lock / preload
+kakeibo.lock();
 
 // On doc ready
 (function() {
-  // ====================================
-  // EVENTS / TRANSACTIONS ==============
-  kakeibo.$body.on('click', '.toggle-panel-transaction', function() {
-    kakeibo.toggle_panel_transaction($(this).data('panel-type'));
-  });
-  kakeibo.$trans_form_import = kakeibo.$body.find('.form-trans-import');
-  kakeibo.$trans_form_import.on('change', '.first-import-file', function() {
-    kakeibo.$trans_form_import.submit();
-  });
-
-  // ====================================
-  // EVENTS / TOGGLER ===================
-  kakeibo.$body.on('click', '[data-toggler-class]', function(e) {
-    var $this = $(this);
-    var $target = (typeof $this.data('toggler-target') != 'undefined') ? kakeibo.$body.find($this.data('toggler-target')) : $this;
-
-    // Toggle class from data attribute
-    $target.toggleClass($this.data('toggler-class'));
-
-    e.stopPropagation();
-    e.preventDefault();
-    return false;
-  });
-
-  // ====================================
-  // EVENTS / RESIZE ====================
-  // kakeibo.$window.on('resize', function(e) {
-  // });
-
-
-  // ====================================
-  // UNLOAD (delay before hide "loading")
-  setTimeout(function() {
-    kakeibo.unload();
-  }, 400);
+  // Rocket launcher !
+  kakeibo.launch();
 })();
 
-
 // kakeibo.js
-module.exports = kakeibo;
+// module.exports = kakeibo;

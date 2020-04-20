@@ -5,6 +5,9 @@ namespace App\Form;
 use App\Entity\Transaction;
 use App\Entity\Category;
 
+// Repositories
+use App\Repository\CategoryRepository;
+
 // Components
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -44,6 +47,11 @@ class TransactionType extends AbstractType
                 'class'         => Category::class,
                 'label'         => 'form_transaction.category.label',
                 'placeholder'   => 'form_transaction.category.placeholder',
+                'query_builder' => function (CategoryRepository $r) {
+                    return $r->createQueryBuilder('c')
+                        // Order on theme name
+                        ->addOrderBy('c.label', 'ASC');
+                },
                 'choice_label'  => function ($category) {
                     return $category->getLabel();
                 }
@@ -54,6 +62,7 @@ class TransactionType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
+            // 'csrf_protection' => false,             // NOTE : Remove CSRF protection to get ajax submit working
             'data_class'  => Transaction::class,
             'type_form'   => 'add'
         ));

@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Transaction;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * @method Transaction|null find($id, $lockMode = null, $lockVersion = null)
@@ -32,6 +33,33 @@ class TransactionRepository extends ServiceEntityRepository
         ;
     }
 
+    public function countAllByBankAccount($bank_account)
+    {
+        return $this->createQueryBuilder('t')
+            ->select('COUNT(t.id) AS nb_transactions')
+            ->andWhere('t.bank_account = :bank_account')
+            ->setParameter('bank_account', $bank_account)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function findByBankAccountAndByPage($bank_account, $page, $max_results = 25)
+    {
+        $qb = $this->createQueryBuilder('t')
+            ->orderBy('t.date', 'DESC')
+            ->addOrderBy('t.id', 'DESC')
+            ->andWhere('t.bank_account = :bank_account')
+            ->setParameter('bank_account', $bank_account);
+
+        // PAGINATOR
+        $qb->setFirstResult(($page - 1) * $max_results)
+            ->setMaxResults($max_results);
+
+        $pag = new Paginator($qb);
+
+        return $pag->getQuery()->getResult();
+    }
+
     /**
      * @return Transaction[] Returns an array of Transaction objects
      */
@@ -42,6 +70,7 @@ class TransactionRepository extends ServiceEntityRepository
             ->setParameter('bank_account', $bank_account)
             ->andWhere('t.date <= CURRENT_DATE()')
             ->orderBy('t.date', 'DESC')
+            ->addOrderBy('t.id', 'DESC')
             ->setMaxResults((int) $max_results)
             ->getQuery()
             ->getResult()

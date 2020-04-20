@@ -16,10 +16,12 @@ use Symfony\Component\Security\Core\Security;
 
 class TransactionsController extends Controller
 {
+    const NB_TRANSAC_BY_PAGE = 50;
+
     /**
-     * @Route("/transactions", name="transactions")
+     * @Route("/transactions/{page}", name="transactions", defaults={"page"=1})
      */
-    public function index(Security $security, Request $request)
+    public function index($page, Security $security, Request $request)
     {
         $user = $security->getUser();
 
@@ -41,8 +43,31 @@ class TransactionsController extends Controller
         $em = $this->getDoctrine()->getManager();
         $r_trans  = $em->getRepository(Transaction::class);
 
+        // Get nb pages of newsletter subscribes
+        $nb_transactions = $r_trans->countAllByBankAccount($default_bank_account);
+        $nb_pages_raw = ($nb_transactions / self::NB_TRANSAC_BY_PAGE);
+        $nb_pages     = floor($nb_pages_raw);
+
+        // If there is decimal numbers,
+        //  there is less than 50 subs (=self::NB_TRANSAC_BY_PAGE) to display
+        //  > So we need to add 1 more page
+        if (($nb_pages_raw - $nb_pages) > 0)
+            $nb_pages++;
+
+        // Check if $page is correct, if not redirect with a correct page number
+        if ($nb_pages > 0 && $page > $nb_pages) {
+            $page = max(1, $page - 1);
+
+            // Redirect with correct $page and filters in URI
+            return $this->redirectToRoute('dashboard', [ 'page' => $page ]);
+        }
+
+        // Get incomes & expenses totals
         $total_incomes  = (float) $r_trans->findTotal($default_bank_account, null, null, 'incomes');
         $total_expenses = (float) $r_trans->findTotal($default_bank_account, null, null, 'expenses');
+
+        // Get transactions
+        $transactions = $r_trans->findByBankAccountAndByPage($default_bank_account, $page, self::NB_TRANSAC_BY_PAGE);
 
         return $this->render('transactions/index.html.twig', [
             'page_title'            => '<span class="icon icon-edit"></span> Transactions',
@@ -51,7 +76,11 @@ class TransactionsController extends Controller
             // 'scripts'               => [ 'kb-dashboard.js' ],
             'user'                  => $user,
             'current_bank_account'  => $default_bank_account,
-            'transactions'          => $default_bank_account->getTransactions(),
+            'transactions'          => $transactions,
+            'nb_transactions'       => $nb_transactions,
+            'current_page'          => $page,
+            'nb_pages'              => $nb_pages,
+            'nb_by_page'            => self::NB_TRANSAC_BY_PAGE,
             'total_incomes'         => $total_incomes,
             'total_expenses'        => $total_expenses,
             'form_transaction'      => $trans_form->createView()

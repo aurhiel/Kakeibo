@@ -21,7 +21,9 @@
         </div>
         <div class="pt-1 mt-3 small text-muted border-top">
           {% if month is defined and year is defined %}
-            Période de {{ date('01-' ~ month ~ '-' ~ year)|localizeddate('none', 'none', 'fr', 'Europe/Paris', 'MMMM')|capitalize }} {{ year }}
+            {% set month_literal = date('01-' ~ totals_month ~ '-' ~ totals_year)|localizeddate('none', 'none', 'fr', 'Europe/Paris', 'MMMM') %}
+            {% set from_literal = month_literal|first in ['a', 'e', 'i', 'o', 'u'] ? "d'": "de " %}
+            Période {{ from_literal }}{{ month_literal|capitalize }} {{ year }}
           {% else %}
             Depuis votre inscription
           {% endif %}
@@ -51,7 +53,9 @@
         </div>
         <div class="pt-1 mt-3 small text-muted border-top">
           {% if month is defined and year is defined %}
-            Période de {{ date('01-' ~ month ~ '-' ~ year)|localizeddate('none', 'none', 'fr', 'Europe/Paris', 'MMMM')|capitalize }} {{ year }}
+            {% set month_literal = date('01-' ~ totals_month ~ '-' ~ totals_year)|localizeddate('none', 'none', 'fr', 'Europe/Paris', 'MMMM') %}
+            {% set from_literal = month_literal|first in ['a', 'e', 'i', 'o', 'u'] ? "d'": "de " %}
+            Période {{ from_literal }}{{ month_literal|capitalize }} {{ year }}
           {% else %}
             Depuis votre inscription
           {% endif %}

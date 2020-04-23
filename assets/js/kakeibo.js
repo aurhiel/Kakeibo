@@ -49,6 +49,7 @@ var kakeibo = {
             chart_type  = $chart.data('chartjs-type'),
             chart_min   = $chart.data('chartjs-min'),
             chart_max   = $chart.data('chartjs-max'),
+            grid_color  = $chart.data('chartjs-grid-color'),
             legend_display    = (typeof $chart.data('chartjs-legend-display') != 'undefined') ? $chart.data('chartjs-legend-display') : true
             legend_position   = $chart.data('chartjs-legend-position')
             legend_hide_sizes = (typeof $chart.data('chartjs-legend-hide') == 'string') ? $chart.data('chartjs-legend-hide').split('|') : [];
@@ -73,6 +74,33 @@ var kakeibo = {
           opts.legend = {
             display: legend_display
           };
+
+          if (typeof grid_color != 'undefined') {
+            if (grid_color == 'white' || grid_color == 'light') {
+              opts.scales = {
+                xAxes: [{
+                  gridLines: {
+                    zeroLineColor: 'rgba(255, 255, 255, .5)',
+                    color: 'rgba(255, 255, 255, .1)',
+                  },
+                  ticks: {
+                    fontColor: 'rgba(255, 255, 255, .75)'
+                  }
+                }],
+                yAxes: [{
+                  gridLines: {
+                    zeroLineColor: 'rgba(255, 255, 255, .5)',
+                    color: 'rgba(255, 255, 255, .1)',
+                  },
+                  ticks: {
+                    fontColor: 'rgba(255, 255, 255, .75)'
+                  }
+                }]
+              };
+              // ChartJS.defaults.global.defaultFontColor = 'rgba(255, 255, 255, .75)'; // la flemme
+              // opts.scaleFontColor = 'white';
+            }
+          }
 
           if (typeof legend_position != 'undefined')
             opts.legend.position = legend_position;

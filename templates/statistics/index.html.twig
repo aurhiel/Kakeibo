@@ -1,9 +1,70 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
-<div class="container">
-  <div class="alert alert-warning">
-    En travaux... // TODO
+{% set month_literal = date('01-' ~ curr_month ~ '-' ~ curr_year)|localizeddate('none', 'none', 'fr', 'Europe/Paris', 'MMMM') %}
+{% set from_literal = month_literal|first in ['a', 'e', 'i', 'o', 'u'] ? "d'": "de " %}
+{% set page_title = '<span class="icon icon-bar-chart"></span> Statistiques ' ~ from_literal ~ month_literal|capitalize ~ ' ' ~ curr_year %}
+
+{# Header #}
+{% block header %}
+  <div class="app-header">
+    {% include 'components/header.html.twig' %}
+
+    <div class="bg-dark text-white mt-4">
+      <div class="container">
+        <div class="row">
+          <div class="col-12 col-md-7 col-xl-8 col-xxl-9 mb-4">
+            <div class="chart-js" data-chartjs-type="line" data-chartjs-data-name="transactions_by_days"
+              data-chartjs-legend-display="false" data-chartjs-grid-color="white">
+              <canvas></canvas>
+            </div>
+
+            <script type="text/javascript">
+              var transactions_by_days = {
+                labels    : [],
+                datasets  : [{
+                  label : 'Dépenses',
+                  data : [],
+                  backgroundColor : 'rgba(238, 82, 83, 0.5)',
+                  borderColor     : 'rgba(238, 82, 83, .75)',
+                  borderWidth     : 2
+                },
+                {
+                  label : 'Revenus',
+                  data : [],
+                  data : [],
+                  backgroundColor : 'rgba(46, 204, 113, 0.5)',
+                  borderColor     : 'rgba(46, 204, 113, .75)',
+                  borderWidth     : 2
+                }]
+              };
+
+              {% for exp in total_expenses_by_date %}
+                transactions_by_days.labels.push('{{ exp.date|localizeddate('none', 'none', 'fr', 'Europe/Paris', 'dd MMM') }}');
+                transactions_by_days.datasets[0].data.push(Math.round(({{ exp.amount_sum }} + Number.EPSILON) * 100) / 100 * -1);
+              {% endfor %}
+
+              {% for inc in total_incomes_by_date %}
+                transactions_by_days.datasets[1].data.push(Math.round(({{ inc.amount_sum }} + Number.EPSILON) * 100) / 100);
+              {% endfor %}
+            </script>
+          </div>
+
+          <div class="col-12 col-md-5 col-xl-4 col-xxl-3">
+            {% include 'components/incomes-and-expenses.html.twig' with {
+              expenses: total_expenses,
+              incomes: total_incomes,
+              bank_account: current_bank_account,
+              full_width: true
+            } %}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
+{% endblock %}
+
+{% block body %}
+  <div class="container">
+    {% include 'components/transactions/list.html.twig' %}
+  </div>
 {% endblock %}

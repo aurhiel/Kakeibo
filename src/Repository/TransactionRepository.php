@@ -33,17 +33,24 @@ class TransactionRepository extends ServiceEntityRepository
         ;
     }
 
-    public function countAllByBankAccount($bank_account)
+    public function countAllByBankAccountAndByDate($bank_account, $year = null, $month = null)
     {
-        return $this->createQueryBuilder('t')
+        $qb = $this->createQueryBuilder('t')
             ->select('COUNT(t.id) AS nb_transactions')
             ->andWhere('t.bank_account = :bank_account')
-            ->setParameter('bank_account', $bank_account)
-            ->getQuery()
-            ->getSingleScalarResult();
+            ->setParameter('bank_account', $bank_account);
+
+        // WHERE: date
+        if (!is_null($month) && !is_null($year)) {
+            $qb->andWhere('MONTH(t.date) = :month AND YEAR(t.date) = :year')
+                ->setParameter('month', $month)
+                ->setParameter('year', $year);
+        }
+
+        return $qb->getQuery()->getSingleScalarResult();
     }
 
-    public function findByBankAccountAndByPage($bank_account, $page, $max_results = 25)
+    public function findByBankAccountAndDateAndPage($bank_account, $year = null, $month = null, $page = null, $max_results = 25)
     {
         $qb = $this->createQueryBuilder('t')
             ->orderBy('t.date', 'DESC')
@@ -51,13 +58,24 @@ class TransactionRepository extends ServiceEntityRepository
             ->andWhere('t.bank_account = :bank_account')
             ->setParameter('bank_account', $bank_account);
 
+        // WHERE: date
+        if (!is_null($month) && !is_null($year)) {
+            $qb->andWhere('MONTH(t.date) = :month AND YEAR(t.date) = :year')
+                ->setParameter('month', $month)
+                ->setParameter('year', $year);
+        }
+
         // PAGINATOR
-        $qb->setFirstResult(($page - 1) * $max_results)
-            ->setMaxResults($max_results);
+        if (!is_null($page)) {
+            $qb->setFirstResult(($page - 1) * $max_results)
+                ->setMaxResults($max_results);
 
-        $pag = new Paginator($qb);
+            $pag = new Paginator($qb);
 
-        return $pag->getQuery()->getResult();
+            return $pag->getQuery()->getResult();
+        } else {
+            return $qb->getQuery()->getResult();
+        }
     }
 
     /**
@@ -124,6 +142,12 @@ class TransactionRepository extends ServiceEntityRepository
             $qb->join('t.category', 'c')
                 ->addSelect('c.id, c.label, c.color, c.icon')
                 ->groupBy('t.category');
+        }
+
+        // GROUP BY: Date
+        if (!is_null($group_by) && $group_by == 'date') {
+            $qb->addSelect('t.date')
+                ->groupBy('t.date');
         }
 
         // return result

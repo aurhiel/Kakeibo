@@ -44,7 +44,9 @@
   <body class="app-core{% if core_class is defined %} {{ core_class }}{% endif %}">
     {# Header #}
     {% block header %}
-      {% include 'components/header.html.twig' %}
+      <div class="app-header">
+        {% include 'components/header.html.twig' %}
+      </div>
     {% endblock %}
 
     <div id="app" class="app-body{% if body_class is defined %} {{ body_class }}{% endif %}">

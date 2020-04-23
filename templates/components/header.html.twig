@@ -1,9 +1,8 @@
-<div class="app-header">
-  {% include 'components/menu.html.twig' %}
 
-  {% if page_title is defined and page_title is not empty %}
-    <div class="header-title container">
-      <h1 class="page-header">{{ page_title|raw }}</h1>
-    </div>
-  {% endif %}
-</div>
+{% include 'components/menu.html.twig' %}
+
+{% if page_title is defined and page_title is not empty %}
+  <div class="header-title container">
+    <h1 class="page-header">{{ page_title|raw }}</h1>
+  </div>
+{% endif %}

@@ -6,14 +6,16 @@
       <div class="row align-items-center">
         <div class="col-9 pr-0">
           <h3 class="h5 mb-0">
-            {% if title is defined and title is not empty %}{{ title }}{% else %}Liste de transactions{% endif %}
+            {% if title is defined and title is not empty %}{{ title }}{% else %}Liste des transactions{% endif %}
             <small>({{ default_bank_account.label }})</small>
           </h3>
         </div>
         <div class="col-3 pl-0 text-right">
+        {% if form_transaction is defined %}
           <button type="button" name="button" class="btn btn-sm btn-primary toggle-panel-transaction" data-panel-type="add">
             <span class="icon icon-plus-square"></span><span class="sr-only{#d-none d-sm-inline#}"> Ajouter une transaction</span>
           </button>
+        {% endif %}
         </div>
       </div>
     </div>
@@ -77,7 +79,22 @@
         {% set last_date = transac.date|date('Y-m-d') %}
       {% endfor %}
     </div>
-    {% block footer %}{# <div class="card-footer"></div> #}{% endblock %}
+    {% block footer %}
+      <div class="card-footer small text-muted">
+        <div class="row">
+          <div class="col">
+            {% if current_page is defined and nb_by_page is defined and nb_transactions is defined %}
+              {{ ((current_page - 1) * nb_by_page) + 1 }} - {{ min(current_page * nb_by_page, nb_transactions) }}
+            {% endif %}
+          </div>
+          <div class="col text-right">
+            {% if nb_transactions is defined %}
+              Total de <b>{{ nb_transactions }}</b> transaction{% if nb_transactions > 1 %}s{% endif %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endblock %}
   </div>
 {% else %}
   <div class="alert alert-secondary">no transactions (add form ?)</div>

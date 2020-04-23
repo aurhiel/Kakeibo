@@ -44,7 +44,7 @@ class TransactionsController extends Controller
         $r_trans  = $em->getRepository(Transaction::class);
 
         // Get nb pages of newsletter subscribes
-        $nb_transactions = $r_trans->countAllByBankAccount($default_bank_account);
+        $nb_transactions = $r_trans->countAllByBankAccountAndByDate($default_bank_account);
         $nb_pages_raw = ($nb_transactions / self::NB_TRANSAC_BY_PAGE);
         $nb_pages     = floor($nb_pages_raw);
 
@@ -66,8 +66,8 @@ class TransactionsController extends Controller
         $total_incomes  = (float) $r_trans->findTotal($default_bank_account, null, null, 'incomes');
         $total_expenses = (float) $r_trans->findTotal($default_bank_account, null, null, 'expenses');
 
-        // Get transactions
-        $transactions = $r_trans->findByBankAccountAndByPage($default_bank_account, $page, self::NB_TRANSAC_BY_PAGE);
+        // Get transactions according to current page
+        $transactions = $r_trans->findByBankAccountAndDateAndPage($default_bank_account, null, null, $page, self::NB_TRANSAC_BY_PAGE);
 
         return $this->render('transactions/index.html.twig', [
             'page_title'            => '<span class="icon icon-edit"></span> Transactions',

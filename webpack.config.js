@@ -32,6 +32,7 @@ Encore
     // .addEntry('kakeibo-app', './assets/vue/kakeibo.js')
     .addEntry('kakeibo',      './assets/js/kakeibo.js')
     .addEntry('kb-dashboard', './assets/js/kb-dashboard.js')
+    .addEntry('kb-statistic', './assets/js/kb-statistic.js')
 
     // CSS only
     // .addStyleEntry('kakeibo',       './assets/css/kakeibo.scss')

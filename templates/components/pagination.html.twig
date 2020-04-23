@@ -1,0 +1,55 @@
+
+{% if nb_pages > 1 %}
+  <nav class="mb-0" aria-label="Navigation par page">
+    <ul class="pagination justify-content-center mb-0">
+      {# Previous button #}
+      {% if current_page > 1 %}
+      <li class="page-item">
+        <a class="page-link" aria-label="Précédent" href="{{ path(path_slug, { page: (current_page - 1) }) }}#app">
+          <span aria-hidden="true">&laquo;</span>
+          <span class="sr-only">Précédent</span>
+        </a>
+      </li>
+      {% else %}
+      <li class="page-item disabled">
+        <span class="page-link">
+          <span aria-hidden="true">&laquo;</span>
+          <span class="sr-only">Précédent</span>
+        </span>
+      </li>
+      {% endif %}
+
+      {# Loop to generate numbers pages #}
+      {% for num_page in 1..nb_pages %}
+        {% if num_page == current_page %}
+        <li class="page-item active">
+          <span class="page-link">{{ num_page }}</span>
+        </li>
+        {% else %}
+        <li class="page-item">
+          <a class="page-link" href="{{ path(path_slug, { page: num_page }) }}#app">
+            {{ num_page }}
+          </a>
+        </li>
+        {% endif %}
+      {% endfor %}
+
+      {# Next button #}
+      {% if current_page < nb_pages %}
+      <li class="page-item">
+        <a class="page-link" aria-label="Suivant" href="{{ path(path_slug, { page: (current_page + 1) }) }}#app">
+          <span aria-hidden="true">&raquo;</span>
+          <span class="sr-only">Suivant</span>
+        </a>
+      </li>
+      {% else %}
+      <li class="page-item disabled">
+        <span class="page-link">
+          <span aria-hidden="true">&raquo;</span>
+          <span class="sr-only">Suivant</span>
+        </span>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+{% endif %}

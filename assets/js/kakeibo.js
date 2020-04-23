@@ -3,6 +3,9 @@ require('../css/kakeibo.scss');
 // Add ChartJS
 var ChartJS = require('chart.js');
 
+// NOTE: Useful for dark theme
+// ChartJS.defaults.global.defaultFontColor = 'rgba(255, 255, 255, .75)';
+
 var kakeibo = {
   // Viewport sizes
   viewport: {
@@ -97,8 +100,6 @@ var kakeibo = {
                   }
                 }]
               };
-              // ChartJS.defaults.global.defaultFontColor = 'rgba(255, 255, 255, .75)'; // la flemme
-              // opts.scaleFontColor = 'white';
             }
           }
 

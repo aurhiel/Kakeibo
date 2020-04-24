@@ -13,6 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DashboardController extends Controller
 {
@@ -23,7 +24,8 @@ class DashboardController extends Controller
      */
     public function index(Security $security, Request $request)
     {
-        $user = $security->getUser();
+        $user       = $security->getUser();
+        $translator = $this->get('translator');
 
         // Force user to create at least ONE bank account !
         if (count($user->getBankAccounts()) < 1)
@@ -61,7 +63,8 @@ class DashboardController extends Controller
         $total_expenses_by_cats = $r_trans->findTotalGroupBy($default_bank_account, $curr_year, $curr_month, 'category', 'expenses');
 
         return $this->render('dashboard/index.html.twig', [
-            'page_title'            => 'Dashboard',
+            'page_title'            => $translator->trans('page.dashboard.title'),
+            'meta'                  => [ 'title' => $translator->trans('page.dashboard.title') ],
             'core_class'            => 'app-core--dashboard app-core--merge-body-in-header',
             'stylesheets'           => [ 'kb-dashboard.css' ],
             'scripts'               => [ 'kb-dashboard.js' ],

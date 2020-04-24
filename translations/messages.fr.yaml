@@ -47,10 +47,11 @@ page :
       title : "Déjà inscrit&middot;e ?"
       link :
         label : "Connectez-vous"
+  # PAGE:DASHBOARD
+  dashboard :
+    title : "Dashboard"
   # PAGE:ABOUT
   about :
-    meta :
-      title : "À propos"
     link :
       label : "À propos"
     title   : "À propos"
@@ -80,6 +81,8 @@ block :
       title         : "Revenus"
     expenses :
       title         : "Dépenses"
+  trans_list :
+    default_title   : "Liste des transactions"
 
 ## FORMS
 form :

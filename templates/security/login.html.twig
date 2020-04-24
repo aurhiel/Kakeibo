@@ -1,8 +1,5 @@
 {% extends 'vertically.html.twig' %}
 {% set core_class = 'app-core--login-page' %}
-{% set meta = {
-  'title' : 'page.login.title'|trans
-} %}
 
 {% block body_vertical_content %}
 <form class="mb-5" action="{{ path('login') }}" method="post">

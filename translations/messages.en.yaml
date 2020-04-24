@@ -48,6 +48,9 @@ page :
       title : "Already registered ?"
       link :
         label : "Log in now !"
+  # PAGE:DASHBOARD
+  dashboard :
+    title : "Dashboard"
   # PAGE:ABOUT
   about :
     meta :
@@ -80,6 +83,8 @@ block :
       title         : "Incomes"
     expenses :
       title         : "Expenses"
+  trans_list :
+    default_title   : "Transactions list"
 
 
 ## FORMS

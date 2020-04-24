@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 // use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -28,6 +29,8 @@ class SecurityController extends Controller
     {
         if (true === $authChecker->isGranted('IS_AUTHENTICATED_FULLY'))
             return $this->redirectToRoute('dashboard');
+
+        $translator = $this->get('translator');
 
         // 1) build the form
         $user = new User();
@@ -88,8 +91,8 @@ class SecurityController extends Controller
         return $this->render(
             'security/register.html.twig',
             array(
-              'meta' => array('title' => 'Inscription'),
-              'form' => $form->createView(),
+              'meta' => [ 'title' => $translator->trans('page.register.title') ],
+              'form' => $form->createView()
             )
         );
     }
@@ -103,6 +106,8 @@ class SecurityController extends Controller
         if (true === $authChecker->isGranted('IS_AUTHENTICATED_FULLY'))
             return $this->redirectToRoute('dashboard');
 
+        $translator = $this->get('translator');
+
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
 
@@ -110,6 +115,7 @@ class SecurityController extends Controller
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('security/login.html.twig', array(
+            'meta'          => [ 'title' => $translator->trans('page.login.title') ],
             'last_username' => $lastUsername,
             'error'         => $error,
         ));

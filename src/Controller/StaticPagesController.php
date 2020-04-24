@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class StaticPagesController extends Controller
 {
@@ -13,7 +14,6 @@ class StaticPagesController extends Controller
     public function __construct()
     {
         // Raw pages data
-
         $company = array(
             'name'        => 'Ingeneria',
             'address'     => '4 rue Gerin Ricard 13003 Marseille - France (métropolitaine)',
@@ -64,16 +64,6 @@ class StaticPagesController extends Controller
         // );
 
 
-        $this->pages['a-propos'] = array(
-            'template' => 'static-pages/about.html.twig',
-            'data' => array(
-                'meta' => array(
-                    'title' => 'À propos',
-                    'robots' => 'noindex,nofollow'
-                ),
-            )
-        );
-        $this->pages['about'] = $this->pages['a-propos'];
 
 
         // $this->pages['donnees-personnelles'] = array(
@@ -102,6 +92,20 @@ class StaticPagesController extends Controller
      */
     public function index($slug)
     {
+        $translator = $this->get('translator');
+        
+        $this->pages['a-propos'] = array(
+            'template' => 'static-pages/about.html.twig',
+            'data' => array(
+                'core_class' => 'app-core--static-page',
+                'meta' => [
+                    'title'   => $translator->trans('page.about.title'),
+                    'robots'  => 'noindex, nofollow'
+                ]
+            )
+        );
+        $this->pages['about'] = $this->pages['a-propos'];
+
         if(isset($this->pages[$slug])) {
             $page = $this->pages[$slug];
             return $this->render($page['template'], $page['data']);

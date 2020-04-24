@@ -6,7 +6,11 @@
       <div class="row align-items-center">
         <div class="col-9 pr-0">
           <h3 class="h5 mb-0">
-            {% if title is defined and title is not empty %}{{ title }}{% else %}Liste des transactions{% endif %}
+            {% if title is defined and title is not empty %}
+              {{ title }}
+            {% else %}
+              {{ 'block.trans_list.default_title'|trans }}
+            {% endif %}
             <small>({{ default_bank_account.label }})</small>
           </h3>
         </div>

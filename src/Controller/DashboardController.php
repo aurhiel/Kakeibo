@@ -19,7 +19,7 @@ class DashboardController extends Controller
     const NB_LAST_TRANS = 20;
 
     /**
-     * @Route("/", name="dashboard")
+     * @Route("/{_locale}/dashboard", name="dashboard")
      */
     public function index(Security $security, Request $request)
     {

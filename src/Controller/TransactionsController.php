@@ -19,7 +19,7 @@ class TransactionsController extends Controller
     const NB_TRANSAC_BY_PAGE = 50;
 
     /**
-     * @Route("/transactions/{page}", name="transactions", defaults={"page"=1})
+     * @Route("/{_locale}/transactions/{page}", name="transactions", defaults={"page"=1})
      */
     public function index($page, Security $security, Request $request)
     {

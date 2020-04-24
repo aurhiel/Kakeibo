@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\Security;
 class StatisticsController extends Controller
 {
     /**
-     * @Route("/statistics/{year}/{month}", name="statistics", defaults={"year"="current","month"="current"})
+     * @Route("/{_locale}/stats/{year}/{month}", name="statistics", defaults={"year"="current","month"="current"})
      */
     public function index($year, $month, Security $security, Request $request)
     {
@@ -44,11 +44,19 @@ class StatisticsController extends Controller
         $transactions = $r_trans->findByBankAccountAndDateAndPage($default_bank_account, $year, $month);
         $nb_transactions = count($transactions);
 
+        $now = new \DateTime();
+        if ($nb_transactions < 1 && ($year != (int)$now->format('Y') && $month != (int)$now->format('m'))) {
+            return $this->redirectToRoute('statistics');
+        }
+
         $total_incomes_by_date = self::reorderByDate($r_trans->findTotalGroupBy($default_bank_account, $year, $month, 'date', 'incomes'));
         $total_expenses_by_date = self::reorderByDate($r_trans->findTotalGroupBy($default_bank_account, $year, $month, 'date', 'expenses'));
 
         self::completeEmptyDate($total_incomes_by_date, $total_expenses_by_date);
         self::completeEmptyDate($total_expenses_by_date, $total_incomes_by_date);
+
+        // Retrieve total incomes & expenses grouped by categories
+        $total_expenses_by_cats = $r_trans->findTotalGroupBy($default_bank_account, $year, $month, 'category', 'expenses');
 
         return $this->render('statistics/index.html.twig', [
             'core_class'      => 'app-core--statistics app-core--merge-body-in-header',
@@ -63,6 +71,7 @@ class StatisticsController extends Controller
             'total_expenses'        => $total_expenses,
             'total_incomes_by_date'   => $total_incomes_by_date,
             'total_expenses_by_date'  => $total_expenses_by_date,
+            'total_expenses_by_cats'  => $total_expenses_by_cats,
         ]);
     }
 

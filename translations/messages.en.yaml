@@ -1,6 +1,7 @@
 ## GLOBALS
 global :
-  speech : "Take back control of your expenses !"
+  speech  : "Take back control of your expenses !"
+  soon    : "coming soon"
 
 ## MENU
 menu :
@@ -54,11 +55,20 @@ page :
     title : "Dashboard"
     trans_list :
       title : "Last transactions"
+      footer_text : "The last <b>%amount%</b> transaction%plural%"
+      all :
+        label : "All transactions"
+    chart_exp :
+      title : "%date% expenses by category"
+      more :
+        label : "See more"
   # PAGE:STATS
   statistics :
     meta :
       title : "Statistics"
     title : "Statistics for %date%"
+    chart_exp :
+      title : "Expenses by Category"
   # PAGE:TRANSACTIONS
   transactions :
     title : "Transactions"
@@ -93,6 +103,7 @@ block :
       title         : "Expenses"
   trans_list :
     default_title   : "Transactions list"
+    total_text      : "<b>%amount%</b> transaction%plural% in total"
 
 
 ## FORMS

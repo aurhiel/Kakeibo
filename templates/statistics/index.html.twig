@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% set month_literal = date('01-' ~ curr_month ~ '-' ~ curr_year)|localizeddate('none', 'none', null, null, 'MMMM') %}
-{% set for_literal = month_literal|first in ['a', 'e', 'i', 'o', 'u'] ? "d'": "de " %}
+{% set for_literal = month_literal|lower|first in ['a', 'e', 'i', 'o', 'u'] ? "d'": "de " %}
 {% set page_title = '<span class="icon icon-bar-chart"></span> ' ~ ('page.statistics.title')|trans({ '%date%': (month_literal|capitalize ~ ' ' ~ curr_year), '%for_literal%': for_literal }) %}
 
 {# Header #}
@@ -74,7 +74,7 @@
       <div class="col-12 col-md-5 col-xl-6 col-xxl-5">
         <div class="card d-none d-md-block">
           <div class="card-header d-flex align-items-center">
-            <h3 class="h5 mb-0">Dépenses par catégorie</h3>
+            <h3 class="h5 mb-0">{{ 'page.statistics.chart_exp.title'|trans }}</h3>
           </div>
           <div class="card-body text-center">
             <div class="chart-js mb-3" data-chartjs-type="pie" data-chartjs-data-name="total_expenses"

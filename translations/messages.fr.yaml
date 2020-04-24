@@ -1,6 +1,7 @@
 ## GLOBALS
 global :
-  speech : "Reprenez le contrôle de vos dépenses !"
+  speech  : "Reprenez le contrôle de vos dépenses !"
+  soon    : "à venir"
 
 ## MENU
 menu :
@@ -53,11 +54,20 @@ page :
     title : "Dashboard"
     trans_list :
       title : "Vos dernières transactions"
+      footer_text : "<b>%amount%</b> dernière%plural% transaction%plural%"
+      all :
+        label : "Toutes les transactions"
+    chart_exp :
+      title : "Dépenses %for_literal%%date% par catégorie"
+      more :
+        label : "Voir plus"
   # PAGE:STATS
   statistics:
     meta :
       title : "Statistiques"
-    title: "Statistiques %for_literal%%date%"
+    title   : "Statistiques %for_literal%%date%"
+    chart_exp :
+      title : "Dépenses par catégorie"
   # PAGE:TRANSACTIONS
   transactions :
     title : "Transactions"
@@ -90,6 +100,7 @@ block :
       title         : "Dépenses"
   trans_list :
     default_title   : "Liste des transactions"
+    total_text      : "Total de <b>%amount%</b> transaction%plural%"
 
 ## FORMS
 form :

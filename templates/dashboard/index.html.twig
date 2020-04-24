@@ -12,11 +12,14 @@
             <div class="card-footer">
               <div class="row align-items-center">
                 <div class="col">
-                  <small class="d-block text-muted"><b>{{ last_trans_amount }}</b> dernière{% if last_trans_amount > 1 %}s{% endif %} transaction{% if last_trans_amount > 1 %}s{% endif %} </small>
+                  {% set plural = (last_trans_amount > 1) ? 's' : '' %}
+                  <small class="d-block text-muted">
+                    {{ 'page.dashboard.trans_list.footer_text'|trans({ '%amount%': last_trans_amount, '%plural%': ((last_trans_amount > 1) ? 's' : '') })|raw }}
+                  </small>
                 </div>
                 <div class="col text-right">
                   <a href="{{ path('transactions') }}" class="btn btn-sm btn-outline-primary">
-                    Toutes les transactions <span class="icon icon-chevron-right"></span>
+                    {{ 'page.dashboard.trans_list.all.label'|trans }} <span class="icon icon-chevron-right"></span>
                   </a>
                 </div>
               </div>
@@ -40,14 +43,14 @@
           <div class="card-header d-flex align-items-center">
             <div class="col pl-0">
               <h3 class="h5 mb-0">
-                {% set month_literal = date('01-' ~ totals_month ~ '-' ~ totals_year)|localizeddate('none', 'none', 'fr', 'Europe/Paris', 'MMMM') %}
-                {% set from_literal = month_literal|first in ['a', 'e', 'i', 'o', 'u'] ? "d'": "de " %}
-                Dépenses {{ from_literal }}{{ month_literal|capitalize }} par catégorie
+                {% set month_literal = date('01-' ~ totals_month ~ '-' ~ totals_year)|localizeddate('none', 'none', null, null, 'MMMM') %}
+                {% set for_literal = month_literal|lower|first in ['a', 'e', 'i', 'o', 'u'] ? "d'": "de " %}
+                {{ 'page.dashboard.chart_exp.title'|trans({ '%date%': (month_literal|capitalize), '%for_literal%': for_literal }) }}
               </h3>
             </div>
             <div class="col-auto px-0">
               <a href="{{ path('statistics')}}" class="btn btn-sm btn-outline-primary">
-                Voir plus <span class="icon-chevron-right"></span>
+                {{ 'page.dashboard.chart_exp.more.label'|trans }} <span class="icon-chevron-right"></span>
               </a>
             </div>
           </div>

@@ -1,6 +1,6 @@
 {% if month is defined and year is defined %}
   {% set month_literal = date('01-' ~ month ~ '-' ~ year)|localizeddate('none', 'none', null, null, 'MMMM') %}
-  {% set for_literal = month_literal|first in ['a', 'e', 'i', 'o', 'u'] ? "d'": "de " %}
+  {% set for_literal = month_literal|lower|first in ['a', 'e', 'i', 'o', 'u'] ? "d'": "de " %}
   {% set period_text = 'block.inc_exp.period'|trans({ '%date%': (month_literal|capitalize ~ ' ' ~ year), '%for_literal%': for_literal }) %}
 {% else %}
   {% set period_text = 'block.inc_exp.since_register'|trans %}

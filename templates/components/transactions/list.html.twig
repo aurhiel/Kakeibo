@@ -93,7 +93,7 @@
           </div>
           <div class="col text-right">
             {% if nb_transactions is defined %}
-              Total de <b>{{ nb_transactions }}</b> transaction{% if nb_transactions > 1 %}s{% endif %}
+              {{ 'block.trans_list.total_text'|trans({ '%amount%': nb_transactions, '%plural%': ((nb_transactions > 1) ? 's' : '') })|raw }}
             {% endif %}
           </div>
         </div>

@@ -43,11 +43,11 @@
         </div>
 
         <div class="col-7 col-md-4 py-2 px-0 mt-2 mb-3 border-top small required required--prepend">
-          Champs obligatoires
+          {{ 'form.required'|trans }}
         </div>
 
         <button class="btn btn-primary" type="submit" name="register">
-          Valider les modifications
+          {{ 'form_user.btn.valid.label'|trans }}
         </button>
       {{ form_end(form) }}
       </div>

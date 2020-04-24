@@ -3,25 +3,43 @@
     <div class="footer-item footer-item--left footer-item--links">
       <ul class="list-inline">
         {#<li class="list-inline-item">
-            <a href="#legal-terms">Mentions légales</a>
+          <a href="#legal-terms">Mentions légales</a>
         </li>
         <li class="list-inline-item">
-            <a href="#personal-data">Données personnelles</a>
+          <a href="#personal-data">Données personnelles</a>
         </li>#}
-        <li class="list-inline-item">
-            <a href="{{ path('static_pages', { slug: 'a-propos' }) }}">A propos</a>
-        </li>
-        <li class="list-inline-item">
-          <a href="{{ path('demo') }}">
-            <span class="icon icon-save"></span>
-            Démo
-          </a>
-        </li>
+        {% set static_pages = {
+          'about' : {
+            'en' : { 'slug' : 'about' },
+            'fr' : { 'slug' : 'a-propos' }
+          }
+        } %}
+        {% for s_page in static_pages %}
+          {% set page = s_page[app.request.locale] %}
+          <li class="list-inline-item">
+            <a href="{{ path('static_pages', { slug: page.slug }) }}">
+              {{ ('page.' ~ page.slug ~ '.link.label')|trans }}
+            </a>
+          </li>
+        {% endfor %}
+        {% if app.environment == 'dev' %}
+          <li class="list-inline-item">
+            <a href="{{ path('demo') }}">
+              <span class="icon icon-save"></span>
+              Démo
+            </a>
+          </li>
+        {% endif %}
       </ul>
     </div>
 
+    {% set release_year = 2020 %}
+    {% set text_year    = "now"|date('Y') %}
+    {% if release_year < text_year %}
+      {% set text_year = release_year ~ ' / ' ~ text_year %}
+    {% endif %}
     <div class="footer-item footer-item--right footer-item--author">
-      &copy;&nbsp;{{ "now"|date('Y') }} - Conçu avec du <span class="icon-code" title="code" alt="code"></span>
+      &copy;&nbsp;{{ text_year }} - Conçu avec du <span class="icon-code" title="code" alt="code"></span>
       et un peu de <span class="icon-coffee" title="thé ou café" alt="thé ou café"></span>
       par <a href="http://litti-aurelien.fr" title="litti-aurelien.fr" target="_blank">Litti Aurélien</a>
     </div>

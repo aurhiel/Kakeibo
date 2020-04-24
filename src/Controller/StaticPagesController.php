@@ -68,11 +68,12 @@ class StaticPagesController extends Controller
             'template' => 'static-pages/about.html.twig',
             'data' => array(
                 'meta' => array(
-                    'title' => 'A propos',
+                    'title' => 'À propos',
                     'robots' => 'noindex,nofollow'
                 ),
             )
         );
+        $this->pages['about'] = $this->pages['a-propos'];
 
 
         // $this->pages['donnees-personnelles'] = array(
@@ -97,7 +98,7 @@ class StaticPagesController extends Controller
     }
 
     /**
-     * @Route("/{slug}.html", name="static_pages")
+     * @Route("/{_locale}/{slug}.html", name="static_pages")
      */
     public function index($slug)
     {

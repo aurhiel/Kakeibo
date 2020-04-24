@@ -1,3 +1,7 @@
+## GLOBALS
+global :
+  speech : "Take back control of your expenses !"
+
 ## MENU
 menu :
   say_hello : "Hello, %name%"
@@ -30,14 +34,38 @@ menu :
 page :
   # Globals
   btn_back_website :
-    label : "Revenir au site"
+    label   : "Back to website"
+  # PAGE:ABOUT
+  about :
+    meta :
+      title : "About"
+    link :
+      label : "About"
+    title   : "About"
+    block :
+      dev :
+        title : "Development"
+        text  : "This web application was developed using the PHP <a href=\"http://symfony.com/\" target=\"_blank\">Symfony</a>
+          framework, the HTML <a href=\"https://getbootstrap.com/\" target=\"_blank\">Bootstrap</a>
+          framework (version 4.1.1), <a href=\"https://www.chartjs.org/\" target=\"_blank\">ChartJS</a>
+          and the JS <a href=\"https://jquery.com/\" target=\"_blank\">jQuery</a> library."
+      medias :
+        title : "Medias"
+        text  : "The icons of the website have been set up using the
+          <a href=\"https://icomoon.io/\" target=\"_blank\">Icomoon</a> web tool."
   # PAGE:STATS
-  statistics:
-    title:
-      "Statistics for %date%"
+  statistics :
+    title   : "Statistics for %date%"
 
 ## FORMS
+form :
+  required : "Required fields"
+# Form user
 form_user :
+  # Buttons
+  btn :
+    valid :
+      label : "Submit changes"
   # Form user's register
   username :
     label : "Username"

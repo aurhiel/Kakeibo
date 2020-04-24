@@ -302,6 +302,8 @@ var kakeibo = {
     // Charts
     this.chartJS.init();
 
+    // Bootstrap tooltips
+    $('[data-toggle="tooltip"]').tooltip();
 
     // ====================================
     // EVENTS / TRANSACTIONS ==============

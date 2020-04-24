@@ -1,0 +1,79 @@
+## MENU
+menu :
+  say_hello : "Hello, %name%"
+  btn_toggle :
+    aria_label : "Toggle navigation"
+  # Menu's main links
+  links :
+    statistics :
+      label : "Statistics"
+    transactions :
+      label : "Transactions"
+    automaton :
+      label : "Recurrences"
+  # User's menu
+  user :
+    profile :
+      label : "Profile"
+    logout :
+      label : "Logout"
+  # Bank accounts
+  bank_accounts :
+    title   : "My bank accounts"
+    btn_add :
+      label : "Add an account"
+  # Account balance
+  balance :
+    label : "Balance"
+
+## PAGES
+page :
+  # Globals
+  btn_back_website :
+    label : "Revenir au site"
+  # PAGE:STATS
+  statistics:
+    title:
+      "Statistics for %date%"
+
+## FORMS
+form_user :
+  # Form user's register
+  username :
+    label : "Username"
+  email :
+    label : "E-mail"
+  first_password :
+    label : "Password"
+  second_password :
+    label : "Repeat password"
+  # Form admin edit user's settings
+  roles :
+    label : "Rights"
+  is_active :
+    label : "Active"
+
+# Form bank account
+form_bank_account :
+  label :
+    label       : "Bank account title"
+    placeholder : "ex: Checking account"
+  bank_brand :
+    label       : "Banking establishment"
+    placeholder : "Choose an establishment"
+  currency :
+    label       : "Currency"
+
+# Form transaction
+form_transaction :
+  label :
+    label       : "Title of the transaction"
+    placeholder : "ex: Market shopping"
+  amount :
+    label       : "Amount"
+    placeholder : "ex: 256,52"
+  date :
+    label       : "Date of the transaction"
+  category :
+    label       : "Category"
+    placeholder : "Choose a category"

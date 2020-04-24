@@ -16,7 +16,7 @@
                 </div>
                 <div class="col text-right">
                   <a href="{{ path('transactions') }}" class="btn btn-sm btn-outline-primary">
-                    Transactions supp. <span class="icon icon-chevron-right"></span>
+                    Toutes les transactions <span class="icon icon-chevron-right"></span>
                   </a>
                 </div>
               </div>
@@ -42,7 +42,7 @@
               <h3 class="h5 mb-0">
                 {% set month_literal = date('01-' ~ totals_month ~ '-' ~ totals_year)|localizeddate('none', 'none', 'fr', 'Europe/Paris', 'MMMM') %}
                 {% set from_literal = month_literal|first in ['a', 'e', 'i', 'o', 'u'] ? "d'": "de " %}
-                Statistiques {{ from_literal }}{{ month_literal|capitalize }}
+                Dépenses {{ from_literal }}{{ month_literal|capitalize }} par catégorie
               </h3>
             </div>
             <div class="col-auto px-0">
@@ -89,8 +89,8 @@
                 total_incomes.labels.push('{{ inc.label }}');
                 total_incomes.datasets[0].data.push(Math.round(({{ inc.amount_sum }} + Number.EPSILON) * 100) / 100);
                 total_incomes.datasets[0].backgroundColor.push('{{ inc.color }}');
-              { % endfor % #}
-            </script>
+              { % endfor %}
+            </script>#}
           </div>
         </div>
       </div>

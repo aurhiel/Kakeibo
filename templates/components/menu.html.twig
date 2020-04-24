@@ -6,7 +6,9 @@
       {% include 'components/logo.html.twig' with { logo_text : 'K', custom_class : (app.request.attributes.get('_route') == 'dashboard' ? 'text-white bg-primary border-primary' : 'text-primary') } %}
     </a>
 
-    <button class="navbar-toggler mr-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler mr-auto" type="button" data-toggle="collapse"
+      data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+        aria-expanded="false" aria-label="{{ 'menu.btn_toggle.aria_label'|trans }}">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -24,21 +26,22 @@
         <li class="nav-item{% if app.request.attributes.get('_route') == 'statistics' %} active{% endif %}">
           <a class="nav-link" href="{{ path('statistics') }}">
             <span class="icon icon-bar-chart"></span>
-            Statistiques
+            {{ 'menu.links.statistics.label'|trans }}
             {% if app.request.attributes.get('_route') == 'statistics' %} <span class="sr-only">(current)</span>{% endif %}
           </a>
         </li>
         <li class="nav-item{% if app.request.attributes.get('_route') == 'transactions' %} active{% endif %}">
           <a class="nav-link" href="{{ path('transactions') }}">
             <span class="icon icon-edit"></span>
-            Transactions
+            {{ 'menu.links.transactions.label'|trans }}
             {% if app.request.attributes.get('_route') == 'transactions' %} <span class="sr-only">(current)</span>{% endif %}
           </a>
         </li>
         <li class="nav-item{% if app.request.attributes.get('_route') == 'automaton' %} active{% endif %}">
-          <a class="nav-link" href="{{ path('automaton') }}">
+          <a class="nav-link" href="{{ path('automaton') }}" data-toggle="tooltip" data-placement="bottom" title="à venir">
             <span class="icon icon-command"></span>
-            Récurrences
+            {{ 'menu.links.automaton.label'|trans }}
+            {% if app.request.attributes.get('_route') == 'automaton' %} <span class="sr-only">(current)</span>{% endif %}
           </a>
         </li>
       </ul>

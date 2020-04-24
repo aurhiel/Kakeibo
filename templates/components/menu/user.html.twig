@@ -2,7 +2,7 @@
 <div class="navbar-user dropdown order-{{ size_display_menu }}-12">
   <div class="dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     <span class="say-hello mr-1 d-none d-{{ size_display_menu }}-inline">
-      <span class="hello-text">Bonjour,</span> <span class="hello-username">{{ app.user.username }}</span>
+      {{ 'menu.say_hello'|trans({'%name%': app.user.username}) }}
     </span>
 
     {% include 'components/user/avatar.html.twig' %}

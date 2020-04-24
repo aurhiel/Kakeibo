@@ -12,6 +12,9 @@ class AutomatonController extends Controller
      */
     public function index()
     {
+        if ($this->container->getParameter('kernel.environment') !== 'dev')
+            return $this->redirectToRoute('dashboard');
+
         return $this->render('automaton/index.html.twig', [
             'page_title'      => '<span class="icon icon-command"></span> Récurrences',
             'controller_name' => 'AutomatonController',

@@ -71,6 +71,15 @@ page :
     title:
       "Statistiques %for_literal%%date%"
 
+## BLOCKS
+block :
+  inc_exp :
+    period          : "Période %for_literal%%date%"
+    since_register  : "Depuis votre inscription"
+    incomes :
+      title         : "Revenus"
+    expenses :
+      title         : "Dépenses"
 
 ## FORMS
 form :

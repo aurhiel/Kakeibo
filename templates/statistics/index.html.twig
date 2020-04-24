@@ -53,6 +53,8 @@
             {% include 'components/incomes-and-expenses.html.twig' with {
               expenses: total_expenses,
               incomes: total_incomes,
+              month: curr_month,
+              year: curr_year,
               bank_account: current_bank_account,
               full_width: true
             } %}

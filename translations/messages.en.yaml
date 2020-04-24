@@ -70,6 +70,18 @@ page :
   statistics :
     title   : "Statistics for %date%"
 
+
+## BLOCKS
+block :
+  inc_exp :
+    period          : "%date% period"
+    since_register  : "Since your registration"
+    incomes :
+      title         : "Incomes"
+    expenses :
+      title         : "Expenses"
+
+
 ## FORMS
 form :
   required : "Required fields"

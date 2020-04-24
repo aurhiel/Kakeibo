@@ -1,10 +1,18 @@
+{% if month is defined and year is defined %}
+  {% set month_literal = date('01-' ~ month ~ '-' ~ year)|localizeddate('none', 'none', null, null, 'MMMM') %}
+  {% set for_literal = month_literal|first in ['a', 'e', 'i', 'o', 'u'] ? "d'": "de " %}
+  {% set period_text = 'block.inc_exp.period'|trans({ '%date%': (month_literal|capitalize ~ ' ' ~ year), '%for_literal%': for_literal }) %}
+{% else %}
+  {% set period_text = 'block.inc_exp.since_register'|trans %}
+{% endif %}
+
 <div class="row">
   <div class="col-12{% if full_width is not defined %} col-xl-6{% endif %} mb-4">
     <div class="card bg-gradient-success text-white text-shadow border-0">
       <div class="card-body">
         <div class="d-flex align-items-center">
           <div class="col pl-0">
-            <h5 class="card-title small text-uppercase mb-1">Revenus</h5>
+            <h5 class="card-title small text-uppercase mb-1">{{ 'block.inc_exp.incomes.title'|trans }}</h5>
             {% include 'components/price.html.twig' with {
               amount        : incomes,
               currency      : bank_account.currency.label,
@@ -20,13 +28,7 @@
           </div>
         </div>
         <div class="pt-1 mt-3 small text-muted border-top">
-          {% if month is defined and year is defined %}
-            {% set month_literal = date('01-' ~ totals_month ~ '-' ~ totals_year)|localizeddate('none', 'none', 'fr', 'Europe/Paris', 'MMMM') %}
-            {% set from_literal = month_literal|first in ['a', 'e', 'i', 'o', 'u'] ? "d'": "de " %}
-            Période {{ from_literal }}{{ month_literal|capitalize }} {{ year }}
-          {% else %}
-            Depuis votre inscription
-          {% endif %}
+          {{ period_text }}
         </div>
       </div>
     </div>
@@ -36,7 +38,7 @@
       <div class="card-body">
         <div class="d-flex align-items-center">
           <div class="col pl-0">
-            <h5 class="card-title small text-uppercase mb-1">Dépenses</h5>
+            <h5 class="card-title small text-uppercase mb-1">{{ 'block.inc_exp.expenses.title'|trans }}</h5>
             {% include 'components/price.html.twig' with {
               amount        : expenses,
               currency      : bank_account.currency.label,
@@ -52,13 +54,7 @@
           </div>
         </div>
         <div class="pt-1 mt-3 small text-muted border-top">
-          {% if month is defined and year is defined %}
-            {% set month_literal = date('01-' ~ totals_month ~ '-' ~ totals_year)|localizeddate('none', 'none', 'fr', 'Europe/Paris', 'MMMM') %}
-            {% set from_literal = month_literal|first in ['a', 'e', 'i', 'o', 'u'] ? "d'": "de " %}
-            Période {{ from_literal }}{{ month_literal|capitalize }} {{ year }}
-          {% else %}
-            Depuis votre inscription
-          {% endif %}
+          {{ period_text }}
         </div>
       </div>
     </div>

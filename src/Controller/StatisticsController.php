@@ -9,6 +9,7 @@ use App\Entity\Transaction;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\Security;
 
 class StatisticsController extends Controller
@@ -18,7 +19,8 @@ class StatisticsController extends Controller
      */
     public function index($year, $month, Security $security, Request $request)
     {
-        $user = $security->getUser();
+        $user       = $security->getUser();
+        $translator = $this->get('translator');
 
         // Force user to create at least ONE bank account !
         if(count($user->getBankAccounts()) < 1)
@@ -60,6 +62,7 @@ class StatisticsController extends Controller
 
         return $this->render('statistics/index.html.twig', [
             'core_class'      => 'app-core--statistics app-core--merge-body-in-header',
+            'meta'            => [ 'title' => $translator->trans('page.statistics.meta.title') ],
             'stylesheets'     => [ 'kb-dashboard.css' ],
             'scripts'         => [ 'kb-dashboard.js' ],
             'curr_year'       => $year,

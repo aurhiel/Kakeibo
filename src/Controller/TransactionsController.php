@@ -12,6 +12,7 @@ use App\Entity\Category;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\Security;
 
 class TransactionsController extends Controller
@@ -23,7 +24,8 @@ class TransactionsController extends Controller
      */
     public function index($page, Security $security, Request $request)
     {
-        $user = $security->getUser();
+        $user       = $security->getUser();
+        $translator = $this->get('translator');
 
         // Force user to create at least ONE bank account !
         if (count($user->getBankAccounts()) < 1)
@@ -70,7 +72,8 @@ class TransactionsController extends Controller
         $transactions = $r_trans->findByBankAccountAndDateAndPage($default_bank_account, null, null, $page, self::NB_TRANSAC_BY_PAGE);
 
         return $this->render('transactions/index.html.twig', [
-            'page_title'            => '<span class="icon icon-edit"></span> Transactions',
+            'page_title'            => '<span class="icon icon-edit"></span> ' . $translator->trans('page.transactions.title'),
+            'meta'                  => [ 'title' => $translator->trans('page.transactions.title') ],
             'core_class'            => 'app-core--transactions app-core--merge-body-in-header',
             // 'stylesheets'           => [ 'kb-dashboard.css' ],
             // 'scripts'               => [ 'kb-dashboard.js' ],

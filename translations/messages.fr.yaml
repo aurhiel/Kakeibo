@@ -43,6 +43,7 @@ page :
         label : "Inscrivez-vous !"
   # PAGE:REGISTER
   register :
+    title : "Inscription"
     login :
       title : "Déjà inscrit&middot;e ?"
       link :
@@ -50,6 +51,16 @@ page :
   # PAGE:DASHBOARD
   dashboard :
     title : "Dashboard"
+    trans_list :
+      title : "Vos dernières transactions"
+  # PAGE:STATS
+  statistics:
+    meta :
+      title : "Statistiques"
+    title: "Statistiques %for_literal%%date%"
+  # PAGE:TRANSACTIONS
+  transactions :
+    title : "Transactions"
   # PAGE:ABOUT
   about :
     link :
@@ -67,10 +78,6 @@ page :
         title : "Médias"
         text  : "Les icônes du site ont été mise en place à l'aide de l'outil web
           <a href=\"https://icomoon.io/\" target=\"_blank\">Icomoon</a>."
-  # PAGE:STATS
-  statistics:
-    title:
-      "Statistiques %for_literal%%date%"
 
 ## BLOCKS
 block :

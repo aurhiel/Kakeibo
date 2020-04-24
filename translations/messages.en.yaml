@@ -44,6 +44,7 @@ page :
         label : "Sign up !"
   # PAGE:REGISTER
   register :
+    title : "Registration"
     login :
       title : "Already registered ?"
       link :
@@ -51,6 +52,16 @@ page :
   # PAGE:DASHBOARD
   dashboard :
     title : "Dashboard"
+    trans_list :
+      title : "Last transactions"
+  # PAGE:STATS
+  statistics :
+    meta :
+      title : "Statistics"
+    title : "Statistics for %date%"
+  # PAGE:TRANSACTIONS
+  transactions :
+    title : "Transactions"
   # PAGE:ABOUT
   about :
     meta :
@@ -69,9 +80,6 @@ page :
         title : "Medias"
         text  : "The icons of the website have been set up using the
           <a href=\"https://icomoon.io/\" target=\"_blank\">Icomoon</a> web tool."
-  # PAGE:STATS
-  statistics :
-    title   : "Statistics for %date%"
 
 
 ## BLOCKS

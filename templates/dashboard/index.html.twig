@@ -5,7 +5,7 @@
     <div class="row">
       <div class="col-12 col-md-7 col-xl-6 col-xxl-7">
         {% embed 'components/transactions/list.html.twig' with {
-          title: 'Vos dernières transactions',
+          title: 'page.dashboard.trans_list.title'|trans,
           transactions: last_transactions
         } %}
           {% block footer %}

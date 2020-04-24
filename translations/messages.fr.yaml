@@ -34,6 +34,19 @@ page :
   # Globals
   btn_back_website :
     label : "Revenir au site"
+  # PAGE:LOGIN
+  login :
+    title     : "Identification"
+    register :
+      title   : "Pas encore inscrit&middot;e ?"
+      link :
+        label : "Inscrivez-vous !"
+  # PAGE:REGISTER
+  register :
+    login :
+      title : "Déjà inscrit&middot;e ?"
+      link :
+        label : "Connectez-vous"
   # PAGE:ABOUT
   about :
     meta :
@@ -62,12 +75,25 @@ page :
 ## FORMS
 form :
   required : "Champs obligatoires"
+form_login :
+  password :
+    label       : "Mot de passe"
+    placeholder : "Mot de passe"
+  login :
+    label       : "Nom d'utilisateur ou adresse email"
+    placeholder : "Nom d'utilisateur ou adresse email"
+  stay_connected :
+    label       : "Rester connecté"
+  btn :
+    label       : "Connexion"
 # Form user
 form_user :
   # Buttons
   btn :
     valid :
       label : "Valider les modifications"
+    register :
+      label : "S'inscrire"
   # Form user's register
   username :
     label : "Nom d'utilisateur"

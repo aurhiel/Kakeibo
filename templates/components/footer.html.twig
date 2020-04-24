@@ -10,15 +10,15 @@
         </li>#}
         {% set static_pages = {
           'about' : {
-            'en' : { 'slug' : 'about' },
-            'fr' : { 'slug' : 'a-propos' }
+            'en' : { 'slug' : 'about',    'label' : 'page.about.link.label' },
+            'fr' : { 'slug' : 'a-propos', 'label' : 'page.about.link.label' }
           }
         } %}
         {% for s_page in static_pages %}
           {% set page = s_page[app.request.locale] %}
           <li class="list-inline-item">
             <a href="{{ path('static_pages', { slug: page.slug }) }}">
-              {{ ('page.' ~ page.slug ~ '.link.label')|trans }}
+              {{ page.label|trans }}
             </a>
           </li>
         {% endfor %}

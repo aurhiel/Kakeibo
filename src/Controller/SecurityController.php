@@ -22,7 +22,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class SecurityController extends Controller
 {
     /**
-     * @Route("/inscription", name="user_registration")
+     * @Route("/register", name="user_registration")
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, \Swift_Mailer $mailer, AuthorizationCheckerInterface $authChecker)
     {
@@ -96,7 +96,7 @@ class SecurityController extends Controller
 
 
     /**
-     * @Route("/connexion", name="login")
+     * @Route("/login", name="login")
      */
     public function login(Request $request, AuthenticationUtils $authenticationUtils, AuthorizationCheckerInterface $authChecker)
     {
@@ -110,7 +110,6 @@ class SecurityController extends Controller
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('security/login.html.twig', array(
-            'meta'          => array('title' => 'Identification'),
             'last_username' => $lastUsername,
             'error'         => $error,
         ));

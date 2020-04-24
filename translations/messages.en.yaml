@@ -35,6 +35,19 @@ page :
   # Globals
   btn_back_website :
     label   : "Back to website"
+  # PAGE:LOGIN
+  login :
+    title     : "Login"
+    register :
+      title   : "Not registered yet ?"
+      link :
+        label : "Sign up !"
+  # PAGE:REGISTER
+  register :
+    login :
+      title : "Already registered ?"
+      link :
+        label : "Log in now !"
   # PAGE:ABOUT
   about :
     meta :
@@ -60,12 +73,26 @@ page :
 ## FORMS
 form :
   required : "Required fields"
+# Form login
+form_login :
+  password :
+    label       : "Password"
+    placeholder : "Password"
+  login :
+    label       : "Username or email address"
+    placeholder : "Username or email address"
+  stay_connected :
+    label       : "Stay connected"
+  btn :
+    label       : "Login"
 # Form user
 form_user :
   # Buttons
   btn :
     valid :
       label : "Submit changes"
+    register :
+      label : "Register"
   # Form user's register
   username :
     label : "Username"

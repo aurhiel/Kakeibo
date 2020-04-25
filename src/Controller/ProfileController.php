@@ -20,7 +20,7 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 class ProfileController extends Controller
 {
     /**
-     * @Route("/{_locale}/profile", name="user_profile")
+     * @Route("/profil", name="user_profile")
      */
     public function profile(AuthorizationCheckerInterface $authChecker, Request $request, Security $security, UserPasswordEncoderInterface $passwordEncoder)
     {

@@ -20,7 +20,7 @@ class TransactionsController extends Controller
     const NB_TRANSAC_BY_PAGE = 50;
 
     /**
-     * @Route("/{_locale}/transactions/{page}", name="transactions", defaults={"page"=1})
+     * @Route("/transactions/{page}", name="transactions", defaults={"page"=1})
      */
     public function index($page, Security $security, Request $request)
     {
@@ -91,7 +91,7 @@ class TransactionsController extends Controller
     }
 
     /**
-     * @Route("/trans/manage", name="transaction_manage")
+     * @Route("/transactions/manage", name="transaction_manage")
      */
     public function manage(Security $security, Request $request)
     {
@@ -169,7 +169,7 @@ class TransactionsController extends Controller
     }
 
     /**
-     * @Route("/trans/get/{id}", name="transaction_get")
+     * @Route("/transactions/get/{id}", name="transaction_get")
      */
     public function retrieve($id, Security $security, Request $request)
     {
@@ -198,7 +198,7 @@ class TransactionsController extends Controller
     }
 
     /**
-     * @Route("/trans/delete/{id}", name="transaction_delete")
+     * @Route("/transactions/delete/{id}", name="transaction_delete")
      */
     public function delete($id, Security $security, Request $request)
     {

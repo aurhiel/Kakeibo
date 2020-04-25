@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class AutomatonController extends Controller
 {
     /**
-     * @Route("/{_locale}/automaton", name="automaton")
+     * @Route("/automaton", name="automaton")
      */
     public function index()
     {

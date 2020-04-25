@@ -23,7 +23,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class SecurityController extends Controller
 {
     /**
-     * @Route("/register", name="user_registration")
+     * @Route("/inscription", name="user_registration")
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, \Swift_Mailer $mailer, AuthorizationCheckerInterface $authChecker)
     {
@@ -99,7 +99,7 @@ class SecurityController extends Controller
 
 
     /**
-     * @Route("/login", name="login")
+     * @Route("/connexion", name="login")
      */
     public function login(Request $request, AuthenticationUtils $authenticationUtils, AuthorizationCheckerInterface $authChecker)
     {

@@ -15,7 +15,7 @@ use Symfony\Component\Security\Core\Security;
 class StatisticsController extends Controller
 {
     /**
-     * @Route("/{_locale}/stats/{year}/{month}", name="statistics", defaults={"year"="current","month"="current"})
+     * @Route("/statistiques/{year}/{month}", name="statistics", defaults={"year"="current","month"="current"})
      */
     public function index($year, $month, Security $security, Request $request)
     {

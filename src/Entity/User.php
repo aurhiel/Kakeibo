@@ -52,9 +52,9 @@ class User implements AdvancedUserInterface, \Serializable
     private $isActive;
 
     /**
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="string", length=64)
      */
-    private $roles = array();
+    private $role;
 
     /**
      * @ORM\Column(type="datetime")
@@ -163,13 +163,12 @@ class User implements AdvancedUserInterface, \Serializable
     // Roles
     public function getRoles()
     {
-        $roles = empty($this->roles) ? array('ROLE_USER') : $this->roles;
-        return $roles;
+        return array(empty($this->role) ? 'ROLE_USER' : $this->role);
     }
 
-    public function setRoles(array $roles)
+    public function setRole($role)
     {
-        $this->roles = $roles;
+        $this->role = $role;
 
         return $this;
     }

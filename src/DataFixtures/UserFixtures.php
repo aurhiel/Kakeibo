@@ -27,12 +27,12 @@ class UserFixtures extends Fixture implements OrderedFixtureInterface
             [
                 'username'  => 'Aisekhiel',
                 'email'     => 'khielsmail@gmail.com',
-                'roles'     => array('ROLE_ADMIN')
+                'role'      => 'ROLE_ADMIN'
             ],
             [
                 'username'  => 'Aurélien',
                 'email'     => 'litti.aurelien@gmail.com',
-                'roles'     => array('ROLE_ADMIN')
+                'role'      => 'ROLE_ADMIN'
             ],
             [ 'username'  => 'Raven' ],
             [ 'username'  => 'Mannhart' ],
@@ -61,11 +61,10 @@ class UserFixtures extends Fixture implements OrderedFixtureInterface
 
                 $user->setPassword($this->encoder->encodePassword($user, 'pass'));
 
-                if(isset($user_data['roles']) && !empty($user_data['roles']))
-                {
-                    $user->setRoles($user_data['roles']);
+                if(isset($user_data['role']) && !empty($user_data['role'])) {
+                    $user->setRole($user_data['role']);
                 } else {
-                    $user->setRoles(array('ROLE_USER'));
+                    $user->setRole('ROLE_USER');
                 }
 
                 // Save

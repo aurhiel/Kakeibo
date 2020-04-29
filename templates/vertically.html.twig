@@ -6,7 +6,10 @@
 
 {% block header %}{% endblock %}
 
-{% block footer %}{% endblock %}
+{# Footer #}
+{% block footer %}
+  {% include 'components/footer.html.twig' with { 'full_width' : true } %}
+{% endblock %}
 
 {% block body %}
 <div class="vertical-col vertical-col-illustration">

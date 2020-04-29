@@ -38,9 +38,7 @@
 
 
 @include media-breakpoint-up(md) {
-
   // Header title part
-
   .header-title {
     padding-top: $header-title-padding-top-md;
     padding-bottom: $header-title-padding-bottom-md;
@@ -53,9 +51,7 @@
 
 
 @include media-breakpoint-up(lg) {
-
   // Header title part
-
   .header-title {
     padding-top: $header-title-padding-top-lg;
     padding-bottom: $header-title-padding-bottom-lg;
@@ -64,5 +60,13 @@
       font-size: 2.4rem;
       margin-bottom: $header-title-margin-bottom-lg;
     }
+  }
+}
+
+
+@include media-breakpoint-up(xl) {
+  .header-title {
+    padding-top: $header-title-padding-top-xl;
+    padding-bottom: $header-title-padding-bottom-xl;
   }
 }

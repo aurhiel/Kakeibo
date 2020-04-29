@@ -94,19 +94,20 @@
 // Bank account
 
 .navbar-bank-account {
-    line-height: 1.2;
-}
+  line-height: 1.2;
 
-.bank-account-label {
+  .bank-account-label {
     max-width: 7.4rem;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .bank-account-balance {
+    font-size: .84rem;
+  }
 }
 
-.bank-account-balance {
-    font-size: .84rem;
-}
 
 
 

@@ -26,6 +26,11 @@ class Currency
      */
     private $label;
 
+    /**
+     * @ORM\Column(type="string", length=128)
+     */
+    private $slug;
+
     public function getId()
     {
         return $this->id;
@@ -51,6 +56,18 @@ class Currency
     public function setLabel(string $label): self
     {
         $this->label = $label;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }

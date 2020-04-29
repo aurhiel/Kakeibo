@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AdminController!{% endblock %}
+
+{% block body %}
+<div class="container">
+  <div class="row">
+    <div class="col-12 col-md-4 col-lg-5">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="h4 mb-0">Utilisateur&middot;rice&middot;s du site</h3>
+        </div>
+        <table class="table table-striped mb-0">
+          <tbody>
+            <tr>
+              <td><b>{{ 'page.admin.users.amount.label'|trans|raw }}</b></td>
+              <td>{{ users|length }}</td>
+            </tr>
+            <tr>
+              <td><b>{{ 'page.admin.users.last_user.label'|trans|raw }}</b></td>
+              <td>{{ users[0].username }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

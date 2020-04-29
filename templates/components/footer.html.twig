@@ -30,6 +30,14 @@
             </a>
           </li>
         {% endif %}
+        {% if is_granted('ROLE_ADMIN') %}
+          <li class="list-inline-item">
+            <a href="{{ path('admin') }}">
+              <span class="icon icon-settings"></span>
+              Admin
+            </a>
+          </li>
+        {% endif %}
       </ul>
     </div>
 

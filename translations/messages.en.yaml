@@ -90,6 +90,14 @@ page :
         title : "Medias"
         text  : "The icons of the website have been set up using the
           <a href=\"https://icomoon.io/\" target=\"_blank\">Icomoon</a> web tool."
+  # PAGE:ADMIN
+  admin :
+    title : "Website admin" 
+    users :
+      amount :
+        label : "Amount of users"
+      last_user :
+        label : "Last registered user"
 
 
 ## BLOCKS

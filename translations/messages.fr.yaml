@@ -88,6 +88,15 @@ page :
         title : "Médias"
         text  : "Les icônes du site ont été mise en place à l'aide de l'outil web
           <a href=\"https://icomoon.io/\" target=\"_blank\">Icomoon</a>."
+  # PAGE:ADMIN
+  admin :
+    title : "Administration du site"
+    users :
+      amount :
+        label : "Nombre d'utilisateur&middot;rice&middot;s"
+      last_user :
+        label : "Dernier&middot;ère utilisateur&middot;rice inscrit&middot;e"
+
 
 ## BLOCKS
 block :

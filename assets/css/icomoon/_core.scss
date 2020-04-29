@@ -1,14 +1,15 @@
 @import "variables";
 
 @font-face {
-  font-family: $icomoon-font-family;
-  src:  url('#{$icomoon-font-path}/icomoon.eot?3u39vn');
-  src:  url('#{$icomoon-font-path}/icomoon.eot?3u39vn#iefix') format('embedded-opentype'),
-    url('#{$icomoon-font-path}/icomoon.ttf?3u39vn') format('truetype'),
-    url('#{$icomoon-font-path}/icomoon.woff?3u39vn') format('woff'),
-    url('#{$icomoon-font-path}/icomoon.svg?3u39vn#icomoon') format('svg');
+  font-family: '#{$icomoon-font-family}';
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?2nejud');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?2nejud#iefix') format('embedded-opentype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?2nejud') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?2nejud') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?2nejud##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
+  font-display: block;
 }
 
 [class^="icon-"]:before, [class*=" icon-"]:before {

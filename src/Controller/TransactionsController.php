@@ -20,77 +20,6 @@ class TransactionsController extends Controller
     const NB_TRANSAC_BY_PAGE = 50;
 
     /**
-     * @Route("/transactions/{page}", name="transactions", defaults={"page"=1})
-     */
-    public function index($page, Security $security, Request $request)
-    {
-        $user       = $security->getUser();
-        $translator = $this->get('translator');
-
-        // Force user to create at least ONE bank account !
-        if (count($user->getBankAccounts()) < 1)
-            return $this->redirectToRoute('ignition-first-bank-account');
-
-        // User has a bank account
-        $default_bank_account = $user->getDefaultBankAccount();
-
-        // Force user to add or import transaction(s) first
-        if (count($default_bank_account->getTransactions()) < 1)
-            return $this->redirectToRoute('ignition-first-transaction');
-
-        // Build the transaction form
-        $trans_entity = new Transaction();
-        $trans_form   = $this->createForm(TransactionType::class, $trans_entity);
-
-        $em = $this->getDoctrine()->getManager();
-        $r_trans  = $em->getRepository(Transaction::class);
-
-        // Get nb pages of newsletter subscribes
-        $nb_transactions = $r_trans->countAllByBankAccountAndByDate($default_bank_account);
-        $nb_pages_raw = ($nb_transactions / self::NB_TRANSAC_BY_PAGE);
-        $nb_pages     = floor($nb_pages_raw);
-
-        // If there is decimal numbers,
-        //  there is less than 50 subs (=self::NB_TRANSAC_BY_PAGE) to display
-        //  > So we need to add 1 more page
-        if (($nb_pages_raw - $nb_pages) > 0)
-            $nb_pages++;
-
-        // Check if $page is correct, if not redirect with a correct page number
-        if ($nb_pages > 0 && $page > $nb_pages) {
-            $page = max(1, $page - 1);
-
-            // Redirect with correct $page and filters in URI
-            return $this->redirectToRoute('dashboard', [ 'page' => $page ]);
-        }
-
-        // Get incomes & expenses totals
-        $total_incomes  = (float) $r_trans->findTotal($default_bank_account, null, null, 'incomes');
-        $total_expenses = (float) $r_trans->findTotal($default_bank_account, null, null, 'expenses');
-
-        // Get transactions according to current page
-        $transactions = $r_trans->findByBankAccountAndDateAndPage($default_bank_account, null, null, $page, self::NB_TRANSAC_BY_PAGE);
-
-        return $this->render('transactions/index.html.twig', [
-            'page_title'            => '<span class="icon icon-edit"></span> ' . $translator->trans('page.transactions.title'),
-            'meta'                  => [ 'title' => $translator->trans('page.transactions.title') ],
-            'core_class'            => 'app-core--transactions app-core--merge-body-in-header',
-            // 'stylesheets'           => [ 'kb-dashboard.css' ],
-            // 'scripts'               => [ 'kb-dashboard.js' ],
-            'user'                  => $user,
-            'current_bank_account'  => $default_bank_account,
-            'transactions'          => $transactions,
-            'nb_transactions'       => $nb_transactions,
-            'current_page'          => $page,
-            'nb_pages'              => $nb_pages,
-            'nb_by_page'            => self::NB_TRANSAC_BY_PAGE,
-            'total_incomes'         => $total_incomes,
-            'total_expenses'        => $total_expenses,
-            'form_transaction'      => $trans_form->createView()
-        ]);
-    }
-
-    /**
      * @Route("/transactions/manage", name="transaction_manage")
      */
     public function manage(Security $security, Request $request)
@@ -147,7 +76,9 @@ class TransactionsController extends Controller
                     'query_status'    => 1,
                     'slug_status'     => 'success',
                     'message_status'  => $message_status_ok,
-                    'entity'          => self::format_json($trans_entity)
+                    // Data
+                    'entity'                => self::format_json($trans_entity),
+                    'default_bank_account'  => self::format_json_bank_account($default_bank_account)
                 );
             } catch (\Exception $e) {
                 // Something goes wrong
@@ -225,12 +156,16 @@ class TransactionsController extends Controller
             try {
                 // Flush OK !
                 $em->flush();
+                // Retrieve user's default bank account
+                $default_bank_account = $user->getDefaultBankAccount();
 
                 $return_data = [
                     'query_status'    => 1,
                     'slug_status'     => 'success',
                     'message_status'  => 'Suppression de la transaction effectuée.',
-                    'entity'          => [ 'id' => $id_trans_deleted ]
+                    // Data
+                    'entity'                => [ 'id' => $id_trans_deleted ],
+                    'default_bank_account'  => self::format_json_bank_account($default_bank_account)
                 ];
             } catch (\Exception $e) {
                 // Something goes wrong
@@ -252,11 +187,83 @@ class TransactionsController extends Controller
         }
     }
 
+    /**
+     * @Route("/transactions/{page}", name="transactions", defaults={"page"=1})
+     */
+    public function index($page, Security $security, Request $request)
+    {
+        $user       = $security->getUser();
+        $translator = $this->get('translator');
+
+        // Force user to create at least ONE bank account !
+        if (count($user->getBankAccounts()) < 1)
+            return $this->redirectToRoute('ignition-first-bank-account');
+
+        // User has a bank account
+        $default_bank_account = $user->getDefaultBankAccount();
+
+        // Force user to add or import transaction(s) first
+        if (count($default_bank_account->getTransactions()) < 1)
+            return $this->redirectToRoute('ignition-first-transaction');
+
+        // Build the transaction form
+        $trans_entity = new Transaction();
+        $trans_form   = $this->createForm(TransactionType::class, $trans_entity);
+
+        $em = $this->getDoctrine()->getManager();
+        $r_trans  = $em->getRepository(Transaction::class);
+
+        // Get nb pages of newsletter subscribes
+        $nb_transactions = $r_trans->countAllByBankAccountAndByDate($default_bank_account);
+        $nb_pages_raw = ($nb_transactions / self::NB_TRANSAC_BY_PAGE);
+        $nb_pages     = floor($nb_pages_raw);
+
+        // If there is decimal numbers,
+        //  there is less than 50 subs (=self::NB_TRANSAC_BY_PAGE) to display
+        //  > So we need to add 1 more page
+        if (($nb_pages_raw - $nb_pages) > 0)
+            $nb_pages++;
+
+        // Check if $page is correct, if not redirect with a correct page number
+        if ($nb_pages > 0 && $page > $nb_pages) {
+            $page = max(1, $page - 1);
+
+            // Redirect with correct $page and filters in URI
+            return $this->redirectToRoute('dashboard', [ 'page' => $page ]);
+        }
+
+        // Get incomes & expenses totals
+        $total_incomes  = (float) $r_trans->findTotal($default_bank_account, null, null, 'incomes');
+        $total_expenses = (float) $r_trans->findTotal($default_bank_account, null, null, 'expenses');
+
+        // Get transactions according to current page
+        $transactions = $r_trans->findByBankAccountAndDateAndPage($default_bank_account, null, null, $page, self::NB_TRANSAC_BY_PAGE);
+
+        return $this->render('transactions/index.html.twig', [
+            'page_title'            => '<span class="icon icon-list"></span> ' . $translator->trans('page.transactions.title'),
+            'meta'                  => [ 'title' => $translator->trans('page.transactions.title') ],
+            'core_class'            => 'app-core--transactions app-core--merge-body-in-header',
+            // 'stylesheets'           => [ 'kb-dashboard.css' ],
+            // 'scripts'               => [ 'kb-dashboard.js' ],
+            'user'                  => $user,
+            'current_bank_account'  => $default_bank_account,
+            'transactions'          => $transactions,
+            'nb_transactions'       => $nb_transactions,
+            'current_page'          => $page,
+            'nb_pages'              => $nb_pages,
+            'nb_by_page'            => self::NB_TRANSAC_BY_PAGE,
+            'total_incomes'         => $total_incomes,
+            'total_expenses'        => $total_expenses,
+            'form_transaction'      => $trans_form->createView()
+        ]);
+    }
+
 
     /**
      * @Route("/trans/import-csv", name="transaction_import_csv")
      * TODO: only tested with "Caisse d'épargne" CSV files,
      *          need to do more test with other banks files
+     *          + custom import ? (TODO auto-detect fields + user validation)
      */
     public function import_csv(Security $security, Request $request)
     {
@@ -416,13 +423,36 @@ class TransactionsController extends Controller
 
     private static function format_json($transaction)
     {
+        $category = $transaction->getCategory();
+
         return [
             'id'        => $transaction->getId(),
             'date'      => $transaction->getDate()->format('Y-m-d'),
             'amount'    => $transaction->getAmount(),
             'label'     => $transaction->getLabel(),
             'details'   => $transaction->getDetails(),
-            'category'  => $transaction->getCategory()->getId(),
+            'category'  => $category->getId(),
+            'category_entity' => [
+                'id'    => $category->getId(),
+                'label' => $category->getLabel(),
+                'color' => $category->getColor()
+            ],
+        ];
+    }
+
+    private static function format_json_bank_account($bank_account)
+    {
+        $currency = $bank_account->getCurrency();
+        return [
+            'id'        => $bank_account->getId(),
+            'balance'   => round($bank_account->getBalance(), 2),
+            'currency'  => $currency->getId(),
+            'currency_entity' => [
+                'id'    => $currency->getId(),
+                'name'  => $currency->getName(),
+                'label' => $currency->getLabel(),
+                'slug'  => $currency->getSlug()
+            ]
         ];
     }
 }

@@ -68,6 +68,11 @@
     content: $icon-key;
   }
 }
+.icon-list {
+  &:before {
+    content: $icon-list;
+  }
+}
 .icon-lock {
   &:before {
     content: $icon-lock;

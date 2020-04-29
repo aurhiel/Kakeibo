@@ -7,7 +7,7 @@
 <div class="form-row">
   <div class="col-sm-6 mb-3">
     {{ form_label(form_transaction.date) }}
-    {{ form_widget(form_transaction.date) }}
+    {{ form_widget(form_transaction.date, { attr : { 'data-form-clear': "false" } }) }}
     {{ form_errors(form_transaction.date) }}
   </div>
 

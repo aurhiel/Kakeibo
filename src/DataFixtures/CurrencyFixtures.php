@@ -16,9 +16,9 @@ class CurrencyFixtures extends Fixture implements OrderedFixtureInterface
     public function load(ObjectManager $manager)
     {
         $currencies = [
-            [ 'name' => "Euro",           'label' => "€" ],
-            [ 'name' => "Dollar",         'label' => "$" ],
-            [ 'name' => "Livre sterling", 'label' => "£" ],
+            [ 'name' => "Euro",           'label' => "€", 'slug' => "EUR" ],
+            [ 'name' => "Dollar",         'label' => "$", 'slug' => "USD" ],
+            [ 'name' => "Livre sterling", 'label' => "£", 'slug' => "GBP" ],
         ];
 
         foreach ($currencies as $currency)
@@ -26,9 +26,10 @@ class CurrencyFixtures extends Fixture implements OrderedFixtureInterface
             // New entity
             $curr = new Currency();
 
+            // Data
             $curr->setName($currency['name']);
-
             $curr->setLabel($currency['label']);
+            $curr->setSlug($currency['slug']);
 
             // Save
             $manager->persist($curr);

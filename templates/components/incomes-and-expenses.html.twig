@@ -13,11 +13,13 @@
         <div class="d-flex align-items-center">
           <div class="col pl-0">
             <h5 class="card-title small text-uppercase mb-1">{{ 'block.inc_exp.incomes.title'|trans }}</h5>
-            {% include 'components/price.html.twig' with {
-              amount        : incomes,
-              currency      : bank_account.currency.label,
-              disable_color : true,
-              custom_class  : 'font-weight-bold h5 no-wrap' } %}
+            <div class="bank-account-total-incomes">
+              {% include 'components/price.html.twig' with {
+                amount        : incomes,
+                currency      : bank_account.currency.label,
+                disable_color : true,
+                custom_class  : 'font-weight-bold h5 no-wrap' } %}
+            </div>
           </div>
           <div class="col-auto px-0">
             <span class="avatar">
@@ -39,11 +41,13 @@
         <div class="d-flex align-items-center">
           <div class="col pl-0">
             <h5 class="card-title small text-uppercase mb-1">{{ 'block.inc_exp.expenses.title'|trans }}</h5>
-            {% include 'components/price.html.twig' with {
-              amount        : expenses,
-              currency      : bank_account.currency.label,
-              disable_color : true,
-              custom_class  : 'font-weight-bold h5 no-wrap' } %}
+            <div class="bank-account-total-expenses">
+              {% include 'components/price.html.twig' with {
+                amount        : expenses,
+                currency      : bank_account.currency.label,
+                disable_color : true,
+                custom_class  : 'font-weight-bold h5 no-wrap' } %}
+            </div>
           </div>
           <div class="col-auto px-0">
             <span class="avatar">

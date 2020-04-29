@@ -155,16 +155,19 @@ var kakeibo = {
   // Transaction panel (add/edit transac.)
   transaction: {
     $panel: null,
+    $lists: null,
     init: function() {
       var self = this;
       this.$panel = kakeibo.$body.find('.app-panel--transaction-form');
+      this.$lists = kakeibo.$body.find('.list-transactions');
 
       kakeibo.$body.on('click', '.toggle-panel-transaction', function() {
         var $btn = $(this);
         self.toggle_panel($btn.data('panel-type'), $btn.data('panel-id-edit'));
       });
     },
-    url_load: '/trans/get/',
+    // TODO get using a config
+    url_load: '/transactions/get/',
     load: function(id_trans, callback) {
       $.ajax({
         url     : this.url_load + id_trans,
@@ -176,9 +179,54 @@ var kakeibo = {
         }
       });
     },
-    update_entity_nodes: function(data) {
-      console.log('[transaction.update_entity_nodes]', data);
+    after_update: function(data, is_edit) {
+      console.log('[transaction.after_update]', data, is_edit);
+      console.log(this.$lists);
+      var bank_account  = data.default_bank_account;
+      var currency      = bank_account.currency_entity;
+      var transaction   = data.entity;
+
+      this.$lists.find('.-item').each(function() {
+        var $item = $(this);
+        var matched_date = null;
+        if ($item.hasClass('-item-date')) {
+
+        }
+        if ($item.hasClass('-item-transac')) {
+
+        }
+      });
+
+      this.update_balance(bank_account.balance, currency);
+      this.update_exp_and_inc(transaction.amount, currency);
       this.toggle_panel('close');
+    },
+    update_balance : function(new_balance, currency) {
+      // console.log('update_balance: ', new_balance, currency);
+      var $text = kakeibo.$bank_account_balance.find('.text-price');
+
+      // Update text price
+      $text.html(kakeibo.format.price(new_balance, currency.slug));
+
+      // Toggle text-[success|warning|danger] to change balance color
+      $text.removeClass('text-success text-warning text-danger');
+      if (new_balance < 0) $text.addClass('text-danger');
+      else if (new_balance > 0) $text.addClass('text-success');
+      else $text.addClass('text-warning');
+    },
+    update_exp_and_inc : function(amount, currency) {
+      console.log('update_exp_and_inc: ', amount, currency);
+
+      var $bank_total = (amount < 0) ? kakeibo.$bank_account_total_expenses : kakeibo.$bank_account_total_incomes;
+      var $text       = $bank_total.find('.text-price');
+      var old_total   = parseFloat($text.html().replace(/ /g, '').replace(',', '.'));
+      var new_total   = old_total + amount;
+
+      console.log(kakeibo.format.price(new_total, currency.slug));
+
+      $text.html(kakeibo.format.price(new_total, currency.slug));
+
+      console.log(old_total, new_total);
     },
     // toggle_panel = add / edit transaction (toggle_panel())
     toggle_panel: function(type, id_edit) {
@@ -207,7 +255,7 @@ var kakeibo = {
             console.warn('[transaction.toggle_panel] invalid ID transaction, something went wrong...');
           }
         } else if (type == 'close') {
-          console.log('[transaction.toggle_panel] clear form ?');
+          // Clear <form>
           kakeibo.forms.clear('transaction');
         }
       } else {
@@ -215,9 +263,9 @@ var kakeibo = {
       }
     }
   },
-  forms: {
+  forms : {
     $items : null,
-    init: function() {
+    init : function() {
       var self = this;
       this.$items = kakeibo.$body.find('form');
 
@@ -230,21 +278,24 @@ var kakeibo = {
       });
     },
     // ajax submit
-    submit: function(form) {
-      var $form = $(form);
+    submit : function(form) {
+      var $form     = $(form);
+      var form_name = $form.attr('name');
+      var is_edit   = $form.find('#' + form_name + '_id').length > 0;
+
       $.ajax({
         method  : $form.attr('method'),
         url     : $form.attr('action'),
         data    : $form.serialize(),
         success : function(r) {
           // Call entity updater
-          if (typeof kakeibo[$form.attr('name')]['update_entity_nodes'] != 'undefined')
-            kakeibo[$form.attr('name')]['update_entity_nodes'](r);
+          if (typeof kakeibo[form_name]['after_update'] != 'undefined')
+            kakeibo[form_name]['after_update'](r, is_edit);
         },
         error   : function() { /* TODO */ }
       })
     },
-    fill: function(name, data) {
+    fill : function(name, data) {
       var $form = this.$items.filter('[name="' + name + '"]');
 
       // Force input hidden for id
@@ -255,14 +306,35 @@ var kakeibo = {
         $form.find('#'+ name +'_' + property).val(data[property]);
       }
     },
-    clear: function(name) {
-      var $form = this.$items.filter('[name="' + name + '"]');
+    clear : function(name) {
+      var $form     = this.$items.filter('[name="' + name + '"]');
+      var $texts    = $form.find('input, textarea');
+      var $selects  = $form.find('select');
+
+      // Reset classic <input|textarea>
+      $texts.not('[type="hidden"], [data-form-clear="false"]').val('');
+      // Reset <input|textarea> with a front wanted value
+      $texts.filter('[data-stealth-raven-wash-value]').each(function() {
+        $(this).val($(this).attr('data-stealth-raven-wash-value'));
+      });
+
+      // Reset <select>
+      $selects.not('[data-form-clear="false"]').each(function() {
+        var $select = $(this);
+        var $options = $select.find('option');
+        var select_val = $options.first().val();
+
+        if ($options.filter('[selected]').length > 0)
+          select_val = $options.filter('[selected]').val();
+
+        $select.val(select_val);
+      });
 
       // Delete hidden input for id
       $form.find('#' + name + '_id').remove();
 
       // Clear inputs (TODO)
-      console.log('TODO full clear form !');
+      // console.log('TODO full clear form !');
     }
   },
   // Loader
@@ -286,8 +358,21 @@ var kakeibo = {
     // Set loading
     this.load();
   },
+  format: {
+    // TODO: set dynamic lang param (replace fr-FR)
+    price: function(amount, currency_slug) {
+      var num_format = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: currency_slug });
+      return num_format.format(amount).replace(' ', ' '); // NOTE: .replace weird space with a real one
+    }
+  },
   // = ~ init/construct
   launch: function() {
+    // ====================================
+    // NODES ==============================
+    this.$bank_account_balance = this.$body.find('.bank-account-balance');
+    this.$bank_account_total_expenses = this.$body.find('.bank-account-total-expenses');
+    this.$bank_account_total_incomes  = this.$body.find('.bank-account-total-incomes');
+
     // ====================================
     // PLUGINS ============================
     // Forms

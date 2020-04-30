@@ -32,14 +32,54 @@ class UserType extends AbstractType
 
         $is_edit = ($options['type_form'] == 'edit');
 
+        $fake_users = [
+            [
+                'username'  => 'JohnWick942',
+                'email'     => 'john@wick.com',
+            ],
+            [
+                'username'  => 'L3ila0rg4na',
+                'email'     => 'leila@organa.com',
+            ],
+            [
+                'username'  => 'Dupont&Dupond',
+                'email'     => 'hello@dupond-et-dupond.com',
+            ],
+            [
+                'username'  => 'raven99',
+                'email'     => 'rachel@roth.com',
+            ],
+            [
+                'username'  => 'w4de-w!lson',
+                'email'     => 'wade@wilson.com',
+            ],
+            [
+                'username'  => 'B4tou',
+                'email'     => 'bruce@wayne.com',
+            ],
+            [ 'username'  => 'Natalia Romanova' ],
+            [ 'username'  => 'Carole Danvers' ],
+            [ 'username'  => 'Harleen Quinzel' ],
+            [ 'username'  => 'David Hayter' ],
+            [ 'username'  => 'Snake Plissken' ],
+            [ 'username'  => 'Nami Nabigeta' ],
+        ];
+
+        $user = $fake_users[rand(0, (count($fake_users) - 1))];
+
+        $user_username  = str_replace(' ', '', $user['username']);
+        $user_email     = (isset($user['email'])) ? $user['email'] : strtolower(str_replace(' ', '.', $user['username']).'@gmail.com');
+        dump($user_username, $user_email);
         $builder
             ->add('username',       TextType::class,  array(
-                'label' => 'form_user.username.label',
-                'disabled' => $is_edit
+                'label'     => 'form_user.username.label',
+                'attr'      => [ 'placeholder' => "ex: $user_username" ],
+                'disabled'  => $is_edit
             ))
             ->add('email',          EmailType::class, array(
-                'label' => 'form_user.email.label',
-                'disabled' => $is_edit
+                'label'     => 'form_user.email.label',
+                'attr'      => [ 'placeholder' => "ex: $user_email" ],
+                'disabled'  => $is_edit
             ))
             ->add('plainPassword',  RepeatedType::class, array(
                 'type' => PasswordType::class,

@@ -1,8 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% set month_literal = date('01-' ~ curr_month ~ '-' ~ curr_year)|localizeddate('none', 'none', null, null, 'MMMM') %}
-{% set for_literal = month_literal|lower|first in ['a', 'e', 'i', 'o', 'u'] ? "d'": "de " %}
-{% set page_title = '<span class="icon icon-bar-chart"></span> ' ~ ('page.statistics.title')|trans({ '%date%': (month_literal|capitalize ~ ' ' ~ curr_year), '%for_literal%': for_literal }) %}
+{% if curr_date_start|date('m') == curr_date_end|date('m') %}
+  {% set month_literal = curr_date_start|localizeddate('none', 'none', null, null, 'MMMM') %}
+  {% set for_literal = month_literal|lower|first in ['a', 'e', 'i', 'o', 'u'] ? "d'": "de " %}
+  {% set page_title = '<span class="icon icon-bar-chart"></span> ' ~ ('page.statistics.title')|trans({ '%date%': (month_literal|capitalize ~ ' ' ~ curr_date_start|date('Y')), '%for_literal%': for_literal }) %}
+{% else %}
+  {% set page_title = '<span class="icon icon-bar-chart"></span> ' ~ ('page.statistics.title_period_custom')|trans({ '%date_start%': curr_date_start|localizeddate('long', 'none'), '%date_end%': curr_date_end|localizeddate('long', 'none') }) %}
+{% endif %}
+
 
 {# Header #}
 {% block header %}
@@ -53,8 +58,8 @@
             {% include 'components/incomes-and-expenses.html.twig' with {
               expenses: total_expenses,
               incomes: total_incomes,
-              month: curr_month,
-              year: curr_year,
+              date_start: curr_date_start,
+              date_end: curr_date_end,
               bank_account: current_bank_account,
               full_width: true
             } %}

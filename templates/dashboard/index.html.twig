@@ -34,8 +34,8 @@
         {% include 'components/incomes-and-expenses.html.twig' with {
           expenses: total_expenses,
           incomes: total_incomes,
-          month: totals_month,
-          year: totals_year,
+          date_start: totals_date_start,
+          date_end: totals_date_end,
           bank_account: current_bank_account
         } %}
 
@@ -43,7 +43,7 @@
           <div class="card-header d-flex align-items-center">
             <div class="col pl-0">
               <h3 class="h5 mb-0">
-                {% set month_literal = date('01-' ~ totals_month ~ '-' ~ totals_year)|localizeddate('none', 'none', null, null, 'MMMM') %}
+                {% set month_literal = totals_date_start|localizeddate('none', 'none', null, null, 'MMMM') %}
                 {% set for_literal = month_literal|lower|first in ['a', 'e', 'i', 'o', 'u'] ? "d'": "de " %}
                 {{ 'page.dashboard.chart_exp.title'|trans({ '%date%': (month_literal|capitalize), '%for_literal%': for_literal }) }}
               </h3>

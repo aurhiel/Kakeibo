@@ -50,7 +50,10 @@ class TransactionRepository extends ServiceEntityRepository
         return $qb->getQuery()->getSingleScalarResult();
     }
 
-    public function findByBankAccountAndDateAndPage($bank_account, $year = null, $month = null, $page = null, $max_results = 25)
+    /**
+     * @return Transaction[] Returns an array of Transaction objects
+     */
+    public function findByBankAccountAndDateAndPage($bank_account, $date_start = null, $date_end = null, $page = null, $max_results = 25)
     {
         $qb = $this->createQueryBuilder('t')
             ->orderBy('t.date', 'DESC')
@@ -58,12 +61,14 @@ class TransactionRepository extends ServiceEntityRepository
             ->andWhere('t.bank_account = :bank_account')
             ->setParameter('bank_account', $bank_account);
 
-        // WHERE: date
-        if (!is_null($month) && !is_null($year)) {
-            $qb->andWhere('MONTH(t.date) = :month AND YEAR(t.date) = :year')
-                ->setParameter('month', $month)
-                ->setParameter('year', $year);
-        }
+        // WHERE: transaction's date start
+        if (!is_null($date_start))
+            $qb->andWhere('t.date >= :date_start')
+                ->setParameter('date_start', $date_start);
+        // WHERE: transaction's date end
+        if (!is_null($date_end))
+            $qb->andWhere('t.date <= :date_end')
+                ->setParameter('date_end', $date_end);
 
         // PAGINATOR
         if (!is_null($page)) {
@@ -95,46 +100,57 @@ class TransactionRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findTotal($bank_account, $year = null, $month = null, $spent_type = 'incomes')
+    public function findTotal($bank_account, $date_start = null, $date_end = null, $spent_type = 'incomes')
     {
         $qb = $this->createQueryBuilder('t')
             ->select('SUM(t.amount) AS amount_sum')
             ->andWhere('t.bank_account = :bank_account')
-            ->setParameter('bank_account', $bank_account)
-            ->andWhere('t.date <= CURRENT_DATE()');
+            ->setParameter('bank_account', $bank_account);
 
         // WHERE: Incomes or Expenses ?
         if ($spent_type == 'incomes') $qb->andWhere('t.amount > 0');
         else $qb->andWhere('t.amount < 0');
 
-        // WHERE: date
-        if (!is_null($month) && !is_null($year)) {
-            $qb->andWhere('MONTH(t.date) = :month AND YEAR(t.date) = :year')
-                ->setParameter('month', $month)
-                ->setParameter('year', $year);
+        // WHERE: transaction's date start
+        if (!is_null($date_start))
+            $qb->andWhere('t.date >= :date_start')
+                ->setParameter('date_start', $date_start);
+        // WHERE: transaction's date end
+        if (!is_null($date_end)) {
+            $qb->andWhere('t.date <= :date_end')
+                ->setParameter('date_end', $date_end);
+        } else {
+            $qb->andWhere('t.date <= CURRENT_DATE()');
         }
 
         return $qb->getQuery()
             ->getSingleScalarResult();
     }
 
-    public function findTotalGroupBy($bank_account, $year = null, $month = null, $group_by = 'category', $spent_type = 'incomes')
+    /**
+     * @return Transaction[] Returns an array of Transaction objects
+     */
+    public function findTotalGroupBy($bank_account, $date_start = null, $date_end = null, $group_by = 'category', $spent_type = 'incomes')
     {
         $qb = $this->createQueryBuilder('t')
             ->select('SUM(t.amount) AS amount_sum')
             ->andWhere('t.bank_account = :bank_account')
-            ->setParameter('bank_account', $bank_account)
-            ->andWhere('t.date <= CURRENT_DATE()');
+            ->setParameter('bank_account', $bank_account);
 
         // WHERE: Incomes or Expenses ?
         if ($spent_type == 'incomes') $qb->andWhere('t.amount > 0');
         else $qb->andWhere('t.amount < 0');
 
-        // WHERE: Date
-        if (!is_null($month) && !is_null($year)) {
-            $qb->andWhere('MONTH(t.date) = :month AND YEAR(t.date) = :year')
-                ->setParameter('month', $month)
-                ->setParameter('year', $year);
+        // WHERE: transaction's date start
+        if (!is_null($date_start))
+            $qb->andWhere('t.date >= :date_start')
+                ->setParameter('date_start', $date_start);
+        // WHERE: transaction's date end
+        if (!is_null($date_end)) {
+            $qb->andWhere('t.date <= :date_end')
+                ->setParameter('date_end', $date_end);
+        } else {
+            $qb->andWhere('t.date <= CURRENT_DATE()');
         }
 
         // GROUP BY: Category
@@ -154,33 +170,4 @@ class TransactionRepository extends ServiceEntityRepository
         return $qb->getQuery()
             ->getResult();
     }
-
-//    /**
-//     * @return Transaction[] Returns an array of Transaction objects
-//     */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Transaction
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

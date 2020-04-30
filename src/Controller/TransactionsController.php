@@ -72,13 +72,24 @@ class TransactionsController extends Controller
             try {
                 // Flush OK !
                 $em->flush();
+
+                // TODO Change this with 2 dates (end & start)
+                $curr_month = (int) date('m');
+                $curr_year  = (int) date('Y');
+
+                // Get incomes & expenses totals
+                $total_incomes  = (float) $r_trans->findTotal($default_bank_account, $curr_year, $curr_month, 'incomes');
+                $total_expenses = (float) $r_trans->findTotal($default_bank_account, $curr_year, $curr_month, 'expenses');
+
                 $return_data = array(
                     'query_status'    => 1,
                     'slug_status'     => 'success',
                     'message_status'  => $message_status_ok,
                     // Data
                     'entity'                => self::format_json($trans_entity),
-                    'default_bank_account'  => self::format_json_bank_account($default_bank_account)
+                    'default_bank_account'  => self::format_json_bank_account($default_bank_account),
+                    'total_incomes'         => $total_incomes,
+                    'total_expenses'        => $total_expenses,
                 );
             } catch (\Exception $e) {
                 // Something goes wrong

@@ -66,7 +66,8 @@ page :
   statistics :
     meta :
       title : "Statistics"
-    title : "Statistics for %date%"
+    title               : "Statistics for %date%"
+    title_period_custom : "Statistics from %date_start% to %date_end%"
     chart_exp :
       title : "Expenses by Category"
   # PAGE:TRANSACTIONS
@@ -92,7 +93,7 @@ page :
           <a href=\"https://icomoon.io/\" target=\"_blank\">Icomoon</a> web tool."
   # PAGE:ADMIN
   admin :
-    title : "Website admin" 
+    title : "Website admin"
     users :
       amount :
         label : "Amount of users"
@@ -104,6 +105,7 @@ page :
 block :
   inc_exp :
     period          : "%date% period"
+    period_custom   : "Period from %date_start% to %date_end%"
     since_register  : "Since your registration"
     incomes :
       title         : "Incomes"

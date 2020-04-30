@@ -15,9 +15,9 @@ use Symfony\Component\Security\Core\Security;
 class StatisticsController extends Controller
 {
     /**
-     * @Route("/statistiques/{year}/{month}", name="statistics", defaults={"year"="current","month"="current"})
+     * @Route("/statistiques/{date_start}/{date_end}", name="statistics", defaults={"date_start"="current","date_end"="current"})
      */
-    public function index($year, $month, Security $security, Request $request)
+    public function index($date_start, $date_end, Security $security, Request $request)
     {
         $user       = $security->getUser();
         $translator = $this->get('translator');
@@ -33,40 +33,39 @@ class StatisticsController extends Controller
         }
 
         // Default values/params
-        $year     = (int)(($year == 'current') ? date('Y') : $year);
-        $month    = (int)(($month == 'current') ? date('m') : $month);
+        $date_start = ($date_start == 'current') ? date('Y-m-01') : $date_start;
+        $date_end   = ($date_end == 'current') ? date('Y-m-t') : $date_end;
         $em       = $this->getDoctrine()->getManager();
         $r_trans  = $em->getRepository(Transaction::class);
 
         // Get totals
-        $total_incomes  = (float) $r_trans->findTotal($default_bank_account, $year, $month, 'incomes');
-        $total_expenses = (float) $r_trans->findTotal($default_bank_account, $year, $month, 'expenses');
+        $total_incomes  = (float) $r_trans->findTotal($default_bank_account, $date_start, $date_end, 'incomes');
+        $total_expenses = (float) $r_trans->findTotal($default_bank_account, $date_start, $date_end, 'expenses');
 
         // Get transactions according to current page
-        $transactions = $r_trans->findByBankAccountAndDateAndPage($default_bank_account, $year, $month);
+        $transactions = $r_trans->findByBankAccountAndDateAndPage($default_bank_account, $date_start, $date_end);
         $nb_transactions = count($transactions);
 
-        $now = new \DateTime();
-        if ($nb_transactions < 1 && ($year != (int)$now->format('Y') && $month != (int)$now->format('m'))) {
+        // Redirect to a page with transactions if not current date
+        if ($nb_transactions < 1 && ($date_start != date('Y-m-01') && $date_end != date('Y-m-t')))
             return $this->redirectToRoute('statistics');
-        }
 
-        $total_incomes_by_date = self::reorderByDate($r_trans->findTotalGroupBy($default_bank_account, $year, $month, 'date', 'incomes'));
-        $total_expenses_by_date = self::reorderByDate($r_trans->findTotalGroupBy($default_bank_account, $year, $month, 'date', 'expenses'));
+        $total_incomes_by_date = self::reorderByDate($r_trans->findTotalGroupBy($default_bank_account, $date_start, $date_end, 'date', 'incomes'));
+        $total_expenses_by_date = self::reorderByDate($r_trans->findTotalGroupBy($default_bank_account, $date_start, $date_end, 'date', 'expenses'));
 
         self::completeEmptyDate($total_incomes_by_date, $total_expenses_by_date);
         self::completeEmptyDate($total_expenses_by_date, $total_incomes_by_date);
 
         // Retrieve total incomes & expenses grouped by categories
-        $total_expenses_by_cats = $r_trans->findTotalGroupBy($default_bank_account, $year, $month, 'category', 'expenses');
+        $total_expenses_by_cats = $r_trans->findTotalGroupBy($default_bank_account, $date_start, $date_end, 'category', 'expenses');
 
         return $this->render('statistics/index.html.twig', [
             'core_class'      => 'app-core--statistics app-core--merge-body-in-header',
             'meta'            => [ 'title' => $translator->trans('page.statistics.meta.title') ],
             'stylesheets'     => [ 'kb-dashboard.css' ],
             'scripts'         => [ 'kb-dashboard.js' ],
-            'curr_year'       => $year,
-            'curr_month'      => $month,
+            'curr_date_start' => $date_start,
+            'curr_date_end'   => $date_end,
             'current_bank_account'  => $default_bank_account,
             'transactions'          => $transactions,
             'nb_transactions'       => $nb_transactions,

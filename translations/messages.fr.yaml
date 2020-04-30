@@ -64,8 +64,9 @@ page :
   # PAGE:STATS
   statistics:
     meta :
-      title : "Statistiques"
-    title   : "Statistiques %for_literal%%date%"
+      title             : "Statistiques"
+    title               : "Statistiques %for_literal%%date%"
+    title_period_custom : "Statistiques du %date_start% au %date_end%"
     chart_exp :
       title : "Dépenses par catégorie"
   # PAGE:TRANSACTIONS
@@ -102,6 +103,7 @@ page :
 block :
   inc_exp :
     period          : "Période %for_literal%%date%"
+    period_custom   : "Période du %date_start% au %date_end%"
     since_register  : "Depuis votre inscription"
     incomes :
       title         : "Revenus"

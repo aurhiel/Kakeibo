@@ -1,4 +1,4 @@
-{# NOTE: Block used to display transactions #}
+{# NOTE: Block used to display a list of transactions #}
 {% if transactions is defined and transactions is not empty %}
   {% set default_bank_account = app.user.getDefaultBankAccount() %}
   <div class="card">
@@ -24,10 +24,12 @@
       </div>
     </div>
     {% set last_date = null %}
-    <div class="list-transactions">
+    <div class="list-transactions"{% if limit_max is defined %} data-kb-limit-items="{{ limit_max }}"{% endif %}
+      {% if date_start is defined %} data-kb-date-start="{{ date_start }}"{% endif %}
+        {% if date_end is defined %} data-kb-date-end="{{ date_end }}"{% endif %}>
       {% for transac in transactions %}
         {% if last_date != transac.date|date('Y-m-d') %}
-          <div class="-item -item-date">
+          <div class="-item -item-date" data-kb-date-formatted="{{ transac.date|date('Y-m-d') }}">
             {{ transac.date|localizeddate('long', 'none') }}
           </div>
         {% endif %}
@@ -68,11 +70,13 @@
               <span class="dot"></span>
             </span>
             <div class="dropdown-menu dropdown-menu-right text-right">
-              <button class="dropdown-item btn-edit-transac toggle-panel-transaction"
-                type="button" data-panel-type="edit" data-panel-id-edit="{{ transac.id }}">
-                Modifier
-                <span class="ml-1 icon icon-edit"></span>
-              </button>
+              {% if form_transaction is defined %}
+                <button class="dropdown-item btn-edit-transac toggle-panel-transaction"
+                  type="button" data-panel-type="edit" data-panel-id-edit="{{ transac.id }}">
+                  Modifier
+                  <span class="ml-1 icon icon-edit"></span>
+                </button>
+              {% endif %}
               <a class="dropdown-item btn-delete-transac" href="{{ path('transaction_delete', { id: transac.id }) }}">
                 Supprimer
                 <span class="ml-1 icon icon-trash"></span>

@@ -20,7 +20,8 @@
         <div class="d-flex align-items-center">
           <div class="col pl-0">
             <h5 class="card-title small text-uppercase mb-1">{{ 'block.inc_exp.incomes.title'|trans }}</h5>
-            <div class="bank-account-total-incomes">
+            <div class="bank-account-total-incomes"{% if date_start is defined %} data-kb-date-start="{{ date_start }}"{% endif %}
+              {% if date_end is defined %}data-kb-date-end="{{ date_end }}"{% endif %}>
               {% include 'components/price.html.twig' with {
                 amount        : incomes,
                 currency      : bank_account.currency.label,
@@ -48,7 +49,8 @@
         <div class="d-flex align-items-center">
           <div class="col pl-0">
             <h5 class="card-title small text-uppercase mb-1">{{ 'block.inc_exp.expenses.title'|trans }}</h5>
-            <div class="bank-account-total-expenses">
+            <div class="bank-account-total-expenses"{% if date_start is defined %} data-kb-date-start="{{ date_start }}"{% endif %}
+              {% if date_end is defined %}data-kb-date-end="{{ date_end }}"{% endif %}>
               {% include 'components/price.html.twig' with {
                 amount        : expenses,
                 currency      : bank_account.currency.label,

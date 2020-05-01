@@ -52,7 +52,7 @@
     <div id="app" class="app-body{% if body_class is defined %} {{ body_class }}{% endif %}">
       {# Notices/Errors messages from "flashbag" #}
       {% block flashes %}
-        <div class="app-flashbags container">{% include 'components/flashes.html.twig' %}</div>
+        <div class="app-flashes container">{% include 'components/flashes.html.twig' %}</div>
       {% endblock %}
 
       {# Body #}

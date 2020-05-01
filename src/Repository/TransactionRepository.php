@@ -66,9 +66,14 @@ class TransactionRepository extends ServiceEntityRepository
             $qb->andWhere('t.date >= :date_start')
                 ->setParameter('date_start', $date_start);
         // WHERE: transaction's date end
-        if (!is_null($date_end))
-            $qb->andWhere('t.date <= :date_end')
-                ->setParameter('date_end', $date_end);
+        if (!is_null($date_end)) {
+            if ($date_end == 'now') {
+                $qb->andWhere('t.date <= CURRENT_DATE()');
+            } else {
+                $qb->andWhere('t.date <= :date_end')
+                    ->setParameter('date_end', $date_end);
+            }
+        }
 
         // PAGINATOR
         if (!is_null($page)) {
@@ -117,10 +122,12 @@ class TransactionRepository extends ServiceEntityRepository
                 ->setParameter('date_start', $date_start);
         // WHERE: transaction's date end
         if (!is_null($date_end)) {
-            $qb->andWhere('t.date <= :date_end')
-                ->setParameter('date_end', $date_end);
-        } else {
-            $qb->andWhere('t.date <= CURRENT_DATE()');
+            if ($date_end == 'now') {
+                $qb->andWhere('t.date <= CURRENT_DATE()');
+            } else {
+                $qb->andWhere('t.date <= :date_end')
+                    ->setParameter('date_end', $date_end);
+            }
         }
 
         return $qb->getQuery()
@@ -147,10 +154,12 @@ class TransactionRepository extends ServiceEntityRepository
                 ->setParameter('date_start', $date_start);
         // WHERE: transaction's date end
         if (!is_null($date_end)) {
-            $qb->andWhere('t.date <= :date_end')
-                ->setParameter('date_end', $date_end);
-        } else {
-            $qb->andWhere('t.date <= CURRENT_DATE()');
+            if ($date_end == 'now') {
+                $qb->andWhere('t.date <= CURRENT_DATE()');
+            } else {
+                $qb->andWhere('t.date <= :date_end')
+                    ->setParameter('date_end', $date_end);
+            }
         }
 
         // GROUP BY: Category

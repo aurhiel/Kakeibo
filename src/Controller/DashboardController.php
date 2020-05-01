@@ -50,20 +50,20 @@ class DashboardController extends Controller
         $date_end   = date('Y-m-t');
 
         // Retrieve totals for incomes & expenses
-        $total_incomes  = (float) $r_trans->findTotal($default_bank_account, $date_start, $date_end, 'incomes');
-        $total_expenses = (float) $r_trans->findTotal($default_bank_account, $date_start, $date_end, 'expenses');
+        $total_incomes  = (float) $r_trans->findTotal($default_bank_account, $date_start, 'now', 'incomes');
+        $total_expenses = (float) $r_trans->findTotal($default_bank_account, $date_start, 'now', 'expenses');
 
         // NOTE If there is no expenses and incomes in the current month, try
         //  to get last month expenses and incomes.
         // if ($total_incomes == 0 && $total_expenses == 0) {
         //     $curr_month = (($curr_month - 1) < 0) ? 12 : ($curr_month - 1);
-        //     $total_incomes  = (float) $r_trans->findTotal($default_bank_account, $date_start, $date_end, 'incomes');
-        //     $total_expenses = (float) $r_trans->findTotal($default_bank_account, $date_start, $date_end, 'expenses');
+        //     $total_incomes  = (float) $r_trans->findTotal($default_bank_account, $date_start, 'now', 'incomes');
+        //     $total_expenses = (float) $r_trans->findTotal($default_bank_account, $date_start, 'now', 'expenses');
         // }
 
         // Retrieve totals grouped by categories for incomes & expenses
-        // $total_incomes_by_cats = $r_trans->findTotalGroupBy($default_bank_account, $date_start, $date_end, 'category', 'incomes');
-        $total_expenses_by_cats = $r_trans->findTotalGroupBy($default_bank_account, $date_start, $date_end, 'category', 'expenses');
+        // $total_incomes_by_cats = $r_trans->findTotalGroupBy($default_bank_account, $date_start, 'now', 'category', 'incomes');
+        $total_expenses_by_cats = $r_trans->findTotalGroupBy($default_bank_account, $date_start, 'now', 'category', 'expenses');
 
         return $this->render('dashboard/index.html.twig', [
             'page_title'            => $translator->trans('page.dashboard.title'),
@@ -75,8 +75,8 @@ class DashboardController extends Controller
             'current_bank_account'  => $default_bank_account,
             'last_transactions'     => $last_trans,
             'last_trans_amount'     => self::NB_LAST_TRANS,
-            'totals_date_start'     => $date_start,
-            'totals_date_end'       => $date_end,
+            'dashboard_date_start'  => $date_start,
+            'dashboard_date_end'    => $date_end,
             'total_incomes'         => $total_incomes,
             'total_expenses'        => $total_expenses,
             // 'total_incomes_by_cats'   => $total_incomes_by_cats,

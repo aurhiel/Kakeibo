@@ -180,25 +180,46 @@ var kakeibo = {
       });
     },
     after_update: function(data, is_edit) {
-      console.log('[transaction.after_update]', data, is_edit);
-      console.log(this.$lists);
+      // console.log('[transaction.after_update]', data, is_edit);
+      // console.log(this.$lists);
+
       var bank_account  = data.default_bank_account;
       var currency      = bank_account.currency_entity;
       var transaction   = data.entity;
 
-      this.$lists.find('.-item').each(function() {
-        var $item = $(this);
-        var matched_date = null;
-        if ($item.hasClass('-item-date')) {
+      this.$lists.each(function() {
+        var $list = $(this);
+        // List data attributes/config
+        var limit       = typeof $list.data('kb-limit-items') != 'undefined' ? parseInt($list.data('kb-limit-items')) : null;
+        var date_start  = typeof $list.data('kb-date-start') != 'undefined' ? new Date($list.data('kb-date-start')) : null ;
+        var date_end    = typeof $list.data('kb-date-end') != 'undefined' ? new Date($list.data('kb-date-end')) : null ;
+        var transaction_date = new Date(transaction.date);
 
-        }
-        if ($item.hasClass('-item-transac')) {
+        // Add transaction ONLY IF his date is between list's dates start & end
+        if (transaction_date >= date_start || transaction_date <= date_end) {
+          var item_date_matched = null;
 
+          // Loop on item to determine where to add transaction
+          $list.find('.-item').each(function(index) {
+            var $item = $(this);
+
+            if ($item.hasClass('-item-date')) {
+              if ($item.data('kb-date-formatted') == transaction.date) {
+                item_date_matched = { 'index' : index, 'date' : $item.data('kb-date-formatted') };
+                return false;
+              }
+            }
+          });
+
+          // New transaction is
+          if (item_date_matched !== null) {
+            console.log('Yay ! ', item_date_matched);
+          }
         }
       });
 
       this.update_balance(bank_account.balance, currency);
-      this.update_exp_and_inc(transaction.amount, currency);
+      this.update_exp_and_inc(transaction, currency);
       this.toggle_panel('close');
     },
     update_balance : function(new_balance, currency) {
@@ -214,19 +235,21 @@ var kakeibo = {
       else if (new_balance > 0) $text.addClass('text-success');
       else $text.addClass('text-warning');
     },
-    update_exp_and_inc : function(amount, currency) {
-      console.log('update_exp_and_inc: ', amount, currency);
+    update_exp_and_inc : function(transaction, currency) {
+      var amount      = transaction.amount;
+      var $bank_total = (transaction.amount < 0) ? kakeibo.$bank_account_total_expenses : kakeibo.$bank_account_total_incomes;
 
-      var $bank_total = (amount < 0) ? kakeibo.$bank_account_total_expenses : kakeibo.$bank_account_total_incomes;
+      var date_start  = typeof $bank_total.data('kb-date-start') != 'undefined' ? new Date($bank_total.data('kb-date-start')) : false;
+      var date_end    = typeof $bank_total.data('kb-date-end') != 'undefined' ? new Date($bank_total.data('kb-date-end')) : false;
+      var date        = new Date(transaction.date);
+
       var $text       = $bank_total.find('.text-price');
       var old_total   = parseFloat($text.html().replace(/ /g, '').replace(',', '.'));
-      var new_total   = old_total + amount;
+      var new_total   = old_total + transaction.amount;
 
-      console.log(kakeibo.format.price(new_total, currency.slug));
-
-      $text.html(kakeibo.format.price(new_total, currency.slug));
-
-      console.log(old_total, new_total);
+      // Update amount value ONLY IF transaction is in current displayed date in totals
+      if ((date >= date_start || date_start == false) && (date <= date_end || date_end == false))
+          $text.html(kakeibo.format.price(new_total, currency.slug));
     },
     // toggle_panel = add / edit transaction (toggle_panel())
     toggle_panel: function(type, id_edit) {

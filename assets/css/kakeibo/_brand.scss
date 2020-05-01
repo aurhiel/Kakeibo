@@ -15,6 +15,24 @@
   text-shadow: 0 .06em 0 rgba(0, 0, 0, .1);
   box-shadow: .04em .04em 0 rgba(0, 0, 0, .1);
   user-select: none;
+  position: relative;
+  z-index: 1;
+
+  ._version {
+    background-color: $yellow;
+    color: $body-color;
+    font-family: $font-family-monospace;
+    font-size: .34em;
+    font-weight: bold;
+    line-height: 1;
+    text-shadow: none;
+    border-radius: 1em;
+    padding: .4em .8em .2em;
+    transform: rotate(16deg);
+    position: absolute;
+    top: -.4em;
+    right: -1.6em;
+  }
 
   ~ .brand-speech {
     margin-top: .6rem;

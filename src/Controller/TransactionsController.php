@@ -26,12 +26,12 @@ class TransactionsController extends Controller
     {
         $user     = $security->getUser();
         $em       = $this->getDoctrine()->getManager();
+        $r_trans  = $em->getRepository(Transaction::class);
         $id_trans = (int) $request->request->get('id');
         $is_edit  = (!empty($id_trans) && $id_trans > 0); // Edit transaction ?
 
         if($is_edit) {
             // Get transaction to edit with id AND user (for security)
-            $r_trans      = $em->getRepository(Transaction::class);
             $trans_entity = $r_trans->findOneByIdAndUser($id_trans, $user);
             $message_status_ok  = 'Modificiation de la transaction effectuée.';
             $message_status_nok = 'Un problème est survenu lors de la modification de la transaction';
@@ -73,23 +73,13 @@ class TransactionsController extends Controller
                 // Flush OK !
                 $em->flush();
 
-                // TODO Change this with 2 dates (end & start)
-                $curr_month = (int) date('m');
-                $curr_year  = (int) date('Y');
-
-                // Get incomes & expenses totals
-                $total_incomes  = (float) $r_trans->findTotal($default_bank_account, $curr_year, $curr_month, 'incomes');
-                $total_expenses = (float) $r_trans->findTotal($default_bank_account, $curr_year, $curr_month, 'expenses');
-
                 $return_data = array(
                     'query_status'    => 1,
                     'slug_status'     => 'success',
                     'message_status'  => $message_status_ok,
                     // Data
                     'entity'                => self::format_json($trans_entity),
-                    'default_bank_account'  => self::format_json_bank_account($default_bank_account),
-                    'total_incomes'         => $total_incomes,
-                    'total_expenses'        => $total_expenses,
+                    'default_bank_account'  => self::format_json_bank_account($default_bank_account)
                 );
             } catch (\Exception $e) {
                 // Something goes wrong
@@ -221,7 +211,7 @@ class TransactionsController extends Controller
         $trans_entity = new Transaction();
         $trans_form   = $this->createForm(TransactionType::class, $trans_entity);
 
-        $em = $this->getDoctrine()->getManager();
+        $em       = $this->getDoctrine()->getManager();
         $r_trans  = $em->getRepository(Transaction::class);
 
         // Get nb pages of newsletter subscribes

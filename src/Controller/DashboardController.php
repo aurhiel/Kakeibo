@@ -47,7 +47,7 @@ class DashboardController extends Controller
         $last_trans = $r_trans->findLastByBankAccount($default_bank_account, self::NB_LAST_TRANS);
 
         $date_start = date('Y-m-01');
-        $date_end   = date('Y-m-t');
+        $date_end   = date('Y-m-d');
 
         // Retrieve totals for incomes & expenses
         $total_incomes  = (float) $r_trans->findTotal($default_bank_account, $date_start, 'now', 'incomes');
@@ -73,10 +73,10 @@ class DashboardController extends Controller
             'scripts'               => [ 'kb-dashboard.js' ],
             'user'                  => $user,
             'current_bank_account'  => $default_bank_account,
-            'last_transactions'     => $last_trans,
-            'last_trans_amount'     => self::NB_LAST_TRANS,
             'dashboard_date_start'  => $date_start,
             'dashboard_date_end'    => $date_end,
+            'last_transactions'     => $last_trans,
+            'last_trans_amount'     => self::NB_LAST_TRANS,
             'total_incomes'         => $total_incomes,
             'total_expenses'        => $total_expenses,
             // 'total_incomes_by_cats'   => $total_incomes_by_cats,

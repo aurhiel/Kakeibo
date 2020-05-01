@@ -186,37 +186,56 @@ var kakeibo = {
       var bank_account  = data.default_bank_account;
       var currency      = bank_account.currency_entity;
       var transaction   = data.entity;
+      var category      = transaction.category_entity;
 
-      this.$lists.each(function() {
-        var $list = $(this);
-        // List data attributes/config
-        var limit       = typeof $list.data('kb-limit-items') != 'undefined' ? parseInt($list.data('kb-limit-items')) : null;
-        var date_start  = typeof $list.data('kb-date-start') != 'undefined' ? new Date($list.data('kb-date-start')) : null ;
-        var date_end    = typeof $list.data('kb-date-end') != 'undefined' ? new Date($list.data('kb-date-end')) : null ;
-        var transaction_date = new Date(transaction.date);
+      // Add transaction to list
+      if (is_edit == false) {
+        this.$lists.each(function() {
+          var $list = $(this);
+          // List data attributes/config
+          var limit       = typeof $list.data('kb-limit-items') != 'undefined' ? parseInt($list.data('kb-limit-items')) : null;
+          var date_start  = typeof $list.data('kb-date-start') != 'undefined' ? new Date($list.data('kb-date-start')) : null ;
+          var date_end    = typeof $list.data('kb-date-end') != 'undefined' ? new Date($list.data('kb-date-end')) : null ;
+          var transaction_date = new Date(transaction.date);
 
-        // Add transaction ONLY IF his date is between list's dates start & end
-        if (transaction_date >= date_start || transaction_date <= date_end) {
-          var item_date_matched = null;
+          // Add transaction ONLY IF his date is before list's end date limit
+          if (transaction_date <= date_end) {
+            var item_date_matched = null;
+            var last_date_matched = null;
 
-          // Loop on item to determine where to add transaction
-          $list.find('.-item').each(function(index) {
-            var $item = $(this);
+            // Loop on item to determine where to add transaction
+            $list.find('.-item').each(function(index) {
+              var $item = $(this);
 
-            if ($item.hasClass('-item-date')) {
-              if ($item.data('kb-date-formatted') == transaction.date) {
-                item_date_matched = { 'index' : index, 'date' : $item.data('kb-date-formatted') };
-                return false;
+              if ($item.hasClass('-item-date')) {
+                if ($item.data('kb-date-formatted') == transaction.date) {
+                  item_date_matched = { 'index' : index, 'date' : $item.data('kb-date-formatted') };
+                  return false;
+                }
+                last_date_matched = $item.data('kb-date-formatted');
               }
-            }
-          });
+            });
 
-          // New transaction is
-          if (item_date_matched !== null) {
-            console.log('Yay ! ', item_date_matched);
+            // New transaction is
+            if (item_date_matched !== null) {
+              console.log('Yay ! ', item_date_matched, last_date_matched);
+            }
           }
-        }
-      });
+        });
+      } else {
+        // Edit transaction item
+        var $item_to_edit = this.$lists.find('.-item-transac[data-kb-id-transaction="' + transaction.id + '"]');
+        var $transac_cat  = $item_to_edit.find('.-transac-category');
+        // // Update transaction data
+        $item_to_edit.find('.-transac-amount').html(kakeibo.format.price(transaction.amount, currency.slug));
+        $item_to_edit.find('.-transac-label').html(transaction.label);
+        $item_to_edit.find('.-transac-details').html(transaction.details);
+        // // Update category
+        $transac_cat.attr('title', category.label);
+        $transac_cat.find('.avatar-text').css('background-color', category.color);
+        $transac_cat.find('.icon').remove();
+        $transac_cat.find('.avatar-text').append($('<span class="icon icon-' + category.icon + '"/>'));
+      }
 
       this.update_balance(bank_account.balance, currency);
       this.update_exp_and_inc(transaction, currency);

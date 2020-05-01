@@ -436,6 +436,7 @@ class TransactionsController extends Controller
             'category_entity' => [
                 'id'    => $category->getId(),
                 'label' => $category->getLabel(),
+                'icon'  => $category->getIcon(),
                 'color' => $category->getColor()
             ],
         ];

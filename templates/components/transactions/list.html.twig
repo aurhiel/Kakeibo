@@ -33,27 +33,30 @@
             {{ transac.date|localizeddate('long', 'none') }}
           </div>
         {% endif %}
-        <div class="-item -item-transac">
+        <div class="-item -item-transac" data-kb-id-transaction="{{ transac.id }}">
           {# TRANS:CATEGORY/ICON & COLOR #}
           <div class="col col-auto col-icon">
-            <span class="avatar" title="{{ transac.category.label }}">
+            <span class="-transac-category avatar" title="{{ transac.category.label }}">
               <span class="avatar-text rounded-circle" style="background-color: {{ transac.category.color }};">
-                <span class="icon-{{ transac.category.icon }}"></span>
+                <span class="icon icon-{{ transac.category.icon }}"></span>
               </span>
             </span>
           </div>
           {# TRANS:TEXT #}
           <div class="col col-text">
-            {{ transac.label }}<br>
-            {% if transac.details is not empty %}
-              <div class="-more-info small text-muted">{{ transac.details }}</div>
-            {% endif %}
+            <span class="-transac-label">{{ transac.label }}</span>
+            <div class="-transac-details -more-info small text-muted">
+              {% if transac.details is not empty %}
+                {{ transac.details }}
+              {% endif %}
+            </div>
           </div>
           {# TRANS:AMOUNT/PRICE #}
           <div class="col col-price">
             {% include 'components/price.html.twig' with {
-              amount    : transac.amount,
-              currency  : transac.bankAccount.currency.label } %}
+              amount        : transac.amount,
+              currency      : transac.bankAccount.currency.label,
+              custom_class  : '-transac-amount' } %}
           </div>
           {# TRANS:ACTIONS #}
           <div class="col col-more">

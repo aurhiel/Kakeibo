@@ -12,7 +12,11 @@
           'about' : {
             'en' : { 'slug' : 'about',    'label' : 'page.about.link.label' },
             'fr' : { 'slug' : 'a-propos', 'label' : 'page.about.link.label' }
-          }
+          },
+          'release-notes' : {
+            'en' : { 'slug' : 'release-notes',    'label' : app_version },
+            'fr' : { 'slug' : 'notes-de-version', 'label' : app_version }
+          },
         } %}
         {% for s_page in static_pages %}
           {% set page = s_page[app.request.locale] %}
@@ -38,9 +42,6 @@
             </a>
           </li>
         {% endif %}
-        <li class="list-inline-item">
-          {{ app_version }}
-        </li>
       </ul>
     </div>
 

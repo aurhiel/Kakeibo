@@ -9,29 +9,31 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class StaticPagesController extends Controller
 {
 
+    private $page_config = array();
+
     private $pages = array();
 
     public function __construct()
     {
         // Raw pages data
-        $company = array(
-            'name'        => 'Ingeneria',
-            'address'     => '4 rue Gerin Ricard 13003 Marseille - France (métropolitaine)',
-            'capital'     => '1 500€',
-            'social_form' => 'SAS (Société par actions simplifiée)',
-            'url'         => 'Ateliers-ingeneria.fr',
-            'vta_number'  => '',
-            'siren' => array(
-                'number' => '752 183 988',
-                'address' => 'Marseille B'
-            )
-        );
+        // $company = array(
+        //     'name'        => 'Ingeneria',
+        //     'address'     => '4 rue Gerin Ricard 13003 Marseille - France (métropolitaine)',
+        //     'capital'     => '1 500€',
+        //     'social_form' => 'SAS (Société par actions simplifiée)',
+        //     'url'         => 'Ateliers-ingeneria.fr',
+        //     'vta_number'  => '',
+        //     'siren' => array(
+        //         'number' => '752 183 988',
+        //         'address' => 'Marseille B'
+        //     )
+        // );
 
         $owner = array(
-            'firstname' => 'Bertrand',
-            'lastname'  => 'Heurfin',
-            'phone'     => '+33 6 19 50 36 22',
-            'email'     => 'contact@ingeneria.fr'
+            'firstname' => 'Aurélien',
+            'lastname'  => 'Litti',
+            'phone'     => '+33 6 95 06 40 91',
+            'email'     => 'litti.aurelien@gmail.com'
         );
 
         $developer = array(
@@ -48,69 +50,72 @@ class StaticPagesController extends Controller
             'phone'       => '+33 820 698 765'
         );
 
-
-
         // Pages list
-
-        // $this->pages['mentions-legales'] = array(
-        //     'template' => 'static-pages/legal-terms.html.twig',
-        //     'data' => array(
-        //         'meta' => array('title' => 'Mentions Légales', 'robots' => 'noindex,nofollow'),
-        //         'company'   => $company,
-        //         'owner'     => $owner,
-        //         'developer' => $developer,
-        //         'web_host'  => $web_host
-        //     )
-        // );
-
-
-
-
-        // $this->pages['donnees-personnelles'] = array(
-        //     'template' => 'static-pages/personal-data.html.twig',
-        //     'data' => array(
-        //         'meta'          => array(
-        //             'title' => 'Données personnelles',
-        //             'robots' => 'noindex,nofollow'
-        //         ),
-        //         'data_manager'  => array(
-        //             'name' => 'Ingeneria',
-        //             'email' => 'contact@ingeneria.fr'
-        //         ),
-        //         'company'       => $company,
-        //         'website'       => array(
-        //             'name' => 'Ateliers-Ingeneria.fr',
-        //             'host' => 'OVH',
-        //             'host_location' => 'France'
-        //         ),
-        //     )
-        // );
     }
 
+    // ML: @Route("/{_locale}/{slug}.html", name="static_pages")
     /**
-     * @Route("/{_locale}/{slug}.html", name="static_pages")
+     * @Route("/{slug}.html", name="static_pages")
      */
     public function index($slug)
     {
         $translator = $this->get('translator');
-        
-        $this->pages['a-propos'] = array(
-            'template' => 'static-pages/about.html.twig',
-            'data' => array(
-                'core_class' => 'app-core--static-page',
-                'meta' => [
-                    'title'   => $translator->trans('page.about.title'),
-                    'robots'  => 'noindex, nofollow'
-                ]
-            )
-        );
-        $this->pages['about'] = $this->pages['a-propos'];
 
-        if(isset($this->pages[$slug])) {
-            $page = $this->pages[$slug];
-            return $this->render($page['template'], $page['data']);
+        // Get page config according to given slug
+        switch ($slug) {
+            // DATA: About page
+            case 'a-propos':
+            case 'about':
+                $this->page_config = array(
+                    'template' => 'static-pages/about.html.twig',
+                    'data' => array(
+                        'meta' => [
+                            'title'   => $translator->trans('page.about.title'),
+                            'robots'  => 'noindex, nofollow'
+                        ]
+                    )
+                );
+              break;
+            // DATA: Release notes page
+            case 'notes-de-version':
+            case 'release-notes':
+                $this->page_config = array(
+                    'template' => 'static-pages/release_notes.html.twig',
+                    'data' => array(
+                        'meta' => [
+                            'title'   => $translator->trans('page.release_notes.title'),
+                            'robots'  => 'noindex, nofollow'
+                        ]
+                    )
+                );
+              break;
+            // NOTE Add default data ? 404 ?
+            default:
+              break;
+        }
+
+        // If config page has been configurated, render it or redirect to dashboard
+        //  (if user isn't connected = redirect to homepage)
+        //    TODO add check if template exist
+        if($this->is_config_valid()) {
+            $data     = $this->page_config['data'];
+            $template = $this->page_config['template'];
+
+            // Force CSS class for static pages (.app-core--static-page)
+            if (!isset($data['core_class'])) $data['core_class'] = 'app-core--static-page';
+            else $data['core_class'] .= ' app-core--static-page';
+
+            // Render template
+            return $this->render($template, $data);
         } else {
             return $this->redirectToRoute('dashboard');
         }
+    }
+
+    private function is_config_valid() {
+        return (!empty($this->page_config)
+            && isset($this->page_config['data'])
+                && isset($this->page_config['template'])
+        );
     }
 }

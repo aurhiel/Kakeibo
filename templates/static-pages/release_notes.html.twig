@@ -1,0 +1,60 @@
+{% extends 'vertically.html.twig' %}
+
+{% block body_vertical_content %}
+<div class="textual-content">
+  <h1 class="page-header h2 mt-3 mb-4">{{ 'page.release_notes.title'|trans }}</h1>
+
+  {% set prefix_txt_ver = 'page.release_notes.alpha_0_1_0.' %}
+  <div class="card mb-4">
+    <div class="card-header">
+      <div class="row align-items-center">
+        <h2 class="h4 mb-0 col">{{ (prefix_txt_ver ~ 'title')|trans }}</h2>
+        <small class="text-muted col-auto">{{ (prefix_txt_ver ~ 'date')|trans|localizeddate('medium', 'none') }}</small>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3 class="h5 font-weight-bold">{{ 'page.release_notes.title_func_add'|trans({ '%plural%': 's' }) }}</h3>
+      <ul>
+        <li class="mb-3">{{ (prefix_txt_ver ~ 'list_func_add.item_1')|trans|raw }}</li>
+        <li class="mb-3">{{ (prefix_txt_ver ~ 'list_func_add.item_2')|trans|raw }}</li>
+        <li>{{ (prefix_txt_ver ~ 'list_func_add.item_3')|trans|raw }}</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="my-5">
+
+  {% set prefix_txt_todo = 'page.release_notes.todo.' %}
+  <h1 class="page-header h2 mt-3 mb-4">{{ (prefix_txt_todo ~ 'title')|trans }}</h1>
+  <div class="card mb-4">
+    <table class="table table-striped mb-0">
+      <thead>
+        <tr>
+          <th class="border-top-0" style="width: 33%">Intitulé</th>
+          <th class="border-top-0 d-none d-sm-table-cell">Desc.</th>
+          <th class="border-top-0 text-center" style="width: 17%">État</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for i in 1..4 %}
+        {% set pfx_item = prefix_txt_todo ~ 'list.item_' ~ i ~ '.' %}
+        <tr>
+          <td class="font-weight-bold" style="width: 33%">{{ (pfx_item ~ 'label')|trans }}</td>
+          <td class="d-none d-sm-table-cell">{{ (pfx_item ~ 'desc')|trans|raw }}</td>
+          <td class="text-center" style="width: 17%">
+            {% set percent = (pfx_item ~ 'percent_status')|trans|number_format %}
+            <span class="badge badge-{% if percent >= 100 %}success{% elseif percent >= 40 %}warning{% else %}danger{% endif %} ">{{ percent }}%</span>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div>
+  <a href="{{ path('dashboard') }}" class="btn btn-outline-secondary btn-sm">
+    <span class="icon-chevron-left"></span> {{ 'page.btn_back_website.label'|trans }}
+  </a>
+</div>
+{% endblock %}

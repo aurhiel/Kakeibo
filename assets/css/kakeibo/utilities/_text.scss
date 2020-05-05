@@ -20,6 +20,11 @@
   text-shadow: none !important;
 }
 
+// For blog text or simple text
+.textual-content {
+  max-width: 40rem;
+}
+
 // No wrap
 .no-wrap {
   white-space: nowrap;

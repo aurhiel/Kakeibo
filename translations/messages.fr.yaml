@@ -89,6 +89,55 @@ page :
         title : "Médias"
         text  : "Les icônes du site ont été mise en place à l'aide de l'outil web
           <a href=\"https://icomoon.io/\" target=\"_blank\">Icomoon</a>."
+  # PAGE:RELEASE NOTES
+  release_notes :
+    link :
+      label : "Notes de version"
+    title   : "Notes de version"
+    title_func_add : "Fonctionnalité%plural% ajoutée%plural%"
+    # VERSIONS
+    alpha_0_1_0 :
+      title : "Version Alpha 0.1.0"
+      date  : "2020-04-25"
+      list_func_add :
+        item_1 : "
+          <p class=\"mb-2\">
+            <b>Inscription</b> &amp; <b>importation d'un fichier de banque</b>
+            au format .csv lors de la création du compte.<br>
+          </p>
+          <p class=\"alert alert-warning mb-0\">
+            <b>Seul les fichiers de la <u>Caisse d'&Eacute;pargne</u></b>
+            sont acceptés pour l'instant, d'autres formats seront supportés à l'avenir.
+          </p>"
+        item_2 : "
+          <b>Tri des transactions par catégorie</b> &amp; gestion <b>automatique des catégories
+          à l'importation</b> du fichier de banque."
+        item_3 : "<b>Statistiques par mois</b> des transactions, avec les dépenses et revenus triés par catégorie."
+    # BLOCKS
+    todo :
+      title : "Fonctionnalités à venir"
+      list :
+        item_1 :
+          label : "Importation de fichiers .csv de tout format"
+          desc  : "Rendre possible l'<b>importation de fichiers .csv</b> avec un format défini
+            <b>manuellement par l'utilisateur</b>."
+          percent_status : 0
+        item_2 :
+          label : "Transactions automatiques"
+          desc  : "Permettre d'<b>automatiser des transactions récurrentes</b>, comme
+            le loyer, le virement d'une paie, de manière périodique (mensuelle, hebdomadaire)
+            selon le choix de l'utilisateur."
+          percent_status : 0
+        item_3 :
+          label : "Transactions automatiques"
+          desc  : "Ajouter des transactions récurrentes <b>basés sur
+          un pourcentage</b>, défini préalablement par l'utilisateur, <b>des revenus du mois</b>."
+          percent_status : 0
+        item_4 :
+          label : "Navigation dans les statistiques"
+          desc  : "Finaliser la page des statistiques afin de <b>naviguer par mois
+          ou via une période</b> choisi par l'utilisateur."
+          percent_status : 40
   # PAGE:ADMIN
   admin :
     title : "Administration du site"

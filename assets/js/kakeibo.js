@@ -181,7 +181,20 @@ var kakeibo = {
         }
       });
     },
+    delete: function() {
+      console.log('[transaction:delete]');
+      // $.ajax({
+      //   url     : this.url_delete + id_trans,
+      //   success : function(response) {
+      //     callback(response);
+      //   },
+      //   error   : function(response) {
+      //     console.warn(response);
+      //   }
+      // });
+    },
     manage: function(transaction, bank_account, is_edit) {
+      console.log('[transaction:manage]', transaction, bank_account, is_edit);
       // Data
       var currency = bank_account.currency_entity;
       var category = transaction.category_entity;
@@ -199,10 +212,13 @@ var kakeibo = {
           var transaction_date = new Date(transaction.date);
 
           // Add transaction ONLY IF his date is before list's end date limit
-          if (transaction_date <= date_end) {
+          if ((date_start === null || transaction_date >= date_start) &&
+              (date_end === null || transaction_date <= date_end)) {
             var item_date_matched = null;
 
             // Loop on item to determine where to add transaction
+            var last_date_matched = null;
+            var nb_transac = 0;
             $list.find('.-item').each(function(index) {
               var $item = $(this);
 
@@ -230,13 +246,31 @@ var kakeibo = {
                   };
 
                   return false;
+                } else {
+                  last_date_matched = { index: index, $node: $item };
                 }
+              } else if ($item.hasClass('-item-transac')) {
+                nb_transac++;
               }
             });
 
+            // Need to push transaction at end of the list
+            if (item_date_matched === null && (limit == null || nb_transac < limit)) {
+              console.log(last_date_matched, nb_transac);
+              var transac_date = new Date(transaction.date);
+              // Create new HTML date item
+              var $new_date_transac = $('<div class="-item -item-date" data-kb-date-formatted="' + transaction.date + '">' +
+                transac_date.toLocaleDateString(kakeibo._locale,
+                  { weekday: undefined, year: 'numeric', month: 'long', day: 'numeric' }) +
+              '</div>');
+              // Append new date item (.-item-date) based on transaciton date
+              $list.append($new_date_transac);
+
+              item_date_matched = { index: $list.find('.-item').length, $node: $new_date_transac };
+            }
+
             // Add new transaction after or create date
             if (item_date_matched !== null) {
-              console.log('Yay ! ', item_date_matched);
               // Add new transaction
               if (item_date_matched.index != -1) {
                 var btn_edit = '';
@@ -519,7 +553,7 @@ var kakeibo = {
   format: {
     // TODO: set dynamic lang param (replace fr-FR)
     price: function(amount, currency_slug) {
-      var num_format = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: currency_slug });
+      var num_format = new Intl.NumberFormat(this._locale, { style: 'currency', currency: currency_slug });
       return num_format.format(amount).replace(' ', ' '); // NOTE: .replace weird space with a real one
     }
   },

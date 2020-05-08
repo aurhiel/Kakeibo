@@ -245,6 +245,10 @@ class TransactionsController extends Controller
         // Get transactions according to current page
         $transactions = $r_trans->findByBankAccountAndDateAndPage($default_bank_account, null, null, $page, self::NB_TRANSAC_BY_PAGE);
 
+        // Get date start and date end
+        $date_end   = (isset($transactions[0]) && $page > 1) ? $transactions[0]->getDate()->format('Y-m-d') : null;
+        $date_start = (count($transactions) > 1) ? $transactions[count($transactions)-1]->getDate()->format('Y-m-d') : null;
+
         return $this->render('transactions/index.html.twig', [
             'page_title'            => '<span class="icon icon-list"></span> ' . $translator->trans('page.transactions.title'),
             'meta'                  => [ 'title' => $translator->trans('page.transactions.title') ],
@@ -254,6 +258,9 @@ class TransactionsController extends Controller
             'user'                  => $user,
             'current_bank_account'  => $default_bank_account,
             'transactions'          => $transactions,
+            'date_start'            => $date_start,
+            'date_end'              => $date_end,
+            'limit_max'             => self::NB_TRANSAC_BY_PAGE,
             'nb_transactions'       => $nb_transactions,
             'current_page'          => $page,
             'nb_pages'              => $nb_pages,

@@ -25,8 +25,8 @@
     </div>
     {% set last_date = null %}
     <div class="list-transactions"{% if limit_max is defined %} data-kb-limit-items="{{ limit_max }}"{% endif %}
-      {% if date_start is defined %} data-kb-date-start="{{ date_start }}"{% endif %}
-        {% if date_end is defined %} data-kb-date-end="{{ date_end }}"{% endif %}>
+      {% if date_start is defined and date_start is not null %} data-kb-date-start="{{ date_start }}"{% endif %}
+        {% if date_end is defined and date_end is not null %} data-kb-date-end="{{ date_end }}"{% endif %}>
       {% for transac in transactions %}
         {% if last_date != transac.date|date('Y-m-d') %}
           <div class="-item -item-date" data-kb-date-formatted="{{ transac.date|date('Y-m-d') }}">

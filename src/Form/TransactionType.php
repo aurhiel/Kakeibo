@@ -33,10 +33,12 @@ class TransactionType extends AbstractType
             ))
             ->add('amount',   NumberType::class, array(
                 'label'         => 'form_transaction.amount.label',
+                'scale'         => 2,
                 'attr'          => array(
                     'placeholder'   => 'form_transaction.amount.placeholder',
                     'class'         => 'text-right',
-                    'autocomplete'  => 'off'
+                    'autocomplete'  => 'off',
+                    'step'          => '0.01'
                 ),
             ))
             ->add('date',     DateType::class, array(

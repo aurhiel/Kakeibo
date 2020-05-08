@@ -7,14 +7,14 @@
 <div class="form-row">
   <div class="col-sm-6 mb-3">
     {{ form_label(form_transaction.date) }}
-    {{ form_widget(form_transaction.date, { attr : { 'data-form-clear': "false" } }) }}
+    {{ form_widget(form_transaction.date, { attr: { 'data-form-clear': 'false', 'value': ('now'|date('Y-m-d')) } }) }}
     {{ form_errors(form_transaction.date) }}
   </div>
 
   <div class="col-sm-6 mb-3">
     {{ form_label(form_transaction.amount) }}
     <div class="input-group">
-      {{ form_widget(form_transaction.amount) }}
+      {{ form_widget(form_transaction.amount, { type: 'number' }) }}
       <div class="input-group-append">
         <span class="input-group-text">{{ default_bank_account.currency.label }}</span>
       </div>
@@ -32,7 +32,7 @@
 
   <div class="col-sm-6 mb-3">
     {{ form_label(form_transaction.category) }}
-    {{ form_widget(form_transaction.category) }}
+    {{ form_widget(form_transaction.category, { attr: { 'data-form-default-value': 145 } }) }}
     {{ form_errors(form_transaction.category) }}
   </div>
 </div>

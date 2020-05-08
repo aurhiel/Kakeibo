@@ -32,7 +32,8 @@ class TransactionsController extends Controller
 
         if($is_edit) {
             // Get transaction to edit with id AND user (for security)
-            $trans_entity = $r_trans->findOneByIdAndUser($id_trans, $user);
+            $trans_entity   = $r_trans->findOneByIdAndUser($id_trans, $user);
+            $old_trans_json = self::format_json($trans_entity);
             $message_status_ok  = 'Modificiation de la transaction effectuée.';
             $message_status_nok = 'Un problème est survenu lors de la modification de la transaction';
         } else {
@@ -81,6 +82,10 @@ class TransactionsController extends Controller
                     'entity'                => self::format_json($trans_entity),
                     'default_bank_account'  => self::format_json_bank_account($default_bank_account)
                 );
+
+                // Force old entity values into entity data (useful for JS edit)
+                if ($is_edit && isset($old_trans_json))
+                    $return_data['entity']['old'] = $old_trans_json;
             } catch (\Exception $e) {
                 // Something goes wrong
                 $em->clear();

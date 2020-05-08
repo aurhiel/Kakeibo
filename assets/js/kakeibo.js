@@ -358,18 +358,17 @@ var kakeibo = {
             if ($item_to_move.length > 0) {
               if (is_period_valid) {
                 var date_find = kakeibo.transaction.find_item_date_in_list($list, transaction);
-
-                if (date_find.matched_date !== null) {
+                // Move transaction if has find a valid item date
+                if (date_find.matched_date !== null)
                   date_find.matched_date.$node.after($item_to_move);
-
-                  // Remove old date ?
-                  if ($list.find('.-item-transac[data-kb-date-formatted="' + transaction.old.date + '"]').length < 1)
-                    $list.find('.-item-date[data-kb-date-formatted="' + transaction.old.date + '"]').remove();
-                }
               } else {
                 // Remove item out of period
                 $item_to_move.remove();
               }
+
+              // Remove old date ?
+              if ($list.find('.-item-transac[data-kb-date-formatted="' + transaction.old.date + '"]').length < 1)
+                $list.find('.-item-date[data-kb-date-formatted="' + transaction.old.date + '"]').remove();
             }
           });
         }

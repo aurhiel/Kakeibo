@@ -345,7 +345,7 @@ var kakeibo = {
         //  > simple adjustment
         if ((transaction.old.amount < 0 && amount < 0) ||
           (transaction.old.amount > 0 && amount > 0)) {
-          // console.log('simple adjustment: old:' + transaction.old.amount + ', new:' + amount);
+          // console.log('[update_exp_and_inc:simple adjustment] old:' + transaction.old.amount + ', new:' + amount);
           amount -= transaction.old.amount;
         } else {
           // Need to add add money to expenses if change to income and vice-versa

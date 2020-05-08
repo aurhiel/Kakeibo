@@ -33,7 +33,7 @@
             {{ transac.date|localizeddate('long', 'none') }}
           </div>
         {% endif %}
-        <div class="-item -item-transac" data-kb-id-transaction="{{ transac.id }}">
+        <div class="-item -item-transac" data-kb-id-transaction="{{ transac.id }}" data-kb-date-formatted="{{ transac.date|date('Y-m-d') }}">
           {# TRANS:CATEGORY/ICON & COLOR #}
           <div class="col col-auto col-icon">
             <span class="-transac-category avatar" title="{{ transac.category.label }}">

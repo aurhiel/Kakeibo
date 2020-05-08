@@ -193,13 +193,63 @@ var kakeibo = {
       //   }
       // });
     },
+    create_item_date_row: function(date) {
+      var date_obj = new Date(date);
+      return '<div class="-item -item-date" data-kb-date-formatted="' + date + '">' +
+        date_obj.toLocaleDateString(kakeibo._locale,
+          { weekday: undefined, year: 'numeric', month: 'long', day: 'numeric' }) +
+      '</div>';
+    },
+    find_item_date_in_list: function($list, transaction) {
+      var item_date_matched   = null;
+      var last_date_matched   = null;
+      var total_transactions  = 0;
+      var transaction_date    = new Date(transaction.date);
+
+      // Loop on item to find a matching date
+      $list.find('.-item').each(function(index) {
+        var $item = $(this);
+
+        if ($item.hasClass('-item-date')) {
+          var item_date = new Date($item.data('kb-date-formatted'));
+          if ($item.data('kb-date-formatted') == transaction.date) {
+            item_date_matched = { index: index, $node: $item };
+            return false;
+          } else if (transaction_date > item_date) {
+            // IF transaction is superior to current item date
+            //  > need to add new date at top of the list OR before current date
+            var $new_item = $(kakeibo.transaction.create_item_date_row(transaction.date));
+            // // Push new HTML date item before current one
+            $item.before($new_item);
+
+            item_date_matched = {
+              index       : index,
+              $node       : $new_item
+            };
+
+            return false;
+          } else {
+            last_date_matched = { index: index, $node: $item };
+          }
+        } else if ($item.hasClass('-item-transac')) {
+          total_transactions++;
+        }
+      });
+
+      return {
+        matched_date  : item_date_matched,
+        last_date     : last_date_matched,
+        total_trans   : total_transactions
+      };
+    },
     manage: function(transaction, bank_account, is_edit) {
-      console.log('[transaction:manage]', transaction, bank_account, is_edit);
+      // console.log('[transaction:manage]', transaction, bank_account, is_edit);
       // Data
       var currency = bank_account.currency_entity;
       var category = transaction.category_entity;
       var url_delete  = this.url_delete;
       var has_edit    = this.$panel.length > 0;
+      var transaction_date  = new Date(transaction.date);
 
       // Add transaction to list
       if (is_edit == false) {
@@ -209,70 +259,26 @@ var kakeibo = {
           var limit       = typeof $list.data('kb-limit-items') != 'undefined' ? parseInt($list.data('kb-limit-items')) : null;
           var date_start  = typeof $list.data('kb-date-start') != 'undefined' ? new Date($list.data('kb-date-start')) : null ;
           var date_end    = typeof $list.data('kb-date-end') != 'undefined' ? new Date($list.data('kb-date-end')) : null ;
-          var transaction_date = new Date(transaction.date);
+          var is_period_valid = (date_start === null || transaction_date >= date_start) &&
+              (date_end === null || transaction_date <= date_end);
 
-          // Add transaction ONLY IF his date is before list's end date limit
-          if ((date_start === null || transaction_date >= date_start) &&
-              (date_end === null || transaction_date <= date_end)) {
-            var item_date_matched = null;
-
-            // Loop on item to determine where to add transaction
-            var last_date_matched = null;
-            var nb_transac = 0;
-            $list.find('.-item').each(function(index) {
-              var $item = $(this);
-
-              if ($item.hasClass('-item-date')) {
-                var item_date = new Date($item.data('kb-date-formatted'));
-                if ($item.data('kb-date-formatted') == transaction.date) {
-                  item_date_matched = { index: index, $node: $item };
-                  return false;
-                } else if (transaction_date > item_date) {
-                  // IF transaction is superior to current item date
-                  //  > need to add new date at top of the list OR before current date
-                  var new_item_date = new Date(transaction.date);
-
-                  // Create new HTML date item
-                  var $new_item = $('<div class="-item -item-date" data-kb-date-formatted="' + transaction.date + '">' +
-                    new_item_date.toLocaleDateString(kakeibo._locale,
-                      { weekday: undefined, year: 'numeric', month: 'long', day: 'numeric' }) +
-                  '</div>');
-                  // // Push new HTML date item before current one
-                  $item.before($new_item);
-
-                  item_date_matched = {
-                    index       : index,
-                    $node       : $new_item
-                  };
-
-                  return false;
-                } else {
-                  last_date_matched = { index: index, $node: $item };
-                }
-              } else if ($item.hasClass('-item-transac')) {
-                nb_transac++;
-              }
-            });
+          // Add transaction ONLY IF date period is valid
+          if (is_period_valid == true) {
+            var date_find = kakeibo.transaction.find_item_date_in_list($list, transaction);
 
             // Need to push transaction at end of the list
-            if (item_date_matched === null && (limit == null || nb_transac < limit)) {
-              console.log(last_date_matched, nb_transac);
-              var transac_date = new Date(transaction.date);
+            if (date_find.matched_date === null && (limit == null || date_find.total_trans < limit)) {
               // Create new HTML date item
-              var $new_date_transac = $('<div class="-item -item-date" data-kb-date-formatted="' + transaction.date + '">' +
-                transac_date.toLocaleDateString(kakeibo._locale,
-                  { weekday: undefined, year: 'numeric', month: 'long', day: 'numeric' }) +
-              '</div>');
+              var $new_date_transac = $(kakeibo.transaction.create_item_date_row(transaction.date));
               // Append new date item (.-item-date) based on transaciton date
               $list.append($new_date_transac);
-
-              item_date_matched = { index: $list.find('.-item').length, $node: $new_date_transac };
+              // Push matched date (based on transaction date) to date_find
+              date_find.matched_date = { index: $list.find('.-item').length, $node: $new_date_transac };
             }
 
-            // Add new transaction after or create date
-            if (item_date_matched !== null) {
-              // Add new transaction
-              if (item_date_matched.index != -1) {
+            // Add new transaction
+            if (date_find.matched_date !== null) {
+              if (date_find.matched_date.index != -1) {
                 var btn_edit = '';
                 if (has_edit == true) {
                   btn_edit = '<button class="dropdown-item btn-edit-transac toggle-panel-transaction"' +
@@ -281,7 +287,7 @@ var kakeibo = {
                   '</button>';
                 }
 
-                item_date_matched.$node.after($('<div class="-item -item-transac" data-kb-id-transaction="' + transaction.id + '">' +
+                date_find.matched_date.$node.after($('<div class="-item -item-transac" data-kb-id-transaction="' + transaction.id + '">' +
                   '<div class="col col-auto col-icon">' +
                     '<span class="-transac-category avatar" title="' + category.label + '">' +
                       '<span class="avatar-text rounded-circle" style="background-color: ' + category.color + ';">' +
@@ -311,9 +317,8 @@ var kakeibo = {
                   '</div>' +
                   '</div>'));
               }
-            // Add new transaction at end of the list (or not if limit max)
             } else {
-              console.log('meh...', limit);
+              // console.log('meh...', limit);
             }
           }
         });
@@ -330,11 +335,44 @@ var kakeibo = {
           .addClass('text-' + amount_status);
         $item_to_edit.find('.-transac-label').html(transaction.label);
         $item_to_edit.find('.-transac-details').html(transaction.details);
+        $item_to_edit.attr('data-kb-date-formatted', transaction.date);
         // // Update category
         $transac_cat.attr('title', category.label);
         $transac_cat.find('.avatar-text').css('background-color', category.color);
         $transac_cat.find('.icon').remove();
         $transac_cat.find('.avatar-text').append($('<span class="icon icon-' + category.icon + '"/>'));
+
+        // // Change transaction position ?
+        if (transaction.date != transaction.old.date) {
+          this.$lists.each(function() {
+            var $list = $(this);
+            // List data attributes/config
+            var limit       = typeof $list.data('kb-limit-items') != 'undefined' ? parseInt($list.data('kb-limit-items')) : null;
+            var date_start  = typeof $list.data('kb-date-start') != 'undefined' ? new Date($list.data('kb-date-start')) : null ;
+            var date_end    = typeof $list.data('kb-date-end') != 'undefined' ? new Date($list.data('kb-date-end')) : null ;
+            var is_period_valid = (date_start === null || transaction_date >= date_start) &&
+                (date_end === null || transaction_date <= date_end);
+
+            var $item_to_move = $list.find('.-item-transac[data-kb-id-transaction="' + transaction.id + '"]');
+
+            if ($item_to_move.length > 0) {
+              if (is_period_valid) {
+                var date_find = kakeibo.transaction.find_item_date_in_list($list, transaction);
+
+                if (date_find.matched_date !== null) {
+                  date_find.matched_date.$node.after($item_to_move);
+
+                  // Remove old date ?
+                  if ($list.find('.-item-transac[data-kb-date-formatted="' + transaction.old.date + '"]').length < 1)
+                    $list.find('.-item-date[data-kb-date-formatted="' + transaction.old.date + '"]').remove();
+                }
+              } else {
+                // Remove item out of period
+                $item_to_move.remove();
+              }
+            }
+          });
+        }
       }
     },
     after_update: function(data, is_edit) {

@@ -71,7 +71,6 @@
 // Sections / "All platforms" section
 .home-section--all-platforms {
   .-section-title {
-    // color: $gray-600;
     font-size: 1.25rem;
     text-align: center;
     margin-bottom: .4rem;
@@ -79,7 +78,6 @@
   }
 
   .app-lists {
-    // color: $gray-700;
     font-size: 2rem;
 
     .-item {
@@ -96,50 +94,32 @@
 
 
 //
-// Sections / "Features" section
-.list-features {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+// Sections / "About" section
+.home-section--about {
+  .mockup--frame {
+    text-align: center;
+    max-width: 26rem;
 
-  .-item {
-    cursor: default;
-    &:hover, &:focus {
-      .-icon {
-        background-color: $white;
-        color: $primary;
-      }
-      .-text {
-        opacity: .7;
-      }
+    .-picture {
+      filter: grayscale(1);
+      opacity: .2;
+    }
+
+    .-icon {
+      font-size: 6rem;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-left: -3rem;
+      margin-top: -3rem;
     }
   }
-
-  .-icon {
-    background-color: lighten($dark, 6%);
-    color: lighten($dark, 26%);
-    font-size: 2.2rem;
-    line-height: 1;
-    border-radius: 50%;
-    display: inline-block;
-    padding: .8rem;
-    height: 4rem;
-    width: 4rem;
-    margin-bottom: .4rem;
-    transition: background $animation-duration ease,
-      color $animation-duration ease;
-  }
-  .-title {
-    font-size: 1.4rem;
-  }
-  .-text {
-    font-size: .8rem;
-    max-width: 14rem;
-    margin: 0 auto;
-    opacity: .4;
-    transition: opacity $animation-duration ease;
-  }
 }
+
+
+
+//
+// Sections / "Features" section
 
 
 

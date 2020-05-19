@@ -124,6 +124,54 @@
   }
 }
 
+// Features
+.list-features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  .-item {
+    cursor: default;
+    &:hover, &:focus {
+      .-icon {
+        background-color: $white;
+        color: $primary;
+        box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .25);
+      }
+      .-text {
+        opacity: .7;
+      }
+    }
+  }
+
+  .-icon {
+    background-color: lighten($dark, 6%);
+    color: lighten($dark, 26%);
+    font-size: 2.2rem;
+    line-height: 1;
+    border-radius: 50%;
+    display: inline-block;
+    padding: .8rem;
+    height: 4rem;
+    width: 4rem;
+    margin-bottom: .4rem;
+    box-shadow: 0 .25rem 1rem rgba(0, 0, 0, .025);
+    transition: background $animation-duration ease,
+      color $animation-duration ease,
+      box-shadow $animation-duration ease;
+  }
+  .-title {
+    font-size: 1.4rem;
+  }
+  .-text {
+    font-size: .8rem;
+    max-width: 14rem;
+    margin: 0 auto;
+    opacity: .4;
+    transition: opacity $animation-duration ease;
+  }
+}
+
 //
 // Responsive
 //

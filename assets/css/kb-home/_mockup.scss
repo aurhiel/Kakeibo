@@ -6,13 +6,18 @@
 
 // Mockup variables
 $mockup-screen-bg: #111;
+// // Mockup:Classic frame
+$mockup--frame-bg:        $white;
+$mockup--frame-screen-bg:  $gray-100;
 // // Mockup:Laptop variables
 $mockup--laptop-color: #111;
 $mockup--laptop-motherboard-height: .8rem;
 $mockup--laptop-motherboard-height-sm: 1.2rem;
 $mockup--laptop-motherboard-height-md: 1.6rem;
-$mockup--laptop-screen-border-color: #000;
-$mockup--laptop-border-color: #1F1F1F;
+$mockup--laptop-bg:           #1F1F1F;
+$mockup--laptop-border-color: $mockup--laptop-bg;
+$mockup--laptop-screen-bg:            #000;
+$mockup--laptop-screen-border-color:  $mockup--laptop-screen-bg;
 // // Mockup:Smartphone variables
 $mockup--smartphone-color: #666;
 $mockup--smartphone-border-radius: 1.4rem;
@@ -62,8 +67,57 @@ $mockup--smartphone-screen-border-color: #000;
     padding: 4rem 2rem;
   }
 
+  // // Mockup:Classic frame/window
+  &--frame {
+    background-color: $mockup--frame-bg;
+    box-shadow: 0 .5rem 1.2rem rgba(0, 0, 0, .1);
+    border-radius: .6rem;
+    padding: 1.6rem .2rem .2rem;
+
+    &:before, &:after, .-screen:after {
+      content: '';
+      height: .625rem;
+      width: .625rem;
+      border-radius: 50%;
+      position: absolute;
+      top: .5rem;
+      right: .6rem;
+    }
+
+    &:before {
+      background-color: $yellow;
+      right: 2.6rem;
+    }
+
+    &:after {
+      background-color: $red;
+    }
+
+    .-screen {
+      overflow: visible;
+
+      &:after {
+        background-color: $green;
+        top: -1.1rem;
+        right: 1.4rem;
+      }
+
+      > .-inner {
+        background-color: $mockup--frame-screen-bg;
+        border-radius: .2rem .2rem .6rem .6rem;
+        overflow: hidden;
+      }
+
+      // Screen aspect ratio
+      &:before {
+        padding-top: 56.25%;
+      }
+    }
+  }
+
+  // // Mockup:Laptop
   &--laptop {
-    background-color: $mockup--laptop-border-color;
+    background-color: $mockup--laptop-bg;
     border: .125rem solid $mockup--laptop-border-color;
     border-radius: 1rem 1rem 0 0;
     box-shadow: 0 0 0 .12rem $mockup--laptop-color;
@@ -71,6 +125,7 @@ $mockup--smartphone-screen-border-color: #000;
     width: 90%;
     max-width: 60rem;
 
+    // Laptop motherboard
     &:after {
       content: '';
       background-color: $mockup--laptop-color;
@@ -83,7 +138,7 @@ $mockup--smartphone-screen-border-color: #000;
     }
 
     .-screen {
-      background-color: $mockup--laptop-screen-border-color;
+      background-color: $mockup--laptop-screen-bg;
       border: .4rem solid $mockup--laptop-screen-border-color;
       border-top-width: 2.8rem;
       border-bottom-width: 2rem;

@@ -26,7 +26,7 @@
             </a>
           </li>
         {% endfor %}
-        {% if app.environment == 'dev' %}
+        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and app.environment == 'dev' %}
           <li class="list-inline-item">
             <a href="{{ path('demo') }}">
               <span class="icon icon-save"></span>
@@ -34,7 +34,7 @@
             </a>
           </li>
         {% endif %}
-        {% if is_granted('ROLE_ADMIN') %}
+        {% if is_granted('IS_AUTHENTICATED_FULLY') and is_granted('ROLE_ADMIN') %}
           <li class="list-inline-item">
             <a href="{{ path('admin') }}">
               <span class="icon icon-settings"></span>

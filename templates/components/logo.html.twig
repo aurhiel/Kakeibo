@@ -2,8 +2,13 @@
 {% set hide_text = (hide_text is defined) ? hide_text : false %}
 {% set custom_class = (custom_class is defined) ? ' ' ~ custom_class : '' %}
 {% set type_text  = (type_text is defined) ? type_text : 'sub' %}
+{% set display_version = (display_version is defined) ? display_version : true  %}
 
-<span class="brand-logo{{ custom_class }}">
+{# Link or not link ? That is the question ! #}
+{% set tag_start  = (link is defined) ? 'a href=' ~ link : 'span' %}
+{% set tag_end    = (link is defined) ? 'a' : 'span' %}
+
+<{{ tag_start }} class="brand-logo{{ custom_class }}">
   <span class="_text _text-{{ type_text }}">{{ logo_text }}</span>
-  <span class="_version">alpha</span>
-</span>
+  {% if display_version == true %}<span class="_version">alpha</span>{% endif %}
+</{{ tag_end }}>

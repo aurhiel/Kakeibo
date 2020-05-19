@@ -16,7 +16,13 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
+/**
+  * Require ROLE_USER for *every* controller method in this class.
+  *
+  * @IsGranted("ROLE_USER")
+  */
 class ProfileController extends Controller
 {
     /**

@@ -1,0 +1,7 @@
+// Tooltip
+//
+
+.tooltip {
+  // fix for bug when window hasn't any scrollbar (y)
+  top: 0;
+}

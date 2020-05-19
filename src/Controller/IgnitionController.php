@@ -16,7 +16,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
+/**
+  * Require ROLE_USER for *every* controller method in this class.
+  *
+  * @IsGranted("ROLE_USER")
+  */
 class IgnitionController extends Controller
 {
 
@@ -84,7 +90,7 @@ class IgnitionController extends Controller
         $user = $security->getUser();
 
         // Force user to create at least ONE bank account !
-        if (count($user->getBankAccounts()) < 1)
+        if (empty($user) || count($user->getBankAccounts()) < 1)
             return $this->redirectToRoute('ignition-first-bank-account');
 
         // User has a bank account

@@ -4,7 +4,13 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
+/**
+  * Require ROLE_USER for *every* controller method in this class.
+  *
+  * @IsGranted("ROLE_USER")
+  */
 class AutomatonController extends Controller
 {
     /**

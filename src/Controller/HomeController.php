@@ -12,6 +12,14 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return $this->redirectToRoute('dashboard');
+      return $this->render(
+          'home/index.html.twig',
+          array(
+              'core_class'  => 'app-core--home',
+              'stylesheets' => [ 'kb-home.css' ],
+              'scripts'     => [ 'kb-home.js' ],
+              'meta'        => array('title' => '')
+          )
+      );
     }
 }

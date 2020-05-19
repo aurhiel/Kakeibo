@@ -1,0 +1,170 @@
+// Kakeibo / Home
+//
+@import "kakeibo/variables";
+@import "kb-home/variables";
+
+// Bootstrap stuff
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import "~bootstrap/scss/jumbotron";
+
+
+//
+// Home
+//
+
+@import "kb-home/core";
+@import "kb-home/header";
+@import "kb-home/mockup";
+@import "kb-home/jumbotron";
+@import "kb-home/footer";
+
+
+
+//
+// Lists
+
+.app-lists {
+  .-list {
+    list-style: none;
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    z-index: 1;
+    padding: 0 .4em;
+    margin: 0 .3em;
+
+    + .-list {
+      &:before {
+        content: '';
+        display: inline-block;
+        vertical-align: middle;
+        border: .125rem solid;
+        border-radius: 50%;
+        height: 0;
+        width: 0;
+        position: absolute;
+        left: -.925rem;
+        top: 50%;
+        margin-top: -.125rem;
+        opacity: .2;
+      }
+    }
+
+    .-item {
+      display: inline-block;
+      padding: .2em .4em;
+    }
+
+    .-icon {
+      display: block;
+    }
+  }
+}
+
+
+
+//
+// Sections / "All platforms" section
+.home-section--all-platforms {
+  .-section-title {
+    // color: $gray-600;
+    font-size: 1.25rem;
+    text-align: center;
+    margin-bottom: .4rem;
+    opacity: .95;
+  }
+
+  .app-lists {
+    // color: $gray-700;
+    font-size: 2rem;
+
+    .-item {
+      transition: opacity $animation-duration ease;
+      opacity: .75;
+
+      &:hover {
+        opacity: .95;
+      }
+    }
+  }
+}
+
+
+
+//
+// Sections / "Features" section
+.list-features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  .-item {
+    cursor: default;
+    &:hover, &:focus {
+      .-icon {
+        background-color: $white;
+        color: $primary;
+      }
+      .-text {
+        opacity: .7;
+      }
+    }
+  }
+
+  .-icon {
+    background-color: lighten($dark, 6%);
+    color: lighten($dark, 26%);
+    font-size: 2.2rem;
+    line-height: 1;
+    border-radius: 50%;
+    display: inline-block;
+    padding: .8rem;
+    height: 4rem;
+    width: 4rem;
+    margin-bottom: .4rem;
+    transition: background $animation-duration ease,
+      color $animation-duration ease;
+  }
+  .-title {
+    font-size: 1.4rem;
+  }
+  .-text {
+    font-size: .8rem;
+    max-width: 14rem;
+    margin: 0 auto;
+    opacity: .4;
+    transition: opacity $animation-duration ease;
+  }
+}
+
+
+
+//
+// Responsive
+//
+
+@include media-breakpoint-up(sm) {
+  //
+  // Sections / "Features" section
+  // .list-features {
+  //   .-item {
+  //     flex: 0 0 50%;
+  //     max-width: 50%;
+  //   }
+  // }
+}
+
+@include media-breakpoint-up(md) {
+  //
+  // Sections / "Features" section
+  // .list-features {
+  //   .-item {
+  //     flex: 0 0 25%;
+  //     max-width: 25%;
+  //   }
+  // }
+}

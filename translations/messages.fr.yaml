@@ -18,6 +18,8 @@ menu :
       label : "Récurrences"
   # User's menu
   user :
+    dashboard :
+      label : "Dashboard"
     profile :
       label : "Profil"
     logout :
@@ -35,6 +37,13 @@ page :
   # Globals
   btn_back_website :
     label : "Revenir au site"
+  # PAGE:HOME
+  home :
+    menu :
+      app :
+        label : "L'Application"
+      features :
+        label : "Fonctionnalités"
   # PAGE:LOGIN
   login :
     title     : "Identification"

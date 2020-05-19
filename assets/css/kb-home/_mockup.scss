@@ -1,0 +1,205 @@
+// Mockup
+//
+
+// Mockups
+//
+
+// Mockup variables
+$mockup-screen-bg: #111;
+// // Mockup:Laptop variables
+$mockup--laptop-color: #111;
+$mockup--laptop-motherboard-height: .8rem;
+$mockup--laptop-motherboard-height-sm: 1.2rem;
+$mockup--laptop-motherboard-height-md: 1.6rem;
+$mockup--laptop-screen-border-color: #000;
+$mockup--laptop-border-color: #1F1F1F;
+// // Mockup:Smartphone variables
+$mockup--smartphone-color: #666;
+$mockup--smartphone-border-radius: 1.4rem;
+$mockup--smartphone-screen-border-color: #000;
+
+.mockup {
+  display: inline-block;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+
+  .-screen {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 0;
+
+    &:before {
+      content: '';
+      display: block;
+    }
+
+    > .-inner {
+      background-color: $mockup-screen-bg;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+
+      iframe, img {
+        border: 0;
+        display: block;
+        width: 100%;
+      }
+      iframe {
+        height: 100%;
+      }
+    }
+  }
+
+  .-text {
+    text-align: center;
+    display: block;
+    padding: 4rem 2rem;
+  }
+
+  &--laptop {
+    background-color: $mockup--laptop-border-color;
+    border: .125rem solid $mockup--laptop-border-color;
+    border-radius: 1rem 1rem 0 0;
+    box-shadow: 0 0 0 .12rem $mockup--laptop-color;
+    margin-bottom: $mockup--laptop-motherboard-height;
+    width: 90%;
+    max-width: 60rem;
+
+    &:after {
+      content: '';
+      background-color: $mockup--laptop-color;
+      height: $mockup--laptop-motherboard-height;
+      position: absolute;
+      left: -5.8%;
+      right: -5.8%;
+      bottom: -$mockup--laptop-motherboard-height;
+      border-radius: 0 0 $mockup--laptop-motherboard-height $mockup--laptop-motherboard-height;
+    }
+
+    .-screen {
+      background-color: $mockup--laptop-screen-border-color;
+      border: .4rem solid $mockup--laptop-screen-border-color;
+      border-top-width: 2.8rem;
+      border-bottom-width: 2rem;
+      border-radius: 1rem 1rem 0 0;
+
+      &:before {
+        padding-top: 56.25%;
+      }
+
+      &:after {
+        content: 'R Λ Z Ξ R';
+        background-size: auto .7em;
+        color: '#fff';
+        font-family: $font-family-base;
+        font-size: .8em;
+        letter-spacing: .02em;
+        text-align: center;
+        width: 100%;
+        position: absolute;
+        z-index: 10;
+        left: 0;
+        bottom: -2em;
+        opacity: .15;
+      }
+
+      > .-inner {
+        border-radius: .2rem;
+      }
+    }
+  }
+
+  &--smartphone {
+    background-color: $mockup--smartphone-screen-border-color;
+    border: .2rem solid $mockup--smartphone-color;
+    border-radius: $mockup--smartphone-border-radius;
+    max-width: 16rem;
+
+    &:before, &:after {
+      content: '';
+      background-color: $mockup--smartphone-color;
+      position: absolute;
+      width: .2rem;
+      right: -.345rem;
+      border-radius: 0 .1rem .1rem 0;
+    }
+
+    &:before {
+      height: 5rem;
+      top: 4rem;
+    }
+
+    &:after {
+      height: 2rem;
+      top: 10rem;
+    }
+
+    .-screen {
+      background-color: $mockup--smartphone-screen-border-color;
+      border: .4rem solid $mockup--smartphone-screen-border-color;
+      border-top-width: .8rem;
+      border-bottom-width: 1.6rem;
+      border-radius: $mockup--smartphone-border-radius;
+
+      &:before {
+        padding-top: 190%;
+      }
+
+      &:after {
+        content: '';
+        background-color: $mockup--smartphone-screen-border-color;
+        border-radius: 0 0 2rem 2rem;
+        height: .8rem;
+        width: 1.6rem;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        margin-left: -.8rem;
+      }
+
+      > .-inner {
+        border-radius: $mockup--smartphone-border-radius;
+      }
+    }
+  }
+}
+
+
+
+//
+// Responsive
+//
+
+@include media-breakpoint-up(sm) {
+  .mockup {
+    &--laptop {
+      margin-bottom: $mockup--laptop-motherboard-height-sm;
+
+      &:after {
+        height: $mockup--laptop-motherboard-height-sm;
+        bottom: -$mockup--laptop-motherboard-height-sm;
+        border-radius: 0 0 $mockup--laptop-motherboard-height-sm $mockup--laptop-motherboard-height-sm;
+      }
+    }
+  }
+}
+
+@include media-breakpoint-up(md) {
+  .mockup {
+    &--laptop {
+      margin-bottom: $mockup--laptop-motherboard-height-md;
+
+      &:after {
+        height: $mockup--laptop-motherboard-height-md;
+        bottom: -$mockup--laptop-motherboard-height-md;
+        border-radius: 0 0 $mockup--laptop-motherboard-height-md $mockup--laptop-motherboard-height-md;
+      }
+    }
+  }
+}

@@ -7,6 +7,12 @@
   opacity: $text-muted-opacity;
 }
 
+.bg-gradient-primary {
+  .text-muted {
+    opacity: .8;
+  }
+}
+
 // Price
 .text-price {
   font-family: $price-font-family;
@@ -23,6 +29,10 @@
 // For blog text or simple text
 .textual-content {
   max-width: 40rem;
+}
+.text-literal {
+  line-height: 2;
+  text-align: justify;
 }
 
 // No wrap

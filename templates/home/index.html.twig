@@ -1,0 +1,184 @@
+{% extends 'base.html.twig' %}
+{# Remove default flashes to change their position #}
+{% block flashes %}{% endblock %}
+
+{% block header %}
+  <div class="app-header mb-0">
+    {% set size_display_menu = 'md' %}
+    <div class="navbar navbar-default">
+      <div class="container">
+        <a class="navbar-brand d-none" href="{{ path('dashboard') }}">
+          {% include 'components/logo.html.twig' with {
+            logo_text : 'K',
+            display_version : false,
+            custom_class : (app.request.attributes.get('_route') == 'dashboard' ? 'text-white bg-primary border-primary' : 'text-primary') } %}
+        </a>
+
+        <button class="navbar-toggler mr-auto" type="button" data-toggle="collapse"
+          data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+            aria-expanded="false" aria-label="{{ 'menu.btn_toggle.aria_label'|trans }}">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        {# User's shortcuts (BS dropdown) #}
+        {% include 'components/menu/user.html.twig' %}
+
+        <div class="collapse navbar-collapse order-{{ size_display_menu }}-1" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="-item" class="nav-item">
+              <a class="nav-link" href="#">{{ 'page.home.menu.app.label'|trans }}</a>
+            </li>
+            <li class="-item" class="nav-item">
+              <a class="nav-link" href="#">{{ 'page.home.menu.features.label'|trans }}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block body %}
+<div class="jumbotron jumbotron-fluid jumbotron--top">
+  <div class="container">
+    <div class="mb-4 mb-md-5 mt-md-3 mt-lg-4 mt-xl-5">
+      {% include 'components/logo.html.twig' with {
+        logo_text       : 'Kakeibo',
+        display_version : false,
+        custom_class    :  'text-primary'
+      } %}
+      <div class="brand-speech">{{ 'global.speech'|trans }}</div>
+    </div>
+
+    <hr class="border-dark w-25 my-5">
+
+    <div class="mockup mockup--laptop">
+      <div class="-screen">
+        <div class="-inner">
+          <img src="/build/images/captures/capture-dashboard.png" alt="Capture d'écran du tableau de bord de Kakeibo">
+        </div>
+      </div>
+    </div>
+
+    <div class="mockup mockup--smartphone">
+      <div class="-screen">
+        <div class="-inner">
+          <img src="/build/images/captures/capture-dashboard--smartphone.png" alt="Capture d'écran du tableau de bord de Kakeibo au format mobile">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="home-section home-section--all-platforms bg-white text-dark pt-3 pb-1">
+  <div class="container text-center">
+    <h3 class="-section-title h5">Disponible sur toutes les plateformes</h3>
+    <div class="app-lists">
+      <ul class="-list">
+        <li class="-item">
+          <span class="-icon icon-microsoft" title="Windows" data-toggle="tooltip" data-placement="top"></span>
+        </li>
+        <li class="-item">
+          <span class="-icon icon-apple" title="MacOS" data-toggle="tooltip" data-placement="top"></span>
+        </li>
+        <li class="-item">
+          <span class="-icon icon-android" title="Android" data-toggle="tooltip" data-placement="top"></span>
+        </li>
+        <li class="-item">
+          <span class="-icon icon-ios" title="iOS" data-toggle="tooltip" data-placement="top"></span>
+        </li>
+      </ul>
+
+      <ul class="-list">
+        <li class="-item">
+          <span class="-icon icon-desktop" title="Ordinateur" data-toggle="tooltip" data-placement="top"></span>
+        </li>
+        <li class="-item">
+          <span class="-icon icon-laptop" title="Portable" data-toggle="tooltip" data-placement="top"></span>
+        </li>
+        <li class="-item">
+          <span class="-icon icon-tablet" title="Tablette" data-toggle="tooltip" data-placement="top"></span>
+        </li>
+        <li class="-item">
+          <span class="-icon icon-smartphone" title="Mobile" data-toggle="tooltip" data-placement="top"></span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="home-section home-section--about bg-light text-dark py-3 py-md-5">
+  <div class="container py-2 py-md-4 py-lg-5">
+    <div class="row">
+      <div class="col-12 col-md-6">
+      </div>
+      <div class="col-12 col-md-6">
+        <h2 class="page-header h1 mb-3 mb-md-4 mb-lg-5">Kakeibo, kézako ?</h2>
+        <div class="text-literal text-muted">
+          <p>
+            L'<b>objectif</b> de cette application web est de faciliter la saisie
+            et <b>le suivi de vos dépenses et revenus</b>. Pour ce faire plusieurs fonctionnalités
+            sont à votre disposition, tel que la catégorisation des transactions et leur automatisation.
+          </p>
+          <p class="mb-0">
+            De <b>nouvelles fonctionnalités</b> seront apportées au fur et à mesure du développement du site
+            et de sa popularisation, qui pourra permettre d'amener des fonds afin d'<b>aider à son amélioration</b>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="home-section home-section--features bg-dark text-white py-3 py-md-5">
+  <div class="container text-center py-2 py-md-4">
+    <h2 class="page-header h1 text-white text-center mb-3">Fonctionnalités</h2>
+    <p class="text-muted mb-md-4 mb-lg-5">
+      Une courte description des principales fonctionnalités de l'application.
+    </p>
+
+    <ul class="list-features row">
+      <li class="-item col-12 col-sm-6 col-lg-3 py-2">
+        <div class="-icon">
+          <span class="icon-download"></span>
+        </div>
+        <h3 class="-title">Importation</h3>
+        <p class="-text">
+          Import et <b>tri automatique</b> par catégorie de vos fichiers excel,
+          <b>au format .csv</b>, à la création de votre compte.
+        </p>
+      </li>
+      <li class="-item col-12 col-sm-6 col-lg-3 py-2">
+        <div class="-icon">
+          <span class="icon-pie-chart"></span>
+        </div>
+        <h3 class="-title">Statistiques</h3>
+        <p class="-text">
+          Visualez vos transactions par mois, ou période au choix, et par catégorie afin de
+          mieux les anticiper
+        </p>
+      </li>
+      <li class="-item col-12 col-sm-6 col-lg-3 py-2">
+        <div class="-icon">
+          <span class="icon-command"></span>
+        </div>
+        <h3 class="-title">Automatismes</h3>
+        <p class="-text">
+          Grâce aux transactions automatiques vous n'oublierez plus vos dépenses
+          récurrentes (loyer, assurances, frais...)
+        </p>
+      </li>
+      <li class="-item col-12 col-sm-6 col-lg-3 py-2">
+        <div class="-icon">
+          <span class="icon-help-circle"></span>
+        </div>
+        <h3 class="-title">Plus à venir !</h3>
+        <p class="-text">
+          Le projet étant en version alpha d'autres fonctionnalités seront
+          amenées à être ajouté à l'avenir
+        </p>
+      </li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

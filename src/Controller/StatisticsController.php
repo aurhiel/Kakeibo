@@ -14,7 +14,13 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
+/**
+  * Require ROLE_USER for *every* controller method in this class.
+  *
+  * @IsGranted("ROLE_USER")
+  */
 class StatisticsController extends Controller
 {
     /**
@@ -69,8 +75,8 @@ class StatisticsController extends Controller
         return $this->render('statistics/index.html.twig', [
             'core_class'      => 'app-core--statistics app-core--merge-body-in-header',
             'meta'            => [ 'title' => $translator->trans('page.statistics.meta.title') ],
-            'stylesheets'     => [ 'kb-dashboard.css' ],
-            'scripts'         => [ 'kb-dashboard.js' ],
+            // 'stylesheets'     => [ 'kb-dashboard.css' ],
+            // 'scripts'         => [ 'kb-dashboard.js' ],
             'curr_date_start' => $date_start,
             'curr_date_end'   => $date_end,
             'current_bank_account'  => $default_bank_account,

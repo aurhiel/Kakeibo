@@ -44,7 +44,7 @@ class SecurityController extends Controller
             $user->setPassword($password);
 
             // 4) Set default role
-            $user->setRoles(array('ROLE_USER'));
+            $user->setRole('ROLE_USER');
 
             // 5) Save the User!
             $entityManager = $this->getDoctrine()->getManager();

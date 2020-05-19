@@ -2,31 +2,25 @@
 
 @font-face {
   font-family: '#{$icomoon-font-family}';
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?2nejud');
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?2nejud#iefix') format('embedded-opentype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?2nejud') format('truetype'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?2nejud') format('woff'),
-    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?2nejud##{$icomoon-font-family}') format('svg');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?qnsqvo');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?qnsqvo#iefix') format('embedded-opentype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?qnsqvo') format('truetype'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?qnsqvo') format('woff'),
+    url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?qnsqvo##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
 }
 
-[class^="icon-"]:before, [class*=" icon-"]:before {
+[class^="icon-"], [class*=" icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: $icomoon-font-family !important;
+  font-family: '#{$icomoon-font-family}' !important;
   speak: none;
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
   text-transform: none;
   line-height: 1;
-  display: inline-block;
-
-  // vertical-align: middle;
-  // Hack for vertical alignement
-  position: relative;
-  top: .08em;
 
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;

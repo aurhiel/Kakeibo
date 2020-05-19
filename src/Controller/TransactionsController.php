@@ -14,7 +14,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
+/**
+  * Require ROLE_USER for *every* controller method in this class.
+  *
+  * @IsGranted("ROLE_USER")
+  */
 class TransactionsController extends Controller
 {
     const NB_TRANSAC_BY_PAGE = 50;

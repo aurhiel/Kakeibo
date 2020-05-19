@@ -1,22 +1,39 @@
 
 <div class="navbar-user dropdown order-{{ size_display_menu }}-12">
-  <div class="dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    <span class="say-hello mr-1 d-none d-{{ size_display_menu }}-inline">
-      {{ 'menu.say_hello'|trans({'%name%': app.user.username}) }}
-    </span>
+  {% if app.user is not null and app.user.username is defined %}
+    <div class="dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <span class="say-hello mr-1 d-none d-{{ size_display_menu }}-inline">
+        {{ 'menu.say_hello'|trans({'%name%': app.user.username}) }}
+      </span>
 
-    {% include 'components/user/avatar.html.twig' %}
-  </div>
+      {% include 'components/user/avatar.html.twig' %}
+    </div>
 
-  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-    <a class="dropdown-item" href="{{ path('user_profile') }}">
-      <span class="icon icon-user"></span>
-      {{ 'menu.user.profile.label'|trans }}
-    </a>
-    <div class="dropdown-divider"></div>
-    <a class="dropdown-item" href="{{ path('logout') }}">
-      <span class="icon icon-power"></span>
-      {{ 'menu.user.logout.label'|trans }}
-    </a>
-  </div>
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+      {% if app.request.attributes.get('_route') == 'home' %}
+      <a class="dropdown-item" href="{{ path('dashboard') }}">
+        <span class="icon icon-settings"></span>
+        {{ 'menu.user.dashboard.label'|trans }}
+      </a>
+      {% endif %}
+      <a class="dropdown-item{% if app.request.attributes.get('_route') == 'user_profile' %} active{% endif %}" href="{{ path('user_profile') }}">
+        <span class="icon icon-user"></span>
+        {{ 'menu.user.profile.label'|trans }}
+      </a>
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="{{ path('logout') }}">
+        <span class="icon icon-power"></span>
+        {{ 'menu.user.logout.label'|trans }}
+      </a>
+    </div>
+  {% else %}
+    <div class="btn-group btn-group-sm">
+      <a href="{{ path('user_registration') }}" class="btn btn-outline-primary text-white">
+        Inscription
+      </a>
+      <a href="{{ path('login') }}" class="btn btn-primary">
+        Connexion
+      </a>
+    </div>
+  {% endif %}
 </div>

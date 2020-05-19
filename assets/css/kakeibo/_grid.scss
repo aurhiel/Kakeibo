@@ -79,9 +79,19 @@
   }
 
   .vertical-col-illustration {
+    width: 50%;
+
     &:after {
       left: auto;
       top: 0;
+    }
+
+    > ._inner {
+      margin-top: -4rem;
+      width: 50%;
+      position: fixed;
+      top: 50%;
+      left: 0;
     }
   }
 
@@ -96,7 +106,9 @@
 
 @include media-breakpoint-up(lg) {
   .vertical-col-illustration {
-    width: 42%;
+    &, > ._inner {
+      width: 42%;
+    }
   }
 
   .vertical-col-content {
@@ -110,7 +122,9 @@
 
 @include media-breakpoint-up(xl) {
   .vertical-col-illustration {
-    width: 38%;
+    &, > ._inner {
+      width: 38%;
+    }
   }
 
   .vertical-col-content {

@@ -1,3 +1,23 @@
+.icon-android {
+  &:before {
+    content: $icon-android;
+  }
+}
+.icon-apple {
+  &:before {
+    content: $icon-apple;
+  }
+}
+.icon-ios {
+  &:before {
+    content: $icon-ios;
+  }
+}
+.icon-microsoft {
+  &:before {
+    content: $icon-microsoft;
+  }
+}
 .icon-at-sign {
   &:before {
     content: $icon-at-sign;
@@ -58,6 +78,11 @@
     content: $icon-edit;
   }
 }
+.icon-help-circle {
+  &:before {
+    content: $icon-help-circle;
+  }
+}
 .icon-home {
   &:before {
     content: $icon-home;
@@ -86,6 +111,11 @@
 .icon-log-out {
   &:before {
     content: $icon-log-out;
+  }
+}
+.icon-pie-chart {
+  &:before {
+    content: $icon-pie-chart;
   }
 }
 .icon-plus-square {
@@ -123,9 +153,29 @@
     content: $icon-user;
   }
 }
+.icon-smartphone {
+  &:before {
+    content: $icon-smartphone;
+  }
+}
+.icon-laptop {
+  &:before {
+    content: $icon-laptop;
+  }
+}
+.icon-desktop {
+  &:before {
+    content: $icon-desktop;
+  }
+}
 .icon-security {
   &:before {
     content: $icon-security;
+  }
+}
+.icon-tablet {
+  &:before {
+    content: $icon-tablet;
   }
 }
 .icon-rotate-right {

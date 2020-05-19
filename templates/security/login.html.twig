@@ -1,6 +1,11 @@
 {% extends 'vertically.html.twig' %}
 {% set core_class = 'app-core--login-page' %}
 
+{% block body_vertical_illus %}
+  {% include 'components/logo.html.twig' with { custom_class : 'text-primary', link : path('home') } %}
+  <div class="brand-speech">{{ 'global.speech'|trans }}</div>
+{% endblock %}
+
 {% block body_vertical_content %}
 <form class="mb-5" action="{{ path('login') }}" method="post">
   {% include 'components/flashes.html.twig' %}

@@ -31,8 +31,9 @@ Encore
     // will create public/build/kakeibo.js and public/build/kakeibo.css
     // .addEntry('kakeibo-app', './assets/vue/kakeibo.js')
     .addEntry('kakeibo',      './assets/js/kakeibo.js')
-    .addEntry('kb-dashboard', './assets/js/kb-dashboard.js')
-    .addEntry('kb-statistic', './assets/js/kb-statistic.js')
+    .addEntry('kb-home',      './assets/js/kb-home.js')
+    // .addEntry('kb-dashboard', './assets/js/kb-dashboard.js')
+    // .addEntry('kb-statistic', './assets/js/kb-statistic.js')
 
     // CSS only
     // .addStyleEntry('kakeibo',       './assets/css/kakeibo.scss')

@@ -36,6 +36,13 @@
     opacity: .02;
     pointer-events: none;
   }
+
+  &.text-center {
+    &:after {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
 }
 
 

@@ -17,6 +17,11 @@
   user-select: none;
   position: relative;
   z-index: 1;
+  transition: color $animation-duration ease;
+
+  &:hover {
+    text-decoration: none;
+  }
 
   ._version {
     background-color: $yellow;

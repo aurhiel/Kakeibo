@@ -69,7 +69,7 @@ class UserType extends AbstractType
 
         $user_username  = str_replace(' ', '', $user['username']);
         $user_email     = (isset($user['email'])) ? $user['email'] : strtolower(str_replace(' ', '.', $user['username']).'@gmail.com');
-        dump($user_username, $user_email);
+
         $builder
             ->add('username',       TextType::class,  array(
                 'label'     => 'form_user.username.label',

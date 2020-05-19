@@ -5,6 +5,11 @@
 {% form_theme form _self %}
 {% block form_label_errors %}{% endblock %}
 
+{% block body_vertical_illus %}
+  {% include 'components/logo.html.twig' with { custom_class : 'text-primary', link : path('home') } %}
+  <div class="brand-speech">{{ 'global.speech'|trans }}</div>
+{% endblock %}
+
 {% block body_vertical_content %}
 {{ form_start(form, { attr : { class: 'mb-5' } }) }}
   {% include 'components/flashes.html.twig' %}

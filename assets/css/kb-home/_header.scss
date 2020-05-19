@@ -1,0 +1,37 @@
+// header
+//
+
+$header-navbard-z-index:  100;
+$header-bg:               $body-bg;
+
+.app-header {
+  background-color: $header-bg;
+  background-color: transparentize($header-bg, .05);
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: $header-navbard-z-index;
+
+  .navbar-default {
+    background: none;
+    
+    .navbar-collapse {
+      &:before {
+        background-color: darken($header-bg, 2%);
+        background-color: transparentize(darken($header-bg, 1%), .1);
+      }
+    }
+  }
+}
+
+
+@include media-breakpoint-up(md) {
+  .app-header {
+    text-shadow: 0 0 .6rem rgba(0, 0, 0, .2);
+
+    .dropdown-menu {
+      text-shadow: none;
+    }
+  }
+}

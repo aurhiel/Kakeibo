@@ -13,3 +13,11 @@
 .bg-gradient-primary {
   background: linear-gradient(87deg, $primary 0, lighten($primary, 15%) 100%) !important;
 }
+
+.bg-gradient-primary--darken {
+  background: linear-gradient(87deg, $primary 0, darken($primary, 4%) 100%) !important;
+}
+
+.bg-gradient-info {
+  background: linear-gradient(87deg, $primary 0, $info 100%) !important;
+}

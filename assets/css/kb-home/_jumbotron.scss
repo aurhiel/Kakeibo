@@ -1,0 +1,145 @@
+// Jumbotron
+//
+
+.jumbotron {
+  .container {
+    position: relative;
+  }
+
+  //
+  // Brand components
+  .brand-logo {
+    font-size: 2.8rem;
+  }
+
+  //
+  // Mockups
+  .mockup--laptop {
+    display: none;
+  }
+
+  //
+  // Variantes
+  &--top {
+    background-color: $body-bg;
+    color: $body-color;
+    text-align: center;
+    height: 32rem;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+    margin-bottom: 0;
+    overflow: hidden;
+
+    .mockup--smartphone {
+      .-inner {
+        > * {
+          position: relative;
+          z-index: 1;
+        }
+
+        &:after {
+          content: 'Sophie H. est la plus belle ! <3';
+          position: absolute;
+          z-index: 0;
+          left: 0;
+          top: 50%;
+          margin-top: -.5em;
+          width: 100%;
+          opacity: .1;
+        }
+      }
+    }
+  }
+}
+
+
+//
+// Responsive
+//
+
+// Medium (md)
+@include media-breakpoint-up(md) {
+  .jumbotron {
+    //
+    // Mockups
+    .mockup--laptop {
+      display: inline-block;
+      max-width: 44rem;
+    }
+
+    .mockup--smartphone {
+      position: absolute;
+      left: 50%;
+      bottom: -2rem;
+      margin-left: 12.8rem;
+      max-width: 12rem;
+    }
+
+    //
+    // Variantes
+    &--top {
+      padding-top: 5.4rem;
+      padding-bottom: 5.4rem;
+      height: 40rem;
+    }
+  }
+}
+
+// Large (lg)
+@include media-breakpoint-up(lg) {
+  .jumbotron {
+    //
+    // Mockups
+    .mockup--laptop {
+      max-width: 48rem;
+    }
+
+    .mockup--smartphone {
+      max-width: 14rem;
+    }
+
+    //
+    // Variantes
+    &--top {
+      height: 42rem;
+    }
+  }
+}
+
+// Extra-Large (xl)
+@include media-breakpoint-up(xl) {
+  .jumbotron {
+    //
+    // Mockups
+    .mockup--laptop {
+      max-width: 60rem;
+    }
+
+    .mockup--smartphone {
+      max-width: 16rem;
+      margin-left: 18rem;
+    }
+
+    //
+    // Variantes
+    &--top {
+      padding-top: 6.6rem;
+      padding-bottom: 6.6rem;
+      height: 48rem;
+    }
+  }
+}
+
+
+// Extra-Large (xl)
+@include media-breakpoint-up(xxl) {
+  .jumbotron {
+    //
+    // Variantes
+    &--top {
+      padding-top: 7.4rem;
+      padding-bottom: 7.4rem;
+      height: 50rem;
+    }
+  }
+}

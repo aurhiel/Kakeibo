@@ -14,7 +14,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
+/**
+  * Require ROLE_USER for *every* controller method in this class.
+  *
+  * @IsGranted("ROLE_USER")
+  */
 class DashboardController extends Controller
 {
     const NB_LAST_TRANS = 20;
@@ -69,8 +75,8 @@ class DashboardController extends Controller
             'page_title'            => $translator->trans('page.dashboard.title'),
             'meta'                  => [ 'title' => $translator->trans('page.dashboard.title') ],
             'core_class'            => 'app-core--dashboard app-core--merge-body-in-header',
-            'stylesheets'           => [ 'kb-dashboard.css' ],
-            'scripts'               => [ 'kb-dashboard.js' ],
+            // 'stylesheets'           => [ 'kb-dashboard.css' ],
+            // 'scripts'               => [ 'kb-dashboard.js' ],
             'user'                  => $user,
             'current_bank_account'  => $default_bank_account,
             'dashboard_date_start'  => $date_start,

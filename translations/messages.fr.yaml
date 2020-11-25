@@ -103,8 +103,17 @@ page :
     link :
       label : "Notes de version"
     title   : "Notes de version"
-    title_func_add : "Fonctionnalité%plural% ajoutée%plural%"
+    title_func_add  : "Fonctionnalité%plural% ajoutée%plural%"
+    title_fix       : "Correction%plural% diverse%plural%"
     # VERSIONS
+    alpha_0_1_2 :
+      title : "Version Alpha 0.1.2"
+      date  : "2020-05-19"
+      list_func_add :
+        item_1 : "Ajout de la page d'accueil"
+      list_fix :
+        item_1 : "Correction de la modification des transactions et mise à jour des différents montants (revenus, dépenses et solde du compte) via JS / Ajax."
+        item_2 : "Corrections et modifications diverses (UI, bug, ...)"
     alpha_0_1_0 :
       title : "Version Alpha 0.1.0"
       date  : "2020-04-25"
@@ -132,13 +141,13 @@ page :
             <b>manuellement par l'utilisateur</b>."
           percent_status : 0
         item_2 :
-          label : "Transactions automatiques"
+          label : "Transactions automatiques par période"
           desc  : "Permettre d'<b>automatiser des transactions récurrentes</b>, comme
             le loyer, le virement d'une paie, de manière périodique (mensuelle, hebdomadaire)
             selon le choix de l'utilisateur."
           percent_status : 0
         item_3 :
-          label : "Transactions automatiques"
+          label : "Transactions automatiques par pourcentage"
           desc  : "Ajouter des transactions récurrentes <b>basés sur
           un pourcentage</b>, défini préalablement par l'utilisateur, <b>des revenus du mois</b>."
           percent_status : 0
@@ -170,6 +179,7 @@ block :
   trans_list :
     default_title   : "Liste des transactions"
     total_text      : "Total de <b>%amount%</b> transaction%plural%"
+    empty           : "Aucune transaction à afficher"
 
 ## FORMS
 form :

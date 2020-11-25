@@ -127,6 +127,7 @@ block :
   trans_list :
     default_title   : "Transactions list"
     total_text      : "<b>%amount%</b> transaction%plural% in total"
+    empty           : "No transaction to display"
 
 
 ## FORMS

@@ -108,5 +108,7 @@
     {% endblock %}
   </div>
 {% else %}
-  <div class="alert alert-secondary">no transactions (add form ?)</div>
+  <div class="alert alert-secondary">
+    {{ 'block.trans_list.empty'|trans }}
+  </div>
 {% endif %}

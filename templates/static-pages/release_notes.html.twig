@@ -4,6 +4,28 @@
 <div class="textual-content">
   <h1 class="page-header h2 mt-3 mb-4">{{ 'page.release_notes.title'|trans }}</h1>
 
+  {% set prefix_txt_ver = 'page.release_notes.alpha_0_1_2.' %}
+  <div class="card mb-4">
+    <div class="card-header">
+      <div class="row align-items-center">
+        <h2 class="h4 mb-0 col">{{ (prefix_txt_ver ~ 'title')|trans }}</h2>
+        <small class="text-muted col-auto">{{ (prefix_txt_ver ~ 'date')|trans|localizeddate('medium', 'none') }}</small>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3 class="h5 font-weight-bold">{{ 'page.release_notes.title_func_add'|trans({ '%plural%': 's' }) }}</h3>
+      <ul class="mb-4">
+        <li>{{ (prefix_txt_ver ~ 'list_func_add.item_1')|trans|raw }}</li>
+      </ul>
+
+      <h3 class="h5 font-weight-bold">{{ 'page.release_notes.title_fix'|trans({ '%plural%': 's' }) }}</h3>
+      <ul class="mb-0">
+        <li class="mb-3">{{ (prefix_txt_ver ~ 'list_fix.item_1')|trans|raw }}</li>
+        <li>{{ (prefix_txt_ver ~ 'list_fix.item_2')|trans|raw }}</li>
+      </ul>
+    </div>
+  </div>
+
   {% set prefix_txt_ver = 'page.release_notes.alpha_0_1_0.' %}
   <div class="card mb-4">
     <div class="card-header">
@@ -14,7 +36,7 @@
     </div>
     <div class="card-body">
       <h3 class="h5 font-weight-bold">{{ 'page.release_notes.title_func_add'|trans({ '%plural%': 's' }) }}</h3>
-      <ul>
+      <ul class="mb-0">
         <li class="mb-3">{{ (prefix_txt_ver ~ 'list_func_add.item_1')|trans|raw }}</li>
         <li class="mb-3">{{ (prefix_txt_ver ~ 'list_func_add.item_2')|trans|raw }}</li>
         <li>{{ (prefix_txt_ver ~ 'list_func_add.item_3')|trans|raw }}</li>

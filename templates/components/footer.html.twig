@@ -14,15 +14,16 @@
             'fr' : { 'slug' : 'a-propos', 'label' : 'page.about.link.label' }
           },
           'release-notes' : {
-            'en' : { 'slug' : 'release-notes',    'label' : app_version },
-            'fr' : { 'slug' : 'notes-de-version', 'label' : app_version }
+            'en' : { 'slug' : 'release-notes',    'label' : app_version, 'label_no_trans' : true },
+            'fr' : { 'slug' : 'notes-de-version', 'label' : app_version, 'label_no_trans' : true }
           },
         } %}
         {% for s_page in static_pages %}
           {% set page = s_page[app.request.locale] %}
           <li class="list-inline-item">
             <a href="{{ path('static_pages', { slug: page.slug }) }}">
-              {{ page.label|trans }}
+              {% if page.label_no_trans is defined %}{{ page.label }}
+              {% else %}{{ page.label|trans }}{% endif %}
             </a>
           </li>
         {% endfor %}

@@ -28,3 +28,8 @@ yarn-error.log
 /public/.htaccess
 /public/robots.txt
 ###< client/ingeneria ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###

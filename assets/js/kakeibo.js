@@ -571,7 +571,9 @@ var kakeibo = {
   loading_class : 'app-core--is-loading',
   load : function() {
     this.is_loading = true;
-    this.$body.addClass(this.loading_class);
+    // NOTE: Add loading class in base.html.twig right after body creation, 
+    //  in order to avoid blinking when it's done here
+    // this.$body.addClass(this.loading_class);
   },
   unload : function() {
     this.is_loading = false;

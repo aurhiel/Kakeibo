@@ -26,12 +26,14 @@ class AdminController extends Controller
 
         // Retrieve users
         $r_user = $em->getRepository(User::class);
-        $users  = $r_user->findAll();
+        $users  = $r_user->findBy([], ['id' => 'DESC']);
+
+        dump($users);
 
         return $this->render('admin/index.html.twig', [
-            'page_title'            => '<span class="icon icon-settings"></span> ' . $translator->trans('page.admin.title'),
-            'core_class'            => 'app-core--admin app-core--merge-body-in-header',
-            'users' => $users,
+            'page_title'  => '<span class="icon icon-settings"></span> ' . $translator->trans('page.admin.title'),
+            'core_class'  => 'app-core--admin app-core--merge-body-in-header',
+            'users'       => $users,
         ]);
     }
 }

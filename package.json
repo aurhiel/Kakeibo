@@ -1,6 +1,7 @@
 {
     "devDependencies": {
-        "@symfony/webpack-encore": "^0.20.0",
+        "@beyonk/google-fonts-webpack-plugin": "^1.7.0",
+        "@symfony/webpack-encore": "^0.24.0",
         "webpack-notifier": "^1.7.0"
     },
     "license": "UNLICENSED",
@@ -15,7 +16,6 @@
         "bootstrap": "^4.1.2",
         "chart.js": "^2.9.3",
         "copy-webpack-plugin": "^4.5.2",
-        "google-fonts-webpack-plugin": "^0.4.4",
         "jquery": "^3.3.1",
         "node-sass": "^4.9.2",
         "popper.js": "^1.14.3",

@@ -42,6 +42,9 @@
   </head>
 
   <body class="app-core{% if core_class is defined %} {{ core_class }}{% endif %}">
+    {# Add loading class on body here, in order to avoid blinking when it's done in kakeibo.js #}
+    <script type="text/javascript">document.getElementsByClassName('app-core')[0].classList.add('app-core--is-loading');</script>
+
     {# Header #}
     {% block header %}
       <div class="app-header">
@@ -106,8 +109,8 @@
     {% block javascripts_defines %}{% endblock %}
 
     {# Javascripts #}
-    <script src="{{ asset('build/manifest.js') }}"></script>
-    <script src="{{ asset('build/vendors.js') }}"></script>
+    <script src="{{ asset('build/runtime.js') }}"></script>
+    <script src="{{ asset('build/entries.js') }}"></script>
     <script src="{{ asset('build/kakeibo.js') }}"></script>
     {% if scripts is defined %}
       {% for script_url in scripts %}

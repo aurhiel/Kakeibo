@@ -1,32 +1,18 @@
 var Encore = require('@symfony/webpack-encore');
-var GoogleFontsPlugin = require("google-fonts-webpack-plugin");
+var GoogleFontsPlugin = require("@beyonk/google-fonts-webpack-plugin");
 var CopyWebpackPlugin = require("copy-webpack-plugin");
 
 Encore
     // the project directory where compiled assets will be stored
     .setOutputPath('public/build/')
-
     // the public path used by the web server to access the previous directory
     .setPublicPath('/build')
-
     // the public path you will use in Symfony's asset() function - e.g. asset('build/some_file.js')
     .setManifestKeyPrefix('build/')
 
-    //
-    .cleanupOutputBeforeBuild()
-
-    // Copy static files like fonts, images, ...
-    .addPlugin(new CopyWebpackPlugin([
-      { from: './assets/static' }
-    ]))
-
-    // Display notifications on webpack's builds
-    // .enableBuildNotifications()
-
-    .enableSourceMaps(!Encore.isProduction())
-
-    // the following line enables hashed filenames (e.g. app.abc123.css)
-    .enableVersioning(Encore.isProduction())
+    // Vendors
+    .createSharedEntry('entries', './shared_entries.js') // new way to add vendor on Encore^0.24.0
+    // .createSharedEntry('vendors', ['jquery', 'bootstrap']) // old way (Encore^0.20.0)
 
     // will create public/build/kakeibo.js and public/build/kakeibo.css
     // .addEntry('kakeibo-app', './assets/vue/kakeibo.js')
@@ -41,8 +27,12 @@ Encore
     .addStyleEntry('kakeibo--blue',  './assets/css/kakeibo--blue.scss')
     .addStyleEntry('kakeibo--blue-dark',  './assets/css/kakeibo--blue-dark.scss')
 
-    // Vendors
-    .createSharedEntry('vendors', ['jquery', 'bootstrap'])
+    // will require an extra script tag for runtime.js
+    // but, you probably want this, unless you're building a single-page app
+    .enableSingleRuntimeChunk()
+
+    // Cleaning things
+    .cleanupOutputBeforeBuild()
 
     // Google Fonts
     .addPlugin(new GoogleFontsPlugin({
@@ -56,11 +46,25 @@ Encore
       "filename": "google-fonts.css"
     }))
 
+    // Copy static files like fonts, images, ...
+    .addPlugin(new CopyWebpackPlugin([
+      { from: './assets/static' }
+    ]))
+
+    // Source maps for production environment
+    .enableSourceMaps(!Encore.isProduction())
+
+    // the following line enables hashed filenames (e.g. app.abc123.css)
+    .enableVersioning(Encore.isProduction())
+
     // enable Vue support
     // .enableVueLoader()
 
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()
+
+    // Display notifications on webpack's builds
+    // .enableBuildNotifications()
 
     // uncomment if you use Sass/SCSS files
     .enableSassLoader(function(sassOptions) {}, {

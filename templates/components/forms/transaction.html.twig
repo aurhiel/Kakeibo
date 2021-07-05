@@ -14,7 +14,7 @@
   <div class="col-sm-6 mb-3">
     {{ form_label(form_transaction.amount) }}
     <div class="input-group">
-      {{ form_widget(form_transaction.amount, { type: 'number' }) }}
+      {{ form_widget(form_transaction.amount, { type: 'number', attr: { 'data-form-default-value': random(25, 400) * ((random()%2) ? 1 : -1) } }) }}
       <div class="input-group-append">
         <span class="input-group-text">{{ default_bank_account.currency.label }}</span>
       </div>
@@ -26,7 +26,7 @@
 <div class="form-row">
   <div class="col-sm-6 mb-3">
     {{ form_label(form_transaction.label) }}
-    {{ form_widget(form_transaction.label) }}
+    {{ form_widget(form_transaction.label, { attr: { 'data-form-default-value': 'Test #' ~ ('now'|date('u')) } }) }}
     {{ form_errors(form_transaction.label) }}
   </div>
 

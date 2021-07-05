@@ -3,10 +3,10 @@
 namespace App\Controller;
 
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class StaticPagesController extends Controller
+class StaticPagesController extends AbstractController
 {
 
     private $page_config = array();
@@ -57,10 +57,8 @@ class StaticPagesController extends Controller
     /**
      * @Route("/{slug}.html", name="static_pages")
      */
-    public function index($slug)
+    public function index($slug, TranslatorInterface $translator)
     {
-        $translator = $this->get('translator');
-
         // Get page config according to given slug
         switch ($slug) {
             // DATA: About page

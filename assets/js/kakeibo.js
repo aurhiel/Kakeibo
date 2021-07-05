@@ -1,7 +1,11 @@
 require('../css/kakeibo.scss');
 
+require('bootstrap');
+
+
 // Add ChartJS
-var ChartJS = require('chart.js');
+import Chart from 'chart.js/auto';
+// var ChartJS = require('chart.js');
 
 // NOTE: Useful for dark theme
 // ChartJS.defaults.global.defaultFontColor = 'rgba(255, 255, 255, .75)';
@@ -47,16 +51,16 @@ var kakeibo = {
 
       this.$items.each(function() {
         var $chart = $(this),
-            canvas = $chart.find('canvas')
+            canvas = $chart.find('canvas'),
             data_name   = $chart.data('chartjs-data-name'),
             data_type   = $chart.data('chartjs-data-type'),
             chart_type  = $chart.data('chartjs-type'),
             chart_min   = $chart.data('chartjs-min'),
             chart_max   = $chart.data('chartjs-max'),
             grid_color  = $chart.data('chartjs-grid-color'),
-            legend_display    = (typeof $chart.data('chartjs-legend-display') != 'undefined') ? $chart.data('chartjs-legend-display') : true
-            legend_position   = $chart.data('chartjs-legend-position')
-            legend_hide_sizes = (typeof $chart.data('chartjs-legend-hide') == 'string') ? $chart.data('chartjs-legend-hide').split('|') : [];
+            legend_display    = ((typeof $chart.data('chartjs-legend-display') != 'undefined') ? $chart.data('chartjs-legend-display') : true),
+            legend_position   = $chart.data('chartjs-legend-position'),
+            legend_hide_sizes = ((typeof $chart.data('chartjs-legend-hide') == 'string') ? $chart.data('chartjs-legend-hide').split('|') : []);
 
         if (typeof data_name != 'undefined' && typeof window[data_name] != 'undefined') {
           var opts = {};
@@ -128,14 +132,17 @@ var kakeibo = {
             };
           }
 
+
           var chartJS = new Chart(canvas, {
             type : chart_type,
             data : data,
             options : opts,
             plugins: [{
               resize: function() {
-                $chart.data('chartJS').options.legend.display = self.is_legend_visible(legend_hide_sizes);
-                $chart.data('chartJS').update();
+                if (typeof $chart.data('chartJS') != 'undefined') {
+                  $chart.data('chartJS').options.legend.display = self.is_legend_visible(legend_hide_sizes);
+                  $chart.data('chartJS').update();
+                }
               }
             }]
           });
@@ -571,7 +578,7 @@ var kakeibo = {
   loading_class : 'app-core--is-loading',
   load : function() {
     this.is_loading = true;
-    // NOTE: Add loading class in base.html.twig right after body creation, 
+    // NOTE: Add loading class in base.html.twig right after body creation,
     //  in order to avoid blinking when it's done here
     // this.$body.addClass(this.loading_class);
   },

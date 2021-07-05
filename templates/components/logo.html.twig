@@ -5,8 +5,8 @@
 {% set display_version = (display_version is defined) ? display_version : true  %}
 
 {# Link or not link ? That is the question ! #}
-{% set tag_start  = (link is defined) ? 'a href=' ~ link : 'span' %}
-{% set tag_end    = (link is defined) ? 'a' : 'span' %}
+{% set tag_start  = (link is defined) ? 'a href=' ~ link : ((custom_tag is defined) ? custom_tag : 'span') %}
+{% set tag_end    = (link is defined) ? 'a' : ((custom_tag is defined) ? custom_tag : 'span') %}
 
 <{{ tag_start }} class="brand-logo{{ custom_class }}">
   <span class="_text _text-{{ type_text }}">{{ logo_text }}</span>

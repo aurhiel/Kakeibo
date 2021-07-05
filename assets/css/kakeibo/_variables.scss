@@ -141,6 +141,17 @@ $container-max-widths: (
 // --------------------------------------
 // Kakeibo's variables ------------------
 
+// Roots for ressources
+$theme-root-build: '/build';
+$theme-root-fonts: '#{$theme-root-build}/fonts';
+$theme-root-images: '#{$theme-root-build}/images';
+
+// Icomoon's variables
+//
+// NOTE After "Theme's variables" because of using variable $theme-root-fonts,
+//    coming from Theme's variables
+
+$icons-font-path: '#{$theme-root-fonts}/icomoon';
 
 //
 // Globals

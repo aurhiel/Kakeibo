@@ -43,7 +43,7 @@ class UserType extends AbstractType
             ],
             [
                 'username'  => 'Dupont&Dupond',
-                'email'     => 'hello@dupond-et-dupond.com',
+                'email'     => 'hello@dupont-et-dupond.com',
             ],
             [
                 'username'  => 'raven99',

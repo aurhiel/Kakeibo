@@ -1,13 +1,13 @@
 {# Set period text according to dates start & end values #}
 {% if date_start is defined and date_end is defined %}
   {% if date_start|date('m') == date_end|date('m') %}
-    {% set month_literal = date_start|localizeddate('none', 'none', null, null, 'MMMM') %}
+    {% set month_literal = date_start|format_date(pattern='MMMM') %}
     {% set for_literal = month_literal|lower|first in ['a', 'e', 'i', 'o', 'u'] ? "d'": "de " %}
     {% set period_text = 'block.inc_exp.period'|trans({ '%date%': (month_literal|capitalize ~ ' ' ~ date_start|date('Y')), '%for_literal%': for_literal }) %}
   {% else %}
     {# Add year to date start text ONLY IF date start year and date end year are differents #}
-    {% set date_start_text = date_start|localizeddate('none', 'none', null, null, 'dd MMMM' ~ (date_start|date('Y') != date_end|date('Y') ? ' YYYY': '')) %}
-    {% set period_text = 'block.inc_exp.period_custom'|trans({ '%date_start%': date_start_text, '%date_end%': date_end|localizeddate('none', 'none', null, null, 'dd MMMM YYYY') }) %}
+    {% set date_start_text = date_start|format_date(pattern='dd MMMM' ~ (date_start|date('Y') != date_end|date('Y') ? ' YYYY': '')) %}
+    {% set period_text = 'block.inc_exp.period_custom'|trans({ '%date_start%': date_start_text, '%date_end%': date_end|format_date(pattern='dd MMMM YYYY') }) %}
   {% endif %}
 {% else %}
   {% set period_text = 'block.inc_exp.since_register'|trans %}

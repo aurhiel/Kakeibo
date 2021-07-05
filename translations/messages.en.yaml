@@ -59,6 +59,11 @@ page :
       title : "Already registered ?"
       link :
         label : "Log in now !"
+    messages :
+      already_registered : "This user already exist, please chose a different mail address."
+      registration_success : "Registration successfully completed, you can now log in."
+      unknown_error : "An unknown error has occurred, please try again."
+      max_users_reached : "The maximum number of registrations has been reached! Come back later or contact us to make new places available."
   # PAGE:DASHBOARD
   dashboard :
     title : "Dashboard"

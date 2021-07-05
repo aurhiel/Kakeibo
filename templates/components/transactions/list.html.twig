@@ -30,7 +30,7 @@
       {% for transac in transactions %}
         {% if last_date != transac.date|date('Y-m-d') %}
           <div class="-item -item-date" data-kb-date-formatted="{{ transac.date|date('Y-m-d') }}">
-            {{ transac.date|localizeddate('long', 'none') }}
+            {{ transac.date|format_datetime('long', 'none') }}
           </div>
         {% endif %}
         <div class="-item -item-transac" data-kb-id-transaction="{{ transac.id }}" data-kb-date-formatted="{{ transac.date|date('Y-m-d') }}">

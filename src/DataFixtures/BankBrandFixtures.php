@@ -6,13 +6,11 @@ namespace App\DataFixtures;
 use App\Entity\BankBrand;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
+use Doctrine\Persistence\ObjectManager;
 
 
-class BankBrandFixtures extends Fixture implements OrderedFixtureInterface
+class BankBrandFixtures extends Fixture
 {
-
     public function load(ObjectManager $manager)
     {
         $bank_brands = [
@@ -39,10 +37,5 @@ class BankBrandFixtures extends Fixture implements OrderedFixtureInterface
 
         // Flush
         $manager->flush();
-    }
-
-    public function getOrder()
-    {
-        return 5;
     }
 }

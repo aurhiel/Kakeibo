@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
@@ -11,14 +11,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
   *
   * @IsGranted("ROLE_USER")
   */
-class AutomatonController extends Controller
+class AutomatonController extends AbstractController
 {
     /**
      * @Route("/automaton", name="automaton")
      */
     public function index()
     {
-        if ($this->container->getParameter('kernel.environment') !== 'dev')
+        if ($this->getParameter('kernel.environment') !== 'dev')
             return $this->redirectToRoute('dashboard');
 
         return $this->render('automaton/index.html.twig', [

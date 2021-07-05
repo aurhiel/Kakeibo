@@ -11,7 +11,7 @@ use App\Entity\Transaction;
 // Components
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -21,15 +21,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
   *
   * @IsGranted("ROLE_USER")
   */
-class StatisticsController extends Controller
+class StatisticsController extends AbstractController
 {
     /**
      * @Route("/statistiques/{date_start}/{date_end}", name="statistics", defaults={"date_start"="current","date_end"="current"})
      */
-    public function index($date_start, $date_end, Security $security, Request $request)
+    public function index($date_start, $date_end, Security $security, Request $request, TranslatorInterface $translator)
     {
-        $user       = $security->getUser();
-        $translator = $this->get('translator');
+        $user = $security->getUser();
 
         // Force user to create at least ONE bank account !
         if(count($user->getBankAccounts()) < 1)

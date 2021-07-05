@@ -58,6 +58,11 @@ page :
       title : "Déjà inscrit&middot;e ?"
       link :
         label : "Connectez-vous"
+    messages :
+      already_registered : "Cet utilisateur existe déjà, veuillez utiliser une adresse email différente."
+      registration_success : "Inscription effectuée avec succès, vous pouvez dès à présent vous connecter."
+      unknown_error : "Une erreur inconnue est survenue, veuillez essayer de nouveau."
+      max_users_reached : "Le nombre maximum d'inscription a été atteint ! Revenez plus tard ou contactez-nous pour que de nouvelles places soient disponibles."
   # PAGE:DASHBOARD
   dashboard :
     title : "Dashboard"

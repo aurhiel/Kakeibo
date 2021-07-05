@@ -12,7 +12,7 @@ use App\Entity\BankAccount;
 use App\Entity\Transaction;
 
 // Components
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,7 +23,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
   *
   * @IsGranted("ROLE_USER")
   */
-class IgnitionController extends Controller
+class IgnitionController extends AbstractController
 {
 
     private $nb_steps = 2;
@@ -142,6 +142,7 @@ class IgnitionController extends Controller
             'step'      => 2,
             'nb_steps'  => $this->nb_steps,
             'current_bank_account'        => $default_bank_account,
+            'hide_form_trans_panel'       => true,
             'form_transaction_submitted'  => $trans_form->isSubmitted(),
             'form_transaction'            => $trans_form->createView()
         ]);

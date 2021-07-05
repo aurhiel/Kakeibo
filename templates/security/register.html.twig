@@ -14,7 +14,7 @@
 {{ form_start(form, { attr : { class: 'mb-5' } }) }}
   {% include 'components/flashes.html.twig' %}
 
-  <h2 class="page-header h3">Inscription</h2>
+  <h2 class="page-header h3">{{ 'page.register.title'|trans }}</h2>
 
   {% include 'security/form-user-inputs.html.twig' with { form : form } %}
 

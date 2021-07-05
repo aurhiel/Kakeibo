@@ -6,18 +6,17 @@ namespace App\DataFixtures;
 use App\Entity\User;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
+use Doctrine\Persistence\ObjectManager;
 
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class UserFixtures extends Fixture implements OrderedFixtureInterface
+class UserFixtures extends Fixture
 {
-    private $encoder;
+    private $hasher;
 
-    public function __construct(UserPasswordEncoderInterface $encoder)
+    public function __construct(UserPasswordHasherInterface $hasher)
     {
-        $this->encoder = $encoder;
+        $this->hasher = $hasher;
     }
 
     public function load(ObjectManager $manager)
@@ -34,12 +33,15 @@ class UserFixtures extends Fixture implements OrderedFixtureInterface
                 'email'     => 'litti.aurelien@gmail.com',
                 'role'      => 'ROLE_ADMIN'
             ],
-            [ 'username'  => 'Raven' ],
+            [
+                'username'  => 'Tony.S',
+                'email'     => 'tony.s@stark-industries.com'
+            ],
+            [
+                'username'  => 'Rav3n',
+                'email'     => 'raven.roth999@gmail.com'
+            ],
             [ 'username'  => 'Mannhart' ],
-            [ 'username'  => 'Patreus' ],
-            [ 'username'  => 'Dragonneau' ],
-            [ 'username'  => 'Diggory' ],
-            [ 'username'  => 'Pichu' ],
         ];
 
         // Create users
@@ -59,7 +61,7 @@ class UserFixtures extends Fixture implements OrderedFixtureInterface
                   $user->setEmail('hello@'.strtolower($user_data['username']).'.fr');
                 }
 
-                $user->setPassword($this->encoder->encodePassword($user, 'pass'));
+                $user->setPassword($this->hasher->hashPassword($user, 'pass'));
 
                 if(isset($user_data['role']) && !empty($user_data['role'])) {
                     $user->setRole($user_data['role']);
@@ -74,10 +76,5 @@ class UserFixtures extends Fixture implements OrderedFixtureInterface
 
         // Flush
         $manager->flush();
-    }
-
-    public function getOrder()
-    {
-        return 1;
     }
 }

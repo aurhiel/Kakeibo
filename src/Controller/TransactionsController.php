@@ -11,7 +11,7 @@ use App\Entity\Category;
 
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -21,7 +21,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
   *
   * @IsGranted("ROLE_USER")
   */
-class TransactionsController extends Controller
+class TransactionsController extends AbstractController
 {
     const NB_TRANSAC_BY_PAGE = 50;
 
@@ -202,10 +202,9 @@ class TransactionsController extends Controller
     /**
      * @Route("/transactions/{page}", name="transactions", defaults={"page"=1})
      */
-    public function index($page, Security $security, Request $request)
+    public function index($page, Security $security, Request $request, TranslatorInterface $translator)
     {
-        $user       = $security->getUser();
-        $translator = $this->get('translator');
+        $user = $security->getUser();
 
         // Force user to create at least ONE bank account !
         if (count($user->getBankAccounts()) < 1)

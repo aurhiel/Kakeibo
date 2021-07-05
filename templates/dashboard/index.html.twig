@@ -46,7 +46,7 @@
           <div class="card-header d-flex align-items-center">
             <div class="col pl-0">
               <h3 class="h5 mb-0">
-                {% set month_literal = dashboard_date_start|localizeddate('none', 'none', null, null, 'MMMM') %}
+                {% set month_literal = dashboard_date_start|format_date(pattern='MMMM') %}
                 {% set for_literal = month_literal|lower|first in ['a', 'e', 'i', 'o', 'u'] ? "d'": "de " %}
                 {{ 'page.dashboard.chart_exp.title'|trans({ '%date%': (month_literal|capitalize), '%for_literal%': for_literal }) }}
               </h3>

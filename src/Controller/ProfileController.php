@@ -9,7 +9,7 @@ use App\Form\UserType;
 use App\Entity\User;
 
 // Components
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
@@ -23,7 +23,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
   *
   * @IsGranted("ROLE_USER")
   */
-class ProfileController extends Controller
+class ProfileController extends AbstractController
 {
     /**
      * @Route("/profil", name="user_profile")

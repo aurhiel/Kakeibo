@@ -9,7 +9,7 @@
     <div class="card-header">
       <div class="row align-items-center">
         <h2 class="h4 mb-0 col">{{ (prefix_txt_ver ~ 'title')|trans }}</h2>
-        <small class="text-muted col-auto">{{ (prefix_txt_ver ~ 'date')|trans|localizeddate('medium', 'none') }}</small>
+        <small class="text-muted col-auto">{{ (prefix_txt_ver ~ 'date')|trans|format_datetime('medium', 'none') }}</small>
       </div>
     </div>
     <div class="card-body">
@@ -31,7 +31,7 @@
     <div class="card-header">
       <div class="row align-items-center">
         <h2 class="h4 mb-0 col">{{ (prefix_txt_ver ~ 'title')|trans }}</h2>
-        <small class="text-muted col-auto">{{ (prefix_txt_ver ~ 'date')|trans|localizeddate('medium', 'none') }}</small>
+        <small class="text-muted col-auto">{{ (prefix_txt_ver ~ 'date')|trans|format_datetime('medium', 'none') }}</small>
       </div>
     </div>
     <div class="card-body">

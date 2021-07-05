@@ -31,10 +31,10 @@
 
     {# Stylesheets #}
     <link rel="stylesheet" href="{{ asset('build/google-fonts.css') }}">
-    <link rel="stylesheet" href="{{ asset('build/kakeibo.css') }}">
+    {{ encore_entry_link_tags('kakeibo') }}
     {% if stylesheets is defined %}
-      {% for stylesheet_url in stylesheets %}
-        <link rel="stylesheet" href="{{ asset('build/' ~ stylesheet_url) }}">
+      {% for entry_name in stylesheets %}
+        {{ encore_entry_link_tags(entry_name) }}
       {% endfor %}
     {% endif %}
     {# Custom stylesheets from twig templates #}
@@ -75,7 +75,7 @@
       <span class="d-none d-xl-block" data-viewport-size-slug="xl"></span>
     </span>
 
-    {% if app.user is defined and app.user is not null and form_transaction is defined %}
+    {% if app.user is defined and app.user is not null and form_transaction is defined and hide_form_trans_panel is not defined %}
       <div class="app-panel app-panel--top app-panel--transaction-form">
         <div class="-inner container">
           {{ form_start(form_transaction, { 'action': path('transaction_manage'), 'attr' : { 'class': '-use-ajax-submit' } }) }}
@@ -109,12 +109,10 @@
     {% block javascripts_defines %}{% endblock %}
 
     {# Javascripts #}
-    <script src="{{ asset('build/runtime.js') }}"></script>
-    <script src="{{ asset('build/entries.js') }}"></script>
-    <script src="{{ asset('build/kakeibo.js') }}"></script>
+    {{ encore_entry_script_tags('kakeibo') }}
     {% if scripts is defined %}
-      {% for script_url in scripts %}
-        <script src="{{ asset('build/' ~ script_url) }}"></script>
+      {% for entry_name in scripts %}
+        {{ encore_entry_script_tags(entry_name) }}
       {% endfor %}
     {% endif %}
 

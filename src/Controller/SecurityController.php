@@ -9,28 +9,30 @@ use App\Form\UserType;
 use App\Entity\User;
 
 // Components
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 // use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+// Mailer components
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Address;
 
 
-class SecurityController extends Controller
+class SecurityController extends AbstractController
 {
     /**
      * @Route("/inscription", name="user_registration")
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, \Swift_Mailer $mailer, AuthorizationCheckerInterface $authChecker)
+    public function register(Request $request, UserPasswordHasherInterface $passwordHasher, MailerInterface $mailer, AuthorizationCheckerInterface $authChecker, TranslatorInterface $translator)
     {
         if (true === $authChecker->isGranted('IS_AUTHENTICATED_FULLY'))
             return $this->redirectToRoute('dashboard');
-
-        $translator = $this->get('translator');
 
         // 1) build the form
         $user = new User();
@@ -39,8 +41,8 @@ class SecurityController extends Controller
         // 2) handle the submit (will only happen on POST)
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            // 3) Encode the password (you could also do this via Doctrine listener)
-            $password = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
+            // 3) Encode the password
+            $password = $passwordHasher->hashPassword($user, $user->getPlainPassword());
             $user->setPassword($password);
 
             // 4) Set default role
@@ -61,16 +63,20 @@ class SecurityController extends Controller
                     // Flush OK ! > Send email to user and redirect to dashboard
 
                     // Send email to user
-                    // $message = (new \Swift_Message('Confirmation d\'inscription'))
-                    //     ->setFrom(array('ne-pas-repondre@kakeibo.fr' => 'Kakeibo'))
-                    //     ->setTo($user->getEmail())
-                    //     ->setBody(
-                    //         $this->renderView(
-                    //             'emails/registration-confirm.html.twig',
-                    //             array( 'user' => $user )
-                    //         ),
-                    //         'text/html'
-                    //     )
+                    // $message = (new Email())
+                    //     ->from(new Address('ne-pas-repondre@kakeibo.fr', 'Kakeibo'))
+                    //     ->to($user->getEmail())
+                    //     ->subject('Confirmation d\'inscription')
+                    //     ->html($this->renderView(
+                    //         'emails/registration-confirm.html.twig',
+                    //         [
+                    //             'user' => $user,
+                    //             // 'visitor' => [
+                    //             //       'ip'    => $request->getClientIp(),
+                    //             //       'agent' => $request->server->get('HTTP_USER_AGENT')
+                    //             // ],
+                    //         ]
+                    //     ))
                     // ;
                     //
                     // $mailer->send($message);
@@ -101,12 +107,10 @@ class SecurityController extends Controller
     /**
      * @Route("/connexion", name="login")
      */
-    public function login(Request $request, AuthenticationUtils $authenticationUtils, AuthorizationCheckerInterface $authChecker)
+    public function login(Request $request, AuthenticationUtils $authenticationUtils, AuthorizationCheckerInterface $authChecker, TranslatorInterface $translator)
     {
         if (true === $authChecker->isGranted('IS_AUTHENTICATED_FULLY'))
             return $this->redirectToRoute('dashboard');
-
-        $translator = $this->get('translator');
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -119,5 +123,13 @@ class SecurityController extends Controller
             'last_username' => $lastUsername,
             'error'         => $error,
         ));
+    }
+
+    /**
+     * @Route("/logout", name="logout")
+     */
+    public function logout(): void
+    {
+        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 }

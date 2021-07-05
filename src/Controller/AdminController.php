@@ -5,7 +5,7 @@ namespace App\Controller;
 // Entities
 use App\Entity\User;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
@@ -14,15 +14,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
   *
   * @IsGranted("ROLE_ADMIN")
   */
-class AdminController extends Controller
+class AdminController extends AbstractController
 {
     /**
      * @Route("/admin", name="admin")
      */
-    public function index()
+    public function index(TranslatorInterface $translator)
     {
-        $em         = $this->getDoctrine()->getManager();
-        $translator = $this->get('translator');
+        $em = $this->getDoctrine()->getManager();
 
         // Retrieve users
         $r_user = $em->getRepository(User::class);

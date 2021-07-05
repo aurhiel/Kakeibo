@@ -6,13 +6,11 @@ namespace App\DataFixtures;
 use App\Entity\Currency;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
+use Doctrine\Persistence\ObjectManager;
 
 
-class CurrencyFixtures extends Fixture implements OrderedFixtureInterface
+class CurrencyFixtures extends Fixture
 {
-
     public function load(ObjectManager $manager)
     {
         $currencies = [
@@ -37,10 +35,5 @@ class CurrencyFixtures extends Fixture implements OrderedFixtureInterface
 
         // Flush
         $manager->flush();
-    }
-
-    public function getOrder()
-    {
-        return 5;
     }
 }

@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% if curr_date_start|date('m') == curr_date_end|date('m') %}
-  {% set month_literal = curr_date_start|localizeddate('none', 'none', null, null, 'MMMM') %}
+  {% set month_literal = curr_date_start|format_date(pattern='MMMM') %}
   {% set for_literal = month_literal|lower|first in ['a', 'e', 'i', 'o', 'u'] ? "d'": "de " %}
   {% set page_title = '<span class="icon icon-bar-chart"></span> ' ~ ('page.statistics.title')|trans({ '%date%': (month_literal|capitalize ~ ' ' ~ curr_date_start|date('Y')), '%for_literal%': for_literal }) %}
 {% else %}
-  {% set page_title = '<span class="icon icon-bar-chart"></span> ' ~ ('page.statistics.title_period_custom')|trans({ '%date_start%': curr_date_start|localizeddate('long', 'none'), '%date_end%': curr_date_end|localizeddate('long', 'none') }) %}
+  {% set page_title = '<span class="icon icon-bar-chart"></span> ' ~ ('page.statistics.title_period_custom')|trans({ '%date_start%': curr_date_start|format_datetime('long', 'none'), '%date_end%': curr_date_end|format_datetime('long', 'none') }) %}
 {% endif %}
 
 
@@ -44,7 +44,7 @@
               };
 
               {% for exp in total_expenses_by_date %}
-                transactions_by_days.labels.push('{{ exp.date|localizeddate('none', 'none', 'fr', 'Europe/Paris', 'dd MMM') }}');
+                transactions_by_days.labels.push('{{ exp.date|format_date(pattern='dd MMM') }}');
                 transactions_by_days.datasets[0].data.push(Math.round(({{ exp.amount_sum }} + Number.EPSILON) * 100) / 100 * -1);
               {% endfor %}
 

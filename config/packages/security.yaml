@@ -1,13 +1,12 @@
 security:
-    always_authenticate_before_granting: true
-    encoders:
-      App\Entity\User: bcrypt
+    # https://symfony.com/doc/current/security/experimental_authenticators.html
+    enable_authenticator_manager: true
 
     # HIERARCHY
     role_hierarchy:
         ROLE_ADMIN: ROLE_USER
 
-    # PROVIDERS
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         # in_memory: { memory: ~ }
         # own user provider
@@ -17,21 +16,24 @@ security:
                 # Restrict login to one field
                 # property: username
 
-    # FIREWALLS
+    password_hashers:
+        # use your user class name here
+        App\Entity\User:
+            # Use native password hasher, which auto-selects the best
+            # possible hashing algorithm (starting from Symfony 5.3 this is "bcrypt")
+            algorithm: auto
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-
         main:
             pattern: ^/
-            logout_on_user_change: true
-            anonymous: true
             provider: pdo
             form_login:
                 login_path: login
                 check_path: login
-                default_target_path: /
+                default_target_path: /dashboard
             logout:
                 path:   /logout
                 target: /connexion
@@ -41,11 +43,17 @@ security:
                 lifetime: 604800 # 1 week in seconds
                 path:     /
 
+            # activate different ways to authenticate
+            # https://symfony.com/doc/current/security.html#firewalls-authentication
+
+            # https://symfony.com/doc/current/security/impersonating_user.html
+            # switch_user: true
+
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/connexion,    roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/inscription,  roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/logout,       roles: IS_AUTHENTICATED_REMEMBERED }
-        - { path: ^/,             roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/connexion,    roles: PUBLIC_ACCESS }
+        - { path: ^/inscription,  roles: PUBLIC_ACCESS }
+        - { path: ^/logout,       roles: PUBLIC_ACCESS }
+        - { path: ^/,             roles: PUBLIC_ACCESS }

@@ -7,12 +7,12 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User implements AdvancedUserInterface, \Serializable
+class User implements UserInterface, \Serializable
 {
     /**
      * @ORM\Id
@@ -39,7 +39,7 @@ class User implements AdvancedUserInterface, \Serializable
     private $plainPassword;
 
     /**
-     * The below length depends on the "algorithm" you use for encoding
+     * The below length depends on the "algorithm" you use for hashing
      * the password, but this works well with bcrypt.
      *
      * @ORM\Column(type="string", length=64)
@@ -59,7 +59,7 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @ORM\Column(type="datetime")
      * @Assert\NotBlank()
-     * @Assert\DateTime()
+     * @Assert\Type("\DateTimeInterface")
      */
     private $registerDate;
 
@@ -93,11 +93,10 @@ class User implements AdvancedUserInterface, \Serializable
 
 
     // Register date (= now())
-    public function getRegisterDate()
+    public function getRegisterDate(): ?\DateTimeInterface
     {
         return $this->registerDate;
     }
-
 
     // Email
     public function getEmail()

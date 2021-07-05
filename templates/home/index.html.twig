@@ -7,12 +7,12 @@
     {% set size_display_menu = 'md' %}
     <div class="navbar navbar-default">
       <div class="container">
-        <a class="navbar-brand d-none" href="{{ path('dashboard') }}">
+        <span class="navbar-brand"{# href="{{ path('dashboard') }}" #}>
           {% include 'components/logo.html.twig' with {
             logo_text       : 'K',
             display_version : false,
             custom_class    : (app.request.attributes.get('_route') == 'dashboard' ? 'text-white bg-primary border-primary' : 'text-primary') } %}
-        </a>
+        </span>
 
         <button class="navbar-toggler mr-auto" type="button" data-toggle="collapse"
           data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -26,10 +26,10 @@
         <div class="collapse navbar-collapse order-{{ size_display_menu }}-1" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
             <li class="-item" class="nav-item">
-              <a class="nav-link" href="#">{{ 'page.home.menu.app.label'|trans }}</a>
+              <a class="nav-link" href="#about">{{ 'page.home.menu.app.label'|trans }}</a>
             </li>
             <li class="-item" class="nav-item">
-              <a class="nav-link" href="#">{{ 'page.home.menu.features.label'|trans }}</a>
+              <a class="nav-link" href="#features">{{ 'page.home.menu.features.label'|trans }}</a>
             </li>
           </ul>
         </div>
@@ -45,7 +45,8 @@
       {% include 'components/logo.html.twig' with {
         logo_text       : 'Kakeibo',
         display_version : false,
-        custom_class    : 'text-primary'
+        custom_class    : 'text-primary mt-0',
+        custom_tag      : 'h1'
       } %}
       <div class="brand-speech">{{ 'global.speech'|trans }}</div>
     </div>
@@ -107,7 +108,7 @@
   </div>
 </div>
 
-<div class="home-section home-section--about bg-light text-dark py-3 py-md-5">
+<div id="about" class="home-section home-section--about bg-light text-dark py-3 py-md-5">
   <div class="container py-2 py-md-4 py-lg-5">
     <div class="row align-items-center">
       <div class="col-12 col-md-6 text-center text-primary">
@@ -138,7 +139,7 @@
   </div>
 </div>
 
-<div class="home-section home-section--features bg-dark text-white py-3 py-md-5">
+<div id="features" class="home-section home-section--features bg-dark text-white py-3 py-md-5">
   <div class="container text-center py-2 py-md-4">
     <h2 class="page-header h1 text-white text-center mb-3 mb-md-4 pb-md-2">Fonctionnalités</h2>
     {#<p class="text-muted mb-md-4 mb-lg-5">

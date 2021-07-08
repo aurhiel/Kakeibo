@@ -1,0 +1,20 @@
+// Kakeibo / Admin
+//
+
+@import "kakeibo/variables";
+@import "kb-admin/variables";
+
+// Bootstrap stuff
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import "~bootstrap/scss/jumbotron";
+
+
+//
+// Admin
+//
+
+@import "kb-admin/core";
+@import "kb-admin/header";
+@import "kb-admin/tables";

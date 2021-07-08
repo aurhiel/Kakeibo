@@ -1,20 +1,18 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Hello AdminController!{% endblock %}
+{% extends 'admin/base.html.twig' %}
 
 {% block body %}
 <div class="container">
   <div class="row">
-    <div class="col-12 col-md-4 col-lg-5">
-      <div class="card">
+    <div class="col-12 order-md-last col-md-4 col-lg-5 mb-4">
+      <div class="card bg-dark text-white">
         <div class="card-header">
-          <h3 class="h4 mb-0">Utilisateur&middot;rice&middot;s du site</h3>
+          <h3 class="h4 mb-0">Quelques données</h3>
         </div>
-        <table class="table table-striped mb-0">
+        <table class="table table-striped table-monospaced table-dark mb-0">
           <tbody>
             <tr>
               <td><b>{{ 'page.admin.users.amount.label'|trans|raw }}</b></td>
-              <td>{{ users|length }}</td>
+              <td>{{ nb_users }}<span class="text-muted">/{{ max_users }}</span></td>
             </tr>
             <tr>
               <td><b>{{ 'page.admin.users.last_user.label'|trans|raw }}</b></td>
@@ -22,6 +20,40 @@
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+    <div class="col-12 order-md-first col-md-8 col-lg-7">
+      <div class="card bg-dark text-white">
+        <div class="card-header">
+          <h3 class="h4 mb-0">{{ users|length }} derniers utilisat&middot;eur&middot;rice&middot;s du site</h3>
+        </div>
+        <table class="table table-striped table-monospaced table-dark mb-0">
+          <thead>
+            <tr>
+              <th>Nom d'utilisateur</th>
+              <th>Email</th>
+              <th>Date d'inscription</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for user in users %}
+            <tr>
+              <td>{{ user.username|anonymize }}</td>
+              <td>
+                {% set email_splitted = user.email|split('@') %}
+                {% set domain = email_splitted[1]|split('.') %}
+                {{ email_splitted[0]|anonymize }}@{{ domain[0]|anonymize }}.{{ domain[1] }}
+              </td>
+              <td>{{ user.registerDate|format_datetime('medium', 'short') }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        <div class="card-footer text-center">
+          <a href="{{ path('admin_users') }}" class="btn btn-outline-primary text-white px-3">
+            + utilisateurs
+          </a>
+        </div>
       </div>
     </div>
   </div>

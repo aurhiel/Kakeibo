@@ -16,13 +16,14 @@
 
   <h2 class="page-header h3">{{ 'page.register.title'|trans }}</h2>
 
-  {% include 'security/form-user-inputs.html.twig' with { form : form } %}
+  {% include 'security/form-user-inputs.html.twig' with { form : form, widgets_disabled : max_users_reached } %}
 
   <div class="col-7 col-md-4 py-2 px-0 mt-2 mb-3 border-top small required required--prepend">
     {{ 'form.required'|trans }}
   </div>
 
-  <button class="btn btn-primary" type="submit" name="register">
+  <button class="btn btn-primary{{ (max_users_reached == true ? ' disabled' : '') }}"
+    type="submit" name="register"{{ (max_users_reached == true ? ' disabled="disabled"' : '') }}>
     {{ 'form_user.btn.register.label'|trans }}
   </button>
 {{ form_end(form) }}

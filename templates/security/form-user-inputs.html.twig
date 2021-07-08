@@ -1,14 +1,23 @@
+{% set widgets_attr = { } %}
+{# Disable form's widgets #}
+{% if widgets_disabled is defined and widgets_disabled == true %}
+  {% set widgets_attr = widgets_attr|merge({ 'disabled': 'disabled' }) %}
+{% endif %}
+{# Assign a custom CSS class on all widgets #}
+{% if widgets_class is defined %}
+  {% set widgets_attr = widgets_attr|merge({ 'class': widgets_class }) %}
+{% endif %}
 
 <div class="form-row">
   <div class="col-md-6 mb-3">
     {{ form_label(form.username) }}
-    {{ form_widget(form.username) }}
+    {{ form_widget(form.username, { attr : widgets_attr }) }}
     {{ form_errors(form.username) }}
   </div>
 
   <div class="col-md-6 mb-3">
     {{ form_label(form.email) }}
-    {{ form_widget(form.email) }}
+    {{ form_widget(form.email, { attr : widgets_attr }) }}
     {{ form_errors(form.email) }}
   </div>
 </div>
@@ -16,13 +25,13 @@
 <div class="form-row">
   <div class="col-sm-6 mb-3">
     {{ form_label(form.plainPassword.first) }}
-    {{ form_widget(form.plainPassword.first) }}
+    {{ form_widget(form.plainPassword.first, { attr : widgets_attr }) }}
     {{ form_errors(form.plainPassword.first) }}
   </div>
 
   <div class="col-sm-6 mb-2">
     {{ form_label(form.plainPassword.second) }}
-    {{ form_widget(form.plainPassword.second) }}
+    {{ form_widget(form.plainPassword.second, { attr : widgets_attr }) }}
     {{ form_errors(form.plainPassword.second) }}
   </div>
 </div>

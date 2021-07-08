@@ -1,0 +1,52 @@
+// Tables
+//
+
+.table {
+  td, th {
+    vertical-align: middle;
+  }
+
+  .col-id {
+    display: none;
+  }
+
+  td.col-label {
+    line-height: 1.2;
+    min-width: 12rem;
+  }
+
+  td.col-import-regex {
+    line-height: 1.2;
+    max-width: 16rem;
+  }
+  .col-import-regex {
+    display: none;
+  }
+
+  .col-actions {
+    text-align: right;
+    min-width: 10rem;
+
+    .btn {
+      font-size: .875em;
+    }
+  }
+}
+
+.table-monospaced {
+  font-family: monospace;
+  font-size: .8rem;
+}
+
+
+
+// Responsive
+//
+
+@include media-breakpoint-up(xl) {
+  .table {
+    .col-import-regex {
+      display: table-cell;
+    }
+  }
+}

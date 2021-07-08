@@ -16,9 +16,17 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
 
     public function findAll()
     {
-        return $this->findBy(array(), array(
+        return $this->findBy([], [
             'username' => 'ASC'
-        ));
+        ]);
+    }
+
+    public function countAll()
+    {
+        return $this->createQueryBuilder('u')
+            ->select('COUNT(u.id) AS amount')
+            ->getQuery()->getSingleScalarResult()
+        ;
     }
 
     public function loadUserByUsername(string $username): ?User

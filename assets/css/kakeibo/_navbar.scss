@@ -107,11 +107,11 @@
     }
 
     &:before {
-      top: -.6rem;
+      top: -$navbar-default-toggler-lines-spacing;
     }
 
     &:after {
-      bottom: -.65rem;
+      bottom: -$navbar-default-toggler-lines-spacing;
     }
   }
 

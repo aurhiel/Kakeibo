@@ -29,15 +29,16 @@ Encore
 
      // will create public/build/kakeibo.js and public/build/kakeibo.css
      // .addEntry('kakeibo-app', './assets/vue/kakeibo.js')
-     .addEntry('kakeibo',      './assets/js/kakeibo.js')
-     .addEntry('kb-home',      './assets/js/kb-home.js')
+     .addEntry('kakeibo',       './assets/js/kakeibo.js')
+     .addEntry('kb-home',       './assets/js/kb-home.js')
+     .addEntry('kb-admin',      './assets/js/kb-admin.js')
      // .addEntry('kb-dashboard', './assets/js/kb-dashboard.js')
      // .addEntry('kb-statistic', './assets/js/kb-statistic.js')
 
      // CSS only
-     .addStyleEntry('kakeibo-dark',  './assets/css/kakeibo-dark.scss')
-     .addStyleEntry('kakeibo--blue',  './assets/css/kakeibo--blue.scss')
-     .addStyleEntry('kakeibo--blue-dark',  './assets/css/kakeibo--blue-dark.scss')
+     .addStyleEntry('kakeibo-dark',         './assets/css/kakeibo-dark.scss')
+     .addStyleEntry('kakeibo--blue',        './assets/css/kakeibo--blue.scss')
+     .addStyleEntry('kakeibo--blue-dark',   './assets/css/kakeibo--blue-dark.scss')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     // .enableStimulusBridge('./assets/controllers.json')

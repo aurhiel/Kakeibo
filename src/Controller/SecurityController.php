@@ -34,71 +34,82 @@ class SecurityController extends AbstractController
         if (true === $authChecker->isGranted('IS_AUTHENTICATED_FULLY'))
             return $this->redirectToRoute('dashboard');
 
-        // 1) build the form
+        $em             = $this->getDoctrine()->getManager();
+        $max_users      = $this->getParameter('app.max_users');
+        $r_user         = $em->getRepository(User::class);
+        $nb_registered  = (int) $r_user->countAll();
+        $max_reached    = ($max_users != null && $nb_registered >= $max_users);
+
+        // 1) Build the form
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
 
-        // 2) handle the submit (will only happen on POST)
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            // 3) Encode the password
-            $password = $passwordHasher->hashPassword($user, $user->getPlainPassword());
-            $user->setPassword($password);
+        // 1.1) Check if spaces left to register a new user
+        if ($max_reached == false) {
+            // 2) Handle the submit (will only happen on POST)
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                // 3) Encode the password
+                $password = $passwordHasher->hashPassword($user, $user->getPlainPassword());
+                $user->setPassword($password);
 
-            // 4) Set default role
-            $user->setRole('ROLE_USER');
+                // 4) Set default role
+                $user->setRole('ROLE_USER');
 
-            // 5) Save the User!
-            $entityManager = $this->getDoctrine()->getManager();
-            $repoUser = $entityManager->getRepository('App:User');
-            $entityManager->persist($user);
+                // 5) Save the User!
+                $em->persist($user);
 
-            // 6) User already exist ?
-            if(!empty($repoUser->loadUserByUsername($user->getUsername()))) {
-                $request->getSession()->getFlashBag()->add('error', 'Cet utilisateur existe déjà, veuillez utiliser une adresse email différente.');
-            } else {
-                // 7) Try or clear
-                try {
-                    $entityManager->flush();
-                    // Flush OK ! > Send email to user and redirect to dashboard
+                // 6) User already exist ?
+                if(!empty($r_user->loadUserByUsername($user->getUsername()))) {
+                    $request->getSession()->getFlashBag()->add('error', $translator->trans('page.register.messages.already_registered'));
+                } else {
+                    // 7) Try or clear
+                    try {
+                        $em->flush();
+                        // Flush OK ! > Send email to user and redirect to dashboard
 
-                    // Send email to user
-                    // $message = (new Email())
-                    //     ->from(new Address('ne-pas-repondre@kakeibo.fr', 'Kakeibo'))
-                    //     ->to($user->getEmail())
-                    //     ->subject('Confirmation d\'inscription')
-                    //     ->html($this->renderView(
-                    //         'emails/registration-confirm.html.twig',
-                    //         [
-                    //             'user' => $user,
-                    //             // 'visitor' => [
-                    //             //       'ip'    => $request->getClientIp(),
-                    //             //       'agent' => $request->server->get('HTTP_USER_AGENT')
-                    //             // ],
-                    //         ]
-                    //     ))
-                    // ;
-                    //
-                    // $mailer->send($message);
+                        // TODO Send email to user in order to validate his subscribe
+                        // $message = (new Email())
+                        //     ->from(new Address('ne-pas-repondre@kakeibo.fr', 'Kakeibo'))
+                        //     ->to($user->getEmail())
+                        //     ->subject('Confirmation d\'inscription')
+                        //     ->html($this->renderView(
+                        //         'emails/registration-confirm.html.twig',
+                        //         [
+                        //             'user' => $user,
+                        //             // 'visitor' => [
+                        //             //       'ip'    => $request->getClientIp(),
+                        //             //       'agent' => $request->server->get('HTTP_USER_AGENT')
+                        //             // ],
+                        //         ]
+                        //     ))
+                        // ;
+                        //
+                        // $mailer->send($message);
 
-                    // Add success message
-                    $request->getSession()->getFlashBag()->add('success', 'Inscription effectuée avec succès, vous pouvez dès à présent vous connecter.');
+                        // Add success message
+                        $request->getSession()->getFlashBag()->add('success', $translator->trans('page.register.messages.registration_success'));
 
-                    // Redirect to login page
-                    return $this->redirectToRoute('login');
-                } catch (\Exception $e) {
-                    // Something goes wrong
-                    $request->getSession()->getFlashBag()->add('error', 'Une erreur inconnue est survenue, veuillez essayer de nouveau.');
-                    $entityManager->clear();
+                        // Redirect to login page
+                        return $this->redirectToRoute('login');
+                    } catch (\Exception $e) {
+                        // Something goes wrong
+                        $request->getSession()->getFlashBag()->add('error', $translator->trans('page.register.messages.unknown_error'));
+                        $em->clear();
+                    }
                 }
             }
+        } else {
+            // Set message that max users amount is reached
+            $request->getSession()->getFlashBag()->add('notice', $translator->trans('page.register.messages.max_users_reached'));
         }
 
         return $this->render(
             'security/register.html.twig',
             array(
-              'meta' => [ 'title' => $translator->trans('page.register.title') ],
-              'form' => $form->createView()
+              'meta'              => [ 'title' => $translator->trans('page.register.title') ],
+              'form'              => $form->createView(),
+              'max_users_reached' => $max_reached,
             )
         );
     }

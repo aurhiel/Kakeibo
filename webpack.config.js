@@ -57,7 +57,7 @@ Encore
      * list of features, see:
      * https://symfony.com/doc/current/frontend.html#adding-more-features
      */
-    // .cleanupOutputBeforeBuild()
+    .cleanupOutputBeforeBuild()
 
     .enableBuildNotifications()
 

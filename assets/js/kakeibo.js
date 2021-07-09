@@ -58,6 +58,7 @@ var kakeibo = {
             chart_min   = $chart.data('chartjs-min'),
             chart_max   = $chart.data('chartjs-max'),
             grid_color  = $chart.data('chartjs-grid-color'),
+            aspect_ratio = ((typeof $chart.data('chartjs-aspect-ratio') != 'undefined') ? $chart.data('chartjs-aspect-ratio') : null),
             legend_display    = ((typeof $chart.data('chartjs-legend-display') != 'undefined') ? $chart.data('chartjs-legend-display') : true),
             legend_position   = $chart.data('chartjs-legend-position'),
             legend_hide_sizes = ((typeof $chart.data('chartjs-legend-hide') == 'string') ? $chart.data('chartjs-legend-hide').split('|') : []);
@@ -131,6 +132,10 @@ var kakeibo = {
               }
             };
           }
+
+          // Set aspect ratio (avoid blank)
+          if (aspect_ratio != null)
+            opts.aspectRatio = aspect_ratio;
 
           var chartJS = new Chart(canvas, {
             type : chart_type,

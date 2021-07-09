@@ -63,7 +63,7 @@ var kakeibo = {
             legend_hide_sizes = ((typeof $chart.data('chartjs-legend-hide') == 'string') ? $chart.data('chartjs-legend-hide').split('|') : []);
 
         if (typeof data_name != 'undefined' && typeof window[data_name] != 'undefined') {
-          var opts = {};
+          var opts = { plugins: { } };
           var data = window[data_name];
 
           if (typeof chart_min != 'undefined' && typeof chart_max != 'undefined') {
@@ -79,7 +79,7 @@ var kakeibo = {
           if (legend_display)
             legend_display = self.is_legend_visible(legend_hide_sizes);
 
-          opts.legend = {
+          opts.plugins.legend = {
             display: legend_display
           };
 
@@ -109,7 +109,7 @@ var kakeibo = {
           }
 
           if (typeof legend_position != 'undefined')
-            opts.legend.position = legend_position;
+            opts.plugins.legend.position = legend_position;
 
           // Custom tooltips
           if (typeof data_type != 'undefined') {
@@ -132,7 +132,6 @@ var kakeibo = {
             };
           }
 
-
           var chartJS = new Chart(canvas, {
             type : chart_type,
             data : data,
@@ -140,7 +139,7 @@ var kakeibo = {
             plugins: [{
               resize: function() {
                 if (typeof $chart.data('chartJS') != 'undefined') {
-                  $chart.data('chartJS').options.legend.display = self.is_legend_visible(legend_hide_sizes);
+                  $chart.data('chartJS').options.plugins.legend.display = self.is_legend_visible(legend_hide_sizes);
                   $chart.data('chartJS').update();
                 }
               }

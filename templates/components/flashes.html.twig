@@ -13,27 +13,13 @@
   }
 } %}
 
-{% if type_flashes is not empty %}
-  {# Detect if any messages is defined #}
-  {% set has_messages = false %}
-  {% for slug_flash, type_flash in type_flashes %}
-    {% if app.session.flashbag.get(slug_flash) is not empty %}
-      {% set has_messages = true %}
-    {% endif %}
-  {% endfor %}
-
-  {% if has_messages == true %}
-    <div class="mb-4 mb-xl-5">
-      {% for slug_flash, type_flash in type_flashes %}
-        {% set flash_messages = app.session.flashbag.get(slug_flash) %}
-        {% if flash_messages is not empty %}
-        <div class="alert alert-{{ type_flash.css_class }}">
-          {% for message in flash_messages %}
-            {{ message|raw }}{% if loop.last == false %}<br>{% endif %}
-          {% endfor %}
-        </div>
-        {% endif %}
-      {% endfor %}
-    </div>
+{% for slug_flash, type_flash in type_flashes %}
+  {% set flash_messages = app.session.flashbag.get(slug_flash) %}
+  {% if flash_messages is not empty %}
+    {% for message in flash_messages %}
+      <div class="alert alert-{{ type_flash.css_class }}">
+        {{ message|raw }}
+      </div>
+    {% endfor %}
   {% endif %}
-{% endif %}
+{% endfor %}

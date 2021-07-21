@@ -19,6 +19,15 @@ class CategoryRepository extends ServiceEntityRepository
         parent::__construct($registry, Category::class);
     }
 
+    public function findAllIndexedBy($column = 'id')
+    {
+        return $this->createQueryBuilder('c', 'c.' . $column)
+            ->orderBy('c.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     public function countAll()
     {
         return $this->createQueryBuilder('c')

@@ -22,6 +22,9 @@
       {% endif %}
     {%- endblock -%}
 
+    {# meta.favicons #}
+    {% include 'components/head-favicons.html.twig' %}
+
     {# meta.robots #}
     {% if meta.robots is defined and meta.robots is not empty %}
       <meta name="robots" content="{{ meta.robots }}" />

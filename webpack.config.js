@@ -1,6 +1,11 @@
 const Encore = require('@symfony/webpack-encore');
 const GoogleFontsPlugin = require("@beyonk/google-fonts-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const FaviconsPlugin = require("favicons-webpack-plugin");
+// const FaviconsTwigPlugin = require("create-favicons-partial-webpack");
+
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { basename } = require('path');
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.js file.
@@ -76,6 +81,46 @@ Encore
       ],
       "path": "fonts/google/",
       "filename": "google-fonts.css"
+    }))
+
+
+    // Favicons
+    .addPlugin(new HtmlWebpackPlugin({
+      filename: '../../templates/components/head-favicons.html.twig',
+      templateContent: ({htmlWebpackPlugin}) => `${htmlWebpackPlugin.tags.headTags.filter((tag => (tag.attributes['rel'] !== 'stylesheet' && tag.tagName !== 'script')))}`,
+      inject: false,
+    }))
+    .addPlugin(new FaviconsPlugin({
+      logo: './assets/images/favicon.png',
+      // Enable caching and optionally specify the path to store cached data
+      // Note: disabling caching may increase build times considerably
+      cache: true,
+      // Favicon app title
+      // title: 'Kakeibo',
+      // The prefix for all image files (might be a folder or a name)
+      prefix: 'favicons/',
+      // mode: 'webapp', // optional can be 'webapp', 'light' or 'auto' - 'auto' by default
+      // devMode: 'webapp', // optional can be 'webapp' or 'light' - 'light' by default
+      favicons: {
+        appName: 'Kakeibo',
+        // appDescription: 'My awesome App',
+        developerName: 'Khiel',
+        developerURL: null, // prevent retrieving from the nearest package.json
+        background: '#212529',
+        theme_color: '#212529',
+        icons: {
+          android: true,
+          appleIcon: true,
+          appleStartup: true,
+          coast: false,
+          favicons: true,
+          firefox: true,
+          opengraph: false,
+          twitter: false,
+          yandex: false,
+          windows: false
+        }
+      }
     }))
 
     // Copy static files like fonts, images, ...

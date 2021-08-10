@@ -14,7 +14,7 @@
 {% endif %}
 
 <div class="row">
-  <div class="col-12{% if full_width is not defined %} col-xl-6{% endif %} mb-4">
+  <div class="col-12{% if full_width is not defined or (full_width is defined and full_width == false) %} col-xl-6{% endif %} mb-4">
     <div class="card bg-gradient-success text-white text-shadow border-0">
       <div class="card-body">
         <div class="d-flex align-items-center">
@@ -43,7 +43,7 @@
       </div>
     </div>
   </div>
-  <div class="col-12{% if full_width is not defined %} col-xl-6{% endif %} mb-4">
+  <div class="col-12{% if full_width is not defined or (full_width is defined and full_width == false) %} col-xl-6{% endif %} mb-4">
     <div class="card bg-gradient-danger text-white text-shadow border-0">
       <div class="card-body">
         <div class="d-flex align-items-center">

@@ -41,6 +41,7 @@ class StatisticsController extends AbstractController
         }
 
         // Default values/params
+        $is_now     = ($date_start == 'current' && $date_end == 'current');
         $date_start = ($date_start == 'current') ? date('Y-m-01') : $date_start;
         $date_end   = ($date_end == 'current') ? date('Y-m-t') : $date_end;
         $em       = $this->getDoctrine()->getManager();
@@ -58,18 +59,80 @@ class StatisticsController extends AbstractController
         $transactions = $r_trans->findByBankAccountAndDateAndPage($default_bank_account, $date_start, $date_end);
         $nb_transactions = count($transactions);
 
-        // Redirect to a page with transactions if not current date
-        if ($nb_transactions < 1 && ($date_start != date('Y-m-01') && $date_end != date('Y-m-t')))
-            return $this->redirectToRoute('statistics');
+        // Redirect to a page with transactions based on last one
+        //  if current period hasn't any transactions
+        if ($is_now === true && $nb_transactions < 1) {
+            $last_transaction = $r_trans->findByBankAccountAndDateAndPage($default_bank_account, null, 'now', 1, 1);
+            if (!empty($last_transaction) && isset($last_transaction[0])) {
+                $last_transaction = $last_transaction[0];
+                return $this->redirectToRoute('statistics', [
+                    'date_start'  => $last_transaction->getDate()->format('Y-m-01'),
+                    'date_end'    => $last_transaction->getDate()->format('Y-m-t'),
+                ]);
+            }
+        }
 
-        $total_incomes_by_date = self::reorderByDate($r_trans->findTotalGroupBy($default_bank_account, $date_start, $date_end, 'date', 'incomes'));
-        $total_expenses_by_date = self::reorderByDate($r_trans->findTotalGroupBy($default_bank_account, $date_start, $date_end, 'date', 'expenses'));
+        $total_incomes_by_date = self::reindexByDate($r_trans->findTotalGroupBy($default_bank_account, $date_start, $date_end, 'date', 'incomes'));
+        $total_expenses_by_date = self::reindexByDate($r_trans->findTotalGroupBy($default_bank_account, $date_start, $date_end, 'date', 'expenses'));
 
+        // Complete date without incomes or expense with empty transactions (= 0)
+        //  according to the opposite one (incomes <> expenses)
         self::completeEmptyDate($total_incomes_by_date, $total_expenses_by_date);
         self::completeEmptyDate($total_expenses_by_date, $total_incomes_by_date);
 
         // Retrieve total incomes & expenses grouped by categories
         $total_expenses_by_cats = $r_trans->findTotalGroupBy($default_bank_account, $date_start, $date_end, 'category', 'expenses');
+
+        // Get period selected type (monthly, yearly or custom)
+        //    & create previous + next links
+        $period_type  = 'custom';
+        $prev_link    = null;
+        $next_link    = null;
+        $prev_date    = null;
+        $next_date    = null;
+        if ($date_start != 'current' && $date_end != 'current') {
+            // Split date start & end into few variables
+            list($st_year, $st_month, $st_day)    = explode('-', $date_start);
+            list($end_year, $end_month, $end_day) = explode('-', $date_end);
+
+            // Check if start & end years are the same (= monthly or yearly)
+            if ($st_year == $end_year) {
+                if ($st_month == $end_month) {
+                    $period_type = 'monthly';
+
+                    // Get previous + next MONTH & check if has transactions
+                    //  before creating links
+                    $prev_date_start = date('Y-m-d', strtotime('first day of -1 month', strtotime($date_start)));
+                    $prev_date_end = date('Y-m-d', strtotime('last day of -1 month', strtotime($date_end)));
+                    $next_date_start = date('Y-m-d', strtotime('first day of +1 month', strtotime($date_start)));
+                    $next_date_end = date('Y-m-d', strtotime('last day of +1 month', strtotime($date_end)));
+
+                    // Check if has previous transactions if so create previous link
+                    $nb_prev_trans = (int)$r_trans->countAllByBankAccountAndByDate($default_bank_account, null, $prev_date_end);
+                    if ($nb_prev_trans > 0) {
+                        $prev_link = $this->generateUrl('statistics', [
+                            'date_start'  => $prev_date_start,
+                            'date_end'    => $prev_date_end
+                        ]);
+                        $prev_date = $prev_date_start;
+                    }
+                    //  & check next transactions and create link
+                    $nb_next_trans = (int)$r_trans->countAllByBankAccountAndByDate($default_bank_account, $next_date_start, null);
+                    if ($nb_next_trans > 0) {
+                        $next_link = $this->generateUrl('statistics', [
+                            'date_start'  => $next_date_start,
+                            'date_end'    => $next_date_end
+                        ]);
+                        $next_date = $next_date_start;
+                    }
+                } else if ((int)$st_month == 1 && (int)$st_day == 1 &&
+                  (int)$end_month == 12 && (int)$end_day == 31) {
+                    $period_type = 'yearly';
+
+                    // Same as TODO upper but check & get previous + next YEAR
+                }
+            }
+        }
 
         return $this->render('statistics/index.html.twig', [
             'core_class'      => 'app-core--statistics app-core--merge-body-in-header',
@@ -81,6 +144,11 @@ class StatisticsController extends AbstractController
             'current_bank_account'  => $default_bank_account,
             'transactions'          => $transactions,
             'nb_transactions'       => $nb_transactions,
+            'trans_period_type'     => $period_type,
+            'trans_prev_link'       => $prev_link,
+            'trans_next_link'       => $next_link,
+            'trans_prev_date'       => $prev_date,
+            'trans_next_date'       => $next_date,
             'total_incomes'         => $total_incomes,
             'total_expenses'        => $total_expenses,
             'total_incomes_by_date'   => $total_incomes_by_date,
@@ -90,7 +158,7 @@ class StatisticsController extends AbstractController
         ]);
     }
 
-    private static function reorderByDate($transactions)
+    private static function reindexByDate($transactions)
     {
         $tmp = array();
         foreach ($transactions as $trans)

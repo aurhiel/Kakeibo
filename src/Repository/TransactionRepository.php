@@ -33,18 +33,25 @@ class TransactionRepository extends ServiceEntityRepository
         ;
     }
 
-    public function countAllByBankAccountAndByDate($bank_account, $year = null, $month = null)
+    public function countAllByBankAccountAndByDate($bank_account, $date_start = null, $date_end = null)
     {
         $qb = $this->createQueryBuilder('t')
             ->select('COUNT(t.id) AS nb_transactions')
             ->andWhere('t.bank_account = :bank_account')
             ->setParameter('bank_account', $bank_account);
 
-        // WHERE: date
-        if (!is_null($month) && !is_null($year)) {
-            $qb->andWhere('MONTH(t.date) = :month AND YEAR(t.date) = :year')
-                ->setParameter('month', $month)
-                ->setParameter('year', $year);
+        // WHERE: transaction's date start
+        if (!is_null($date_start))
+            $qb->andWhere('t.date >= :date_start')
+                ->setParameter('date_start', $date_start);
+        // WHERE: transaction's date end
+        if (!is_null($date_end)) {
+            if ($date_end == 'now') {
+                $qb->andWhere('t.date <= CURRENT_DATE()');
+            } else {
+                $qb->andWhere('t.date <= :date_end')
+                    ->setParameter('date_end', $date_end);
+            }
         }
 
         return $qb->getQuery()->getSingleScalarResult();

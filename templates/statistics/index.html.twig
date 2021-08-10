@@ -1,9 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% if curr_date_start|date('m') == curr_date_end|date('m') %}
+{% if trans_period_type == 'monthly' %}
   {% set month_literal = curr_date_start|format_date(pattern='MMMM') %}
   {% set for_literal = month_literal|lower|first in ['a', 'e', 'i', 'o', 'u'] ? "d'": "de " %}
   {% set page_title = '<span class="icon icon-bar-chart"></span> ' ~ ('page.statistics.title')|trans({ '%date%': (month_literal|capitalize ~ ' ' ~ curr_date_start|date('Y')), '%for_literal%': for_literal }) %}
+{% elseif trans_period_type == 'yearly' %}
+  {% set page_title = '<span class="icon icon-bar-chart"></span> ' ~ ('page.statistics.title_period_yearly')|trans({ '%year%': curr_date_start|date('Y') }) %}
 {% else %}
   {% set page_title = '<span class="icon icon-bar-chart"></span> ' ~ ('page.statistics.title_period_custom')|trans({ '%date_start%': curr_date_start|format_datetime('long', 'none'), '%date_end%': curr_date_end|format_datetime('long', 'none') }) %}
 {% endif %}
@@ -14,10 +16,33 @@
   <div class="app-header">
     {% include 'components/header.html.twig' %}
 
-    <div class="bg-dark text-white mt-4">
+    <div class="bg-dark text-white mt-">
       <div class="container">
+        {# Statistics navigation buttons #}
+        {% if trans_prev_link is not null or trans_next_link is not null %}
+          <div class="row mb-4">
+            <div class="col-6">
+              {% if trans_prev_link is not null %}
+                <a class="btn btn-sm btn-pill btn-outline-light" href="{{ trans_prev_link }}">
+                  {% if trans_period_type == 'monthly' %}&laquo;&nbsp;{{ trans_prev_date|format_date(pattern='MMMM YYYY')|capitalize }}
+                  {% elseif trans_period_type == 'yearly' %}&laquo;&nbsp;{{ trans_prev_date|format_date(pattern='YYYY') }}
+                  {% else %}&laquo;&nbsp;Précédent{% endif %}
+                </a>
+              {% endif %}
+            </div>
+            <div class="col-6 text-right">
+              {% if trans_next_link is not null %}
+                <a class="btn btn-sm btn-pill btn-outline-light" href="{{ trans_next_link }}">
+                  {% if trans_period_type == 'monthly' %}{{ trans_next_date|format_date(pattern='MMMM YYYY')|capitalize }}&nbsp;&raquo;
+                  {% elseif trans_period_type == 'yearly' %}{{ trans_next_date|format_date(pattern='YYYY') }}&nbsp;&raquo;
+                  {% else %}Suivant&nbsp;&raquo;{% endif %}
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
         <div class="row">
-          <div class="col-12 col-md-7 col-xl-8 col-xxl-9 mb-4">
+          <div class="col-12{% if trans_period_type != 'yearly' %} col-md-7 col-xl-8 col-xxl-9{% endif %} mb-4">
             <div class="chart-js" data-chartjs-type="line" data-chartjs-data-name="transactions_by_days"
               data-chartjs-legend-display="false" data-chartjs-grid-color="white">
               <canvas></canvas>
@@ -57,14 +82,14 @@
             </script>
           </div>
 
-          <div class="col-12 col-md-5 col-xl-4 col-xxl-3">
+          <div class="col-12{% if trans_period_type != 'yearly' %} col-md-5 col-xl-4 col-xxl-3{% endif %}">
             {% include 'components/incomes-and-expenses.html.twig' with {
               expenses: total_expenses,
               incomes: total_incomes,
               date_start: curr_date_start,
               date_end: curr_date_end,
               bank_account: current_bank_account,
-              full_width: true
+              full_width: (trans_period_type != 'yearly')
             } %}
           </div>
         </div>
@@ -76,38 +101,40 @@
 {% block body %}
   <div class="container">
     <div class="row">
-      <div class="col-12 col-md-7 col-xl-6 col-xxl-7">
+      <div class="col-12 {% if total_expenses_by_cats is not empty %}col-md-7 col-xl-6 col-xxl-7{% endif %}">
         {% include 'components/transactions/list.html.twig' %}
       </div>
-      <div class="col-12 col-md-5 col-xl-6 col-xxl-5">
-        <div class="card d-none d-md-block">
-          <div class="card-header d-flex align-items-center">
-            <h3 class="h5 mb-0">{{ 'page.statistics.chart_exp.title'|trans }}</h3>
-          </div>
-          <div class="card-body text-center">
-            <div class="chart-js mb-3" data-chartjs-type="pie" data-chartjs-aspect-ratio="1.4"
-              data-chartjs-data-name="total_expenses"
-                data-chartjs-legend-position="right" data-chartjs-legend-hide="xs|sm|md">
-              <canvas></canvas>
+      {% if total_expenses_by_cats is not empty %}
+        <div class="col-12 col-md-5 col-xl-6 col-xxl-5">
+          <div class="card d-none d-md-block">
+            <div class="card-header d-flex align-items-center">
+              <h3 class="h5 mb-0">{{ 'page.statistics.chart_exp.title'|trans }}</h3>
             </div>
-            <script type="text/javascript">
-              var total_expenses = {
-                labels    : [],
-                datasets  : [{
-                  data: [],
-                  backgroundColor : [],
-                }]
-              };
+            <div class="card-body text-center">
+              <div class="chart-js mb-3" data-chartjs-type="pie" data-chartjs-aspect-ratio="1.4"
+                data-chartjs-data-name="total_expenses"
+                  data-chartjs-legend-position="right" data-chartjs-legend-hide="xs|sm|md">
+                <canvas></canvas>
+              </div>
+              <script type="text/javascript">
+                var total_expenses = {
+                  labels    : [],
+                  datasets  : [{
+                    data: [],
+                    backgroundColor : [],
+                  }]
+                };
 
-              {% for exp in total_expenses_by_cats %}
-                total_expenses.labels.push('{{ exp.label }}');
-                total_expenses.datasets[0].data.push(Math.round(({{ exp.amount_sum }} + Number.EPSILON) * 100) / 100);
-                total_expenses.datasets[0].backgroundColor.push('{{ exp.color }}');
-              {% endfor %}
-            </script>
+                {% for exp in total_expenses_by_cats %}
+                  total_expenses.labels.push('{{ exp.label }}');
+                  total_expenses.datasets[0].data.push(Math.round(({{ exp.amount_sum }} + Number.EPSILON) * 100) / 100);
+                  total_expenses.datasets[0].backgroundColor.push('{{ exp.color }}');
+                {% endfor %}
+              </script>
+            </div>
           </div>
         </div>
-      </div>
+      {% endif %}
     </div>
   </div>
 {% endblock %}

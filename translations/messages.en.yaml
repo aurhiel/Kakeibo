@@ -81,6 +81,7 @@ page :
     meta :
       title : "Statistics"
     title               : "Statistics for %date%"
+    title_period_yearly : "Statistics for %year%"
     title_period_custom : "Statistics from %date_start% to %date_end%"
     chart_exp :
       title : "Expenses by Category"

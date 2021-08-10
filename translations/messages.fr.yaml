@@ -80,6 +80,7 @@ page :
     meta :
       title             : "Statistiques"
     title               : "Statistiques %for_literal%%date%"
+    title_period_yearly : "Statistiques de l'année %year%"
     title_period_custom : "Statistiques du %date_start% au %date_end%"
     chart_exp :
       title : "Dépenses par catégorie"

@@ -1,6 +1,8 @@
 
 {% include 'components/menu.html.twig' %}
 
+{% block before_title %}{% endblock %}
+
 {% if page_title is defined and page_title is not empty %}
   <div class="header-title container">
     <h1 class="page-header">{{ page_title|raw }}</h1>

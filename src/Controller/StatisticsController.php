@@ -86,10 +86,8 @@ class StatisticsController extends AbstractController
         // Get period selected type (monthly, yearly or custom)
         //    & create previous + next links
         $period_type  = 'custom';
-        $prev_link    = null;
-        $next_link    = null;
-        $prev_date    = null;
-        $next_date    = null;
+        $prev_link    = $next_link = null;
+        $prev_date    = $next_date = null;
         if ($date_start != 'current' && $date_end != 'current') {
             // Split date start & end into few variables
             list($st_year, $st_month, $st_day)    = explode('-', $date_start);
@@ -99,17 +97,20 @@ class StatisticsController extends AbstractController
             if ($st_year == $end_year) {
                 if ($st_month == $end_month) {
                     $period_type = 'monthly';
+                } else if ((int)$st_month == 1 && (int)$st_day == 1 &&
+                  (int)$end_month == 12 && (int)$end_day == 31) {
+                    $period_type = 'yearly';
+                }
 
-                    // Get previous + next MONTH & check if has transactions
-                    //  before creating links
-                    $prev_date_start = date('Y-m-d', strtotime('first day of -1 month', strtotime($date_start)));
-                    $prev_date_end = date('Y-m-d', strtotime('last day of -1 month', strtotime($date_end)));
-                    $next_date_start = date('Y-m-d', strtotime('first day of +1 month', strtotime($date_start)));
-                    $next_date_end = date('Y-m-d', strtotime('last day of +1 month', strtotime($date_end)));
-
-                    // Check if has previous transactions if so create previous link
+                // Create links (no navigation with custom periods TODO implement it ?)
+                if ($period_type == 'monthly' || $period_type == 'yearly') {
+                    $search_period = str_replace('ly', '', $period_type);
+                    // Get previous + next "YEAR | MONTH" & check if has transactions
+                    //    before creating links & if so create previous link
+                    $prev_date_end = date('Y-m-d', strtotime('last day of -1 ' . $search_period, strtotime($date_end)));
                     $nb_prev_trans = (int)$r_trans->countAllByBankAccountAndByDate($default_bank_account, null, $prev_date_end);
                     if ($nb_prev_trans > 0) {
+                        $prev_date_start = date('Y-m-d', strtotime('first day of -1 '. $search_period, strtotime($date_start)));
                         $prev_link = $this->generateUrl('statistics', [
                             'date_start'  => $prev_date_start,
                             'date_end'    => $prev_date_end
@@ -117,19 +118,16 @@ class StatisticsController extends AbstractController
                         $prev_date = $prev_date_start;
                     }
                     //  & check next transactions and create link
-                    $nb_next_trans = (int)$r_trans->countAllByBankAccountAndByDate($default_bank_account, $next_date_start, null);
+                    $next_date_start  = date('Y-m-d', strtotime('first day of +1 '. $search_period, strtotime($date_start)));
+                    $nb_next_trans    = (int)$r_trans->countAllByBankAccountAndByDate($default_bank_account, $next_date_start, null);
                     if ($nb_next_trans > 0) {
+                        $next_date_end = date('Y-m-d', strtotime('last day of +1 '. $search_period, strtotime($date_end)));
                         $next_link = $this->generateUrl('statistics', [
                             'date_start'  => $next_date_start,
                             'date_end'    => $next_date_end
                         ]);
                         $next_date = $next_date_start;
                     }
-                } else if ((int)$st_month == 1 && (int)$st_day == 1 &&
-                  (int)$end_month == 12 && (int)$end_day == 31) {
-                    $period_type = 'yearly';
-
-                    // Same as TODO upper but check & get previous + next YEAR
                 }
             }
         }

@@ -24,8 +24,8 @@
             <div class="col-6">
               {% if trans_prev_link is not null %}
                 <a class="btn btn-sm btn-pill btn-outline-light" href="{{ trans_prev_link }}">
-                  {% if trans_period_type == 'monthly' %}&laquo;&nbsp;{{ trans_prev_date|format_date(pattern='MMMM YYYY')|capitalize }}
-                  {% elseif trans_period_type == 'yearly' %}&laquo;&nbsp;{{ trans_prev_date|format_date(pattern='YYYY') }}
+                  {% if trans_period_type == 'monthly' %}&laquo;&nbsp;{{ trans_prev_date|format_date(pattern='MMMM')|capitalize }} {{ trans_prev_date|split('-')[0] }}
+                  {% elseif trans_period_type == 'yearly' %}&laquo;&nbsp;{{ trans_prev_date|split('-')[0] }}
                   {% else %}&laquo;&nbsp;Précédent{% endif %}
                 </a>
               {% endif %}
@@ -33,8 +33,8 @@
             <div class="col-6 text-right">
               {% if trans_next_link is not null %}
                 <a class="btn btn-sm btn-pill btn-outline-light" href="{{ trans_next_link }}">
-                  {% if trans_period_type == 'monthly' %}{{ trans_next_date|format_date(pattern='MMMM YYYY')|capitalize }}&nbsp;&raquo;
-                  {% elseif trans_period_type == 'yearly' %}{{ trans_next_date|format_date(pattern='YYYY') }}&nbsp;&raquo;
+                  {% if trans_period_type == 'monthly' %}{{ trans_next_date|format_date(pattern='MMMM')|capitalize }} {{ trans_next_date|split('-')[0] }}&nbsp;&raquo;
+                  {% elseif trans_period_type == 'yearly' %}{{ trans_next_date|split('-')[0] }}&nbsp;&raquo;
                   {% else %}Suivant&nbsp;&raquo;{% endif %}
                 </a>
               {% endif %}

@@ -13,7 +13,7 @@
 // Header
 .page-header {
   font-family: $page-header-font-family;
-  color: $page-header-color;
+  // color: $page-header-color;
   margin-bottom: .6em;
   position: relative;
   z-index: 0;
@@ -41,6 +41,52 @@
     &:after {
       margin-left: auto;
       margin-right: auto;
+    }
+
+    .icon {
+      left: 50%;
+      margin-left: -6rem;
+    }
+  }
+}
+
+@each $breakpoint in map-keys($grid-breakpoints) {
+  @include media-breakpoint-up($breakpoint) {
+    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+    .page-header {
+      &.text#{$infix}-left {
+        &:after {
+          margin-left: 0;
+        }
+        .icon {
+          left: -3.2rem;
+          right: auto;
+        }
+      }
+
+      &.text#{$infix}-right {
+        &:after {
+          margin-left: auto;
+          margin-right: 0;
+        }
+        .icon {
+          left: auto;
+          right: -3.2rem;
+        }
+      }
+
+      &.text#{$infix}-center {
+        &:after {
+          margin-left: auto;
+          margin-right: auto;
+        }
+        .icon {
+          left: 50%;
+          right: auto;
+          margin-left: -6rem;
+        }
+      }
     }
   }
 }

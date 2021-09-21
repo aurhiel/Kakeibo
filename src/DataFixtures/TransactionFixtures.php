@@ -113,7 +113,7 @@ class TransactionFixtures extends Fixture implements DependentFixtureInterface
 
         // Misc. variables
         $now              = new \DateTime();
-        $trans_start_date = new \DateTime('-2 month');
+        $trans_start_date = new \DateTime('-6 month');
 
         // Loop on each days from 1 month ago to now
         $old_month = null;

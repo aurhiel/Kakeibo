@@ -1,9 +1,22 @@
+{% set max_pages_diplayed = 7 %}
+
+{% set nav_pages_start = 1 %}
+{% set nav_pages_end = min(nb_pages, max_pages_diplayed) %}
+
+{# Update start / end foreach #}
+{% if nb_pages >= max_pages_diplayed %}
+  {% set nav_limits = ((max_pages_diplayed / 2)|intval) %}
+  {% if current_page > max_pages_diplayed - nav_limits %}
+    {% set nav_pages_start = min((current_page - nav_limits), (nb_pages - (max_pages_diplayed - 1))) %}
+    {% set nav_pages_end = min(nb_pages, ((nav_pages_start - 1) + max_pages_diplayed)) %}
+  {% endif %}
+{% endif %}
 
 {% if nb_pages > 1 %}
   <nav class="mb-0" aria-label="Navigation par page">
     <ul class="pagination justify-content-center mb-0">
       {# Previous button #}
-      {% if current_page > 1 %}
+      {% if current_page > (max_pages_diplayed - nav_limits) %}
       <li class="page-item">
         <a class="page-link" aria-label="Précédent" href="{{ path(path_slug, { page: (current_page - 1) }) }}#app">
           <span aria-hidden="true">&laquo;</span>
@@ -20,7 +33,7 @@
       {% endif %}
 
       {# Loop to generate numbers pages #}
-      {% for num_page in 1..nb_pages %}
+      {% for num_page in nav_pages_start..nav_pages_end %}
         {% if num_page == current_page %}
         <li class="page-item active">
           <span class="page-link">{{ num_page }}</span>
@@ -35,7 +48,7 @@
       {% endfor %}
 
       {# Next button #}
-      {% if current_page < nb_pages %}
+      {% if current_page < (nb_pages - nav_limits) %}
       <li class="page-item">
         <a class="page-link" aria-label="Suivant" href="{{ path(path_slug, { page: (current_page + 1) }) }}#app">
           <span aria-hidden="true">&raquo;</span>

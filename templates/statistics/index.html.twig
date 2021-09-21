@@ -3,7 +3,7 @@
 {% if trans_period_type == 'monthly' %}
   {% set month_literal = curr_date_start|format_date(pattern='MMMM') %}
   {% set for_literal = month_literal|lower|first in ['a', 'e', 'i', 'o', 'u'] ? "d'": "de " %}
-  {% set page_title = '<span class="icon icon-bar-chart"></span> ' ~ ('page.statistics.title')|trans({ '%date%': (month_literal|capitalize ~ ' ' ~ curr_date_start|date('Y')), '%for_literal%': for_literal }) %}
+  {% set page_title = '<span class="icon icon-bar-chart"></span> ' ~ ('page.statistics.title')|trans({ '%date%': (month_literal|capitalize ~ '&nbsp;' ~ curr_date_start|date('Y')), '%for_literal%': for_literal }) %}
 {% elseif trans_period_type == 'yearly' %}
   {% set page_title = '<span class="icon icon-bar-chart"></span> ' ~ ('page.statistics.title_period_yearly')|trans({ '%year%': curr_date_start|date('Y') }) %}
 {% else %}
@@ -14,11 +14,48 @@
 {# Header #}
 {% block header %}
   <div class="app-header">
-    {% include 'components/header.html.twig' %}
+    {% embed 'components/header.html.twig' %}
+      {% block block_page_title %}
+        {# Statistics navigation buttons #}
+        {% if trans_prev_link is not null or trans_next_link is not null %}
+        <div class="header-title container mb-5">
+          <div class="row align-items-center">
+            <div class="col-6 col-md-2 px-md-0 order-md-first">
+              {% if trans_prev_link is not null %}
+                <a class="btn btn-sm btn-pill btn-outline-light" href="{{ trans_prev_link }}">
+                  {% if trans_period_type == 'monthly' %}&laquo;&nbsp;{{ trans_prev_date|format_date(pattern='MMMM')|capitalize }}&nbsp;{{ trans_prev_date|split('-')[0] }}
+                  {% elseif trans_period_type == 'yearly' %}&laquo;&nbsp;{{ trans_prev_date|split('-')[0] }}
+                  {% else %}&laquo;&nbsp;Précédent{% endif %}
+                </a>
+              {% endif %}
+            </div>
+            <div class="col-6 col-md-2 px-md-0 order-md-last text-right">
+              {% if trans_next_link is not null %}
+                <a class="btn btn-sm btn-pill btn-outline-light" href="{{ trans_next_link }}">
+                  {% if trans_period_type == 'monthly' %}{{ trans_next_date|format_date(pattern='MMMM')|capitalize }}&nbsp;{{ trans_next_date|split('-')[0] }}&nbsp;&raquo;
+                  {% elseif trans_period_type == 'yearly' %}{{ trans_next_date|split('-')[0] }}&nbsp;&raquo;
+                  {% else %}Suivant&nbsp;&raquo;{% endif %}
+                </a>
+              {% endif %}
+            </div>
+            <div class="col-12 col-md-8 mt-3 px-md-0">
+              <h1 class="page-header text-md-center">{{ page_title|raw }}</h1>
+            </div>
+          </div>
+        </div>
+        {% else %}
+          <div class="header-title container">
+            <h1 class="page-header">{{ page_title|raw }}</h1>
+          </div>
+        {% endif %}
+      {% endblock %}
+    {% endembed %}
+
+    {# % include 'components/header.html.twig' %#}
 
     <div class="bg-dark text-white mt-">
       <div class="container">
-        {# Statistics navigation buttons #}
+        {# Statistics navigation buttons
         {% if trans_prev_link is not null or trans_next_link is not null %}
           <div class="row mb-4">
             <div class="col-6">
@@ -41,6 +78,7 @@
             </div>
           </div>
         {% endif %}
+        #}
         <div class="row">
           <div class="col-12{% if trans_period_type != 'yearly' %} col-md-7 col-xl-8 col-xxl-9{% endif %} mb-4">
             <div class="chart-js" data-chartjs-type="line" data-chartjs-data-name="transactions_by_days"

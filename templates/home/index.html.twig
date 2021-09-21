@@ -7,7 +7,7 @@
     {% set size_display_menu = 'md' %}
     <div class="navbar navbar-default">
       <div class="container">
-        <span class="navbar-brand"{# href="{{ path('dashboard') }}" #}>
+        <span class="navbar-brand mr-md-4"{# href="{{ path('dashboard') }}" #}>
           {% include 'components/logo.html.twig' with {
             logo_text       : 'K',
             display_version : false,
@@ -25,7 +25,7 @@
 
         <div class="collapse navbar-collapse order-{{ size_display_menu }}-1" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
-            <li class="-item" class="nav-item">
+            <li class="-item mr-md-3 mr-lg-4" class="nav-item">
               <a class="nav-link" href="#about">{{ 'page.home.menu.app.label'|trans }}</a>
             </li>
             <li class="-item" class="nav-item">

@@ -11,6 +11,7 @@ class AppExtension extends AbstractExtension
     {
         return [
             new TwigFilter('anonymize', [$this, 'anonymize']),
+            new TwigFilter('intval',    fn ($value) => intval($value)),
         ];
     }
 
@@ -23,7 +24,7 @@ class AppExtension extends AbstractExtension
         if (strlen($string) <= ($nbCharacVisible * 2))
             $nbCharacVisible = 0;
 
-        // Replace string characters 
+        // Replace string characters
         foreach ($str_array as $k => $character) {
             if (($k + 1) > $nbCharacVisible && $k < (count($str_array) - $nbCharacVisible))
               $str_array[$k] = $anonymizeCharacter;

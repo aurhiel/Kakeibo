@@ -1,5 +1,5 @@
 {# Set period text according to dates start & end values #}
-{% if date_start is defined and date_end is defined %}
+{% if (date_start is defined and date_start is not null) and (date_end is defined and date_end is not null) %}
   {% if date_start|date('m') == date_end|date('m') %}
     {% set month_literal = date_start|format_date(pattern='MMMM') %}
     {% set for_literal = month_literal|lower|first in ['a', 'e', 'i', 'o', 'u'] ? "d'": "de " %}

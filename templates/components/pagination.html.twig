@@ -48,7 +48,7 @@
       {% endfor %}
 
       {# Next button #}
-      {% if current_page < (nb_pages - nav_limits) %}
+      {% if current_page < nb_pages %}
       <li class="page-item">
         <a class="page-link" aria-label="Suivant" href="{{ path(path_slug, { page: (current_page + 1) }) }}#app">
           <span aria-hidden="true">&raquo;</span>

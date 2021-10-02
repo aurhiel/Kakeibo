@@ -73,6 +73,7 @@ page :
         label : "Toutes les transactions"
     chart_exp :
       title : "Dépenses %for_literal%%date% par catégorie"
+      no_data : "Aucune dépense pour le mois %for_literal%<b>%date%</b>"
       more :
         label : "Voir plus"
   # PAGE:STATS

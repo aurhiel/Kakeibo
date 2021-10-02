@@ -58,26 +58,32 @@
             </div>
           </div>
           <div class="card-body text-center">
-            <div class="chart-js mb-3" data-chartjs-type="pie" data-chartjs-aspect-ratio="1.6"
-              data-chartjs-data-name="total_expenses"
-                data-chartjs-legend-position="right" data-chartjs-legend-hide="xs|sm|md">
-              <canvas></canvas>
-            </div>
-            <script type="text/javascript">
-              var total_expenses = {
-                labels    : [],
-                datasets  : [{
-                  data: [],
-                  backgroundColor : [],
-                }]
-              };
+            {% if total_expenses_by_cats is not empty %}
+              <div class="chart-js mb-3" data-chartjs-type="pie" data-chartjs-aspect-ratio="1.6"
+                data-chartjs-data-name="total_expenses"
+                  data-chartjs-legend-position="right" data-chartjs-legend-hide="xs|sm|md">
+                <canvas></canvas>
+              </div>
+              <script type="text/javascript">
+                var total_expenses = {
+                  labels    : [],
+                  datasets  : [{
+                    data: [],
+                    backgroundColor : [],
+                  }]
+                };
 
-              {% for exp in total_expenses_by_cats %}
-                total_expenses.labels.push('{{ exp.label }}');
-                total_expenses.datasets[0].data.push(Math.round(({{ exp.amount_sum }} + Number.EPSILON) * 100) / 100);
-                total_expenses.datasets[0].backgroundColor.push('{{ exp.color }}');
-              {% endfor %}
-            </script>
+                {% for exp in total_expenses_by_cats %}
+                  total_expenses.labels.push('{{ exp.label }}');
+                  total_expenses.datasets[0].data.push(Math.round(({{ exp.amount_sum }} + Number.EPSILON) * 100) / 100);
+                  total_expenses.datasets[0].backgroundColor.push('{{ exp.color }}');
+                {% endfor %}
+              </script>
+            {% else %}
+              <div class="alert alert-secondary my-5">
+                {{ 'page.dashboard.chart_exp.no_data'|trans({ '%date%': (month_literal|capitalize), '%for_literal%': for_literal })|raw }}
+              </div>
+            {% endif %}
 
             {#<div class="chart-js" data-chartjs-type="pie" data-chartjs-data-name="total_incomes"
               data-chartjs-legend-position="left">

@@ -74,6 +74,7 @@ page :
         label : "All transactions"
     chart_exp :
       title : "%date% expenses by category"
+      no_data : "No expenses for <b>%date%</b>"
       more :
         label : "See more"
   # PAGE:STATS

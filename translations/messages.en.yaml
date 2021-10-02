@@ -72,11 +72,15 @@ page :
       footer_text : "The last <b>%amount%</b> transaction%plural%"
       all :
         label : "All transactions"
-    chart_exp :
-      title : "%date% expenses by category"
-      no_data : "No expenses for <b>%date%</b>"
+    chart_exp_inc :
+      title : "%date% transactions by category"
       more :
         label : "See more"
+      no_expenses : "No expenses for <b>%date%</b>"
+      no_incomes : "No incomes for <b>%date%</b>"
+      nav_tab :
+        expenses : "expenses"
+        incomes : "incomes"
   # PAGE:STATS
   statistics :
     meta :
@@ -84,8 +88,8 @@ page :
     title               : "Statistics for %date%"
     title_period_yearly : "Statistics for %year%"
     title_period_custom : "Statistics from %date_start% to %date_end%"
-    chart_exp :
-      title : "Expenses by Category"
+    chart_exp_inc :
+      title : "Transactions by Category"
   # PAGE:TRANSACTIONS
   transactions :
     title : "Transactions"

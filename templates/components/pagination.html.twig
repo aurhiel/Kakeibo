@@ -1,3 +1,5 @@
+{% set goto = ((goto is defined) ? goto : 'app') %}
+
 {% set max_pages_diplayed = 7 %}
 
 {% set nav_pages_start = 1 %}
@@ -16,9 +18,9 @@
   <nav class="mb-0" aria-label="Navigation par page">
     <ul class="pagination justify-content-center mb-0">
       {# Previous button #}
-      {% if current_page > (max_pages_diplayed - nav_limits) %}
+      {% if current_page > 1 %}
       <li class="page-item">
-        <a class="page-link" aria-label="Précédent" href="{{ path(path_slug, { page: (current_page - 1) }) }}#app">
+        <a class="page-link" aria-label="Précédent" href="{{ path(path_slug, { page: (current_page - 1) }) }}#{{ goto }}">
           <span aria-hidden="true">&laquo;</span>
           <span class="sr-only">Précédent</span>
         </a>
@@ -40,7 +42,7 @@
         </li>
         {% else %}
         <li class="page-item">
-          <a class="page-link" href="{{ path(path_slug, { page: num_page }) }}#app">
+          <a class="page-link" href="{{ path(path_slug, { page: num_page }) }}#{{ goto }}">
             {{ num_page }}
           </a>
         </li>
@@ -50,7 +52,7 @@
       {# Next button #}
       {% if current_page < nb_pages %}
       <li class="page-item">
-        <a class="page-link" aria-label="Suivant" href="{{ path(path_slug, { page: (current_page + 1) }) }}#app">
+        <a class="page-link" aria-label="Suivant" href="{{ path(path_slug, { page: (current_page + 1) }) }}#{{ goto }}">
           <span aria-hidden="true">&raquo;</span>
           <span class="sr-only">Suivant</span>
         </a>

@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
@@ -28,7 +27,7 @@ class ProfileController extends AbstractController
     /**
      * @Route("/profil", name="user_profile")
      */
-    public function profile(AuthorizationCheckerInterface $authChecker, Request $request, Security $security, UserPasswordEncoderInterface $passwordEncoder)
+    public function profile(Request $request, Security $security, UserPasswordEncoderInterface $passwordEncoder)
     {
         $user = $security->getUser();
 

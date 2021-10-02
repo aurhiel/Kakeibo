@@ -638,7 +638,7 @@ var kakeibo = {
     kakeibo.$trans_form_import.on('change', '.first-import-file', function() {
       kakeibo.$trans_form_import.submit();
     });
-    // Close panel on click on loader
+    // Close panel on click on loader >>> TODO change by a click on a "mask" !!
     kakeibo.$body.on('click', '.app-loader', function() {
       kakeibo.transaction.toggle_panel('close');
     });
@@ -648,9 +648,15 @@ var kakeibo = {
     kakeibo.$body.on('click', '[data-toggler-class]', function(e) {
       var $this = $(this);
       var $target = (typeof $this.data('toggler-target') != 'undefined') ? kakeibo.$body.find($this.data('toggler-target')) : $this;
+      var self_class = (typeof $this.data('toggler-self') != 'undefined') ? $this.data('toggler-self') : null;
+      var forced_state = (typeof $this.data('toggler-forced-state') != 'undefined') ? $this.data('toggler-forced-state') : null;
 
       // Toggle class from data attribute
-      $target.toggleClass($this.data('toggler-class'));
+      $target.toggleClass($this.data('toggler-class'), forced_state);
+
+      // Toggle a class on clicked button (= self)
+      if (self_class != null)
+        $this.toggleClass(self_class);
 
       e.stopPropagation();
       e.preventDefault();

@@ -1,0 +1,31 @@
+// Chart JS
+//
+
+.chart-js {
+  // NOTE Not working on charts with transparent background
+  // position: relative;
+  // overflow: hidden;
+  // &:before {
+  //   content: '...';
+  //   text-align: center;
+  //   letter-spacing: .2em;
+  //   width: 100%;
+  //   position: absolute;
+  //   z-index: 1;
+  //   left: 0;
+  //   top: 50%;
+  //   margin-top: -.5em;
+  //   opacity: .5;
+  // }
+  // > * {
+  //   position: relative;
+  //   z-index: 5;
+  // }
+}
+
+
+.charts-trans-by-cats {
+  .list-group-horizontal {
+    max-width: 14rem;
+  }
+}

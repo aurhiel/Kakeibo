@@ -67,7 +67,7 @@ class DashboardController extends AbstractController
         // }
 
         // Retrieve totals grouped by categories for incomes & expenses
-        // $total_incomes_by_cats = $r_trans->findTotalGroupBy($default_bank_account, $date_start, 'now', 'category', 'incomes');
+        $total_incomes_by_cats = $r_trans->findTotalGroupBy($default_bank_account, $date_start, 'now', 'category', 'incomes');
         $total_expenses_by_cats = $r_trans->findTotalGroupBy($default_bank_account, $date_start, 'now', 'category', 'expenses');
 
         return $this->render('dashboard/index.html.twig', [
@@ -84,7 +84,7 @@ class DashboardController extends AbstractController
             'last_trans_amount'     => self::NB_LAST_TRANS,
             'total_incomes'         => $total_incomes,
             'total_expenses'        => $total_expenses,
-            // 'total_incomes_by_cats'   => $total_incomes_by_cats,
+            'total_incomes_by_cats'   => $total_incomes_by_cats,
             'total_expenses_by_cats'  => $total_expenses_by_cats,
             'form_transaction'      => $trans_form->createView()
         ]);

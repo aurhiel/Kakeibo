@@ -4,7 +4,8 @@
 <div class="textual-content">
   <h1 class="page-header h2 mt-3 mb-4">{{ 'page.release_notes.title'|trans }}</h1>
 
-  {% set prefix_txt_ver = 'page.release_notes.alpha_0_1_2.' %}
+  {# ALPHA 0.1.3 --------------------- #}
+  {% set prefix_txt_ver = 'page.release_notes.alpha_0_1_3.' %}
   <div class="card mb-4">
     <div class="card-header">
       <div class="row align-items-center">
@@ -14,6 +15,38 @@
     </div>
     <div class="card-body">
       <h3 class="h5 font-weight-bold">{{ 'page.release_notes.title_func_add'|trans({ '%plural%': 's' }) }}</h3>
+      <ul class="mb-4">
+        <li class="mb-3">{{ (prefix_txt_ver ~ 'list_func_add.item_1')|trans|raw }}</li>
+        <li class="mb-3">{{ (prefix_txt_ver ~ 'list_func_add.item_2')|trans|raw }}</li>
+        <li>{{ (prefix_txt_ver ~ 'list_func_add.item_3')|trans|raw }}</li>
+      </ul>
+
+      <h3 class="h5 font-weight-bold">{{ 'page.release_notes.title_update'|trans({ '%plural%': '' }) }}</h3>
+      <ul class="mb-4">
+        <li>{{ (prefix_txt_ver ~ 'list_update.item_1')|trans|raw }}</li>
+      </ul>
+
+      <h3 class="h5 font-weight-bold">{{ 'page.release_notes.title_fix'|trans({ '%plural%': 's' }) }}</h3>
+      <ul class="mb-0">
+        <li class="mb-3">{{ (prefix_txt_ver ~ 'list_fix.item_1')|trans|raw }}</li>
+        <li>{{ (prefix_txt_ver ~ 'list_fix.item_2')|trans|raw }}</li>
+      </ul>
+    </div>
+  </div>
+  {# --------------------------------- #}
+
+
+  {# ALPHA 0.1.2 --------------------- #}
+  {% set prefix_txt_ver = 'page.release_notes.alpha_0_1_2.' %}
+  <div class="card mb-4">
+    <div class="card-header">
+      <div class="row align-items-center">
+        <h2 class="h4 mb-0 col">{{ (prefix_txt_ver ~ 'title')|trans }}</h2>
+        <small class="text-muted col-auto">{{ (prefix_txt_ver ~ 'date')|trans|format_datetime('medium', 'none') }}</small>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3 class="h5 font-weight-bold">{{ 'page.release_notes.title_func_add'|trans({ '%plural%': '' }) }}</h3>
       <ul class="mb-4">
         <li>{{ (prefix_txt_ver ~ 'list_func_add.item_1')|trans|raw }}</li>
       </ul>
@@ -25,7 +58,10 @@
       </ul>
     </div>
   </div>
+  {# --------------------------------- #}
 
+
+  {# ALPHA 0.1.0 --------------------- #}
   {% set prefix_txt_ver = 'page.release_notes.alpha_0_1_0.' %}
   <div class="card mb-4">
     <div class="card-header">
@@ -43,9 +79,11 @@
       </ul>
     </div>
   </div>
+  {# --------------------------------- #}
 
   <hr class="my-5">
 
+  {# TODO LIST ----------------------- #}
   {% set prefix_txt_todo = 'page.release_notes.todo.' %}
   <h1 class="page-header h2 mt-3 mb-4">{{ (prefix_txt_todo ~ 'title')|trans }}</h1>
   <div class="card mb-4">
@@ -72,6 +110,7 @@
       </tbody>
     </table>
   </div>
+  {# --------------------------------- #}
 </div>
 
 <div>

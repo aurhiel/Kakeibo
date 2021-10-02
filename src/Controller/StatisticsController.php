@@ -81,6 +81,7 @@ class StatisticsController extends AbstractController
         self::completeEmptyDate($total_expenses_by_date, $total_incomes_by_date);
 
         // Retrieve total incomes & expenses grouped by categories
+        $total_incomes_by_cats = $r_trans->findTotalGroupBy($default_bank_account, $date_start, $date_end, 'category', 'incomes');
         $total_expenses_by_cats = $r_trans->findTotalGroupBy($default_bank_account, $date_start, $date_end, 'category', 'expenses');
 
         // Get period selected type (monthly, yearly or custom)
@@ -150,6 +151,7 @@ class StatisticsController extends AbstractController
             'total_incomes'         => $total_incomes,
             'total_expenses'        => $total_expenses,
             'total_incomes_by_date'   => $total_incomes_by_date,
+            'total_incomes_by_cats'   => $total_incomes_by_cats,
             'total_expenses_by_date'  => $total_expenses_by_date,
             'total_expenses_by_cats'  => $total_expenses_by_cats,
             // 'form_transaction'        => $trans_form->createView(),

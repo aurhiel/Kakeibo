@@ -71,11 +71,15 @@ page :
       footer_text : "<b>%amount%</b> dernière%plural% transaction%plural%"
       all :
         label : "Toutes les transactions"
-    chart_exp :
-      title : "Dépenses %for_literal%%date% par catégorie"
-      no_data : "Aucune dépense pour le mois %for_literal%<b>%date%</b>"
+    chart_exp_inc :
+      title : "Transactions %for_literal%%date% par catégorie"
       more :
         label : "Voir plus"
+      no_expenses : "Aucune dépense pour le mois %for_literal%<b>%date%</b>"
+      no_incomes : "Aucun revenu pour le mois %for_literal%<b>%date%</b>"
+      nav_tab :
+        expenses : "dépenses"
+        incomes : "revenus"
   # PAGE:STATS
   statistics:
     meta :
@@ -83,8 +87,8 @@ page :
     title               : "Statistiques %for_literal%%date%"
     title_period_yearly : "Statistiques de l'année %year%"
     title_period_custom : "Statistiques du %date_start% au %date_end%"
-    chart_exp :
-      title : "Dépenses par catégorie"
+    chart_exp_inc :
+      title : "Transactions par catégorie"
   # PAGE:TRANSACTIONS
   transactions :
     title : "Transactions"
@@ -111,16 +115,29 @@ page :
       label : "Notes de version"
     title   : "Notes de version"
     title_func_add  : "Fonctionnalité%plural% ajoutée%plural%"
+    title_update    : "Mise%plural% à jour"
     title_fix       : "Correction%plural% diverse%plural%"
     # VERSIONS
+    alpha_0_1_3 :
+      title : "Version Alpha 0.1.3"
+      date  : "2021-08-10"
+      list_func_add :
+        item_1 : "Affichage des revenus par catégorie dans le <b>Dashboard</b> et la page des <b>Statistiques</b>."
+        item_2 : "Page des <b>Statistiques</b>, ajout des boutons de navigation par mois."
+        item_3 : "Ajout d'une icône du site pour l'ensemble des types de navigateurs."
+      list_update :
+        item_1 : "Mise à jour de Symfony (3.4 > 5.3)"
+      list_fix :
+        item_1 : "Limitation du nombre de pages affichées dans les paginations."
+        item_2 : "Corrections et modifications diverses suite à la mise à jour de Symfony."
     alpha_0_1_2 :
       title : "Version Alpha 0.1.2"
       date  : "2020-05-19"
       list_func_add :
-        item_1 : "Ajout de la page d'accueil"
+        item_1 : "Ajout de la page d'accueil, avec quelques informations clés."
       list_fix :
         item_1 : "Correction de la modification des transactions et mise à jour des différents montants (revenus, dépenses et solde du compte) via JS / Ajax."
-        item_2 : "Corrections et modifications diverses (UI, bug, ...)"
+        item_2 : "Corrections et modifications diverses (UI, bug, ...)."
     alpha_0_1_0 :
       title : "Version Alpha 0.1.0"
       date  : "2020-04-25"
@@ -152,7 +169,7 @@ page :
           desc  : "Permettre d'<b>automatiser des transactions récurrentes</b>, comme
             le loyer, le virement d'une paie, de manière périodique (mensuelle, hebdomadaire)
             selon le choix de l'utilisateur."
-          percent_status : 0
+          percent_status : 20
         item_3 :
           label : "Transactions automatiques par pourcentage"
           desc  : "Ajouter des transactions récurrentes <b>basés sur
@@ -162,7 +179,7 @@ page :
           label : "Navigation dans les statistiques"
           desc  : "Finaliser la page des statistiques afin de <b>naviguer par mois
           ou via une période</b> choisi par l'utilisateur."
-          percent_status : 40
+          percent_status : 70
   # PAGE:ADMIN
   admin :
     title : "Administration du site"

@@ -139,36 +139,86 @@
 {% block body %}
   <div class="container">
     <div class="row">
-      <div class="col-12 {% if total_expenses_by_cats is not empty %}col-md-7 col-xl-6 col-xxl-7{% endif %}">
+      <div class="col-12 {% if total_expenses_by_cats is not empty or total_incomes_by_cats is not empty %}col-md-7 col-xl-6 col-xxl-7{% endif %}">
         {% include 'components/transactions/list.html.twig' %}
       </div>
-      {% if total_expenses_by_cats is not empty %}
+      {% if total_expenses_by_cats is not empty or total_incomes_by_cats is not empty %}
         <div class="col-12 col-md-5 col-xl-6 col-xxl-5">
-          <div class="card d-none d-md-block">
+          <div class="card d-none d-md-block charts-trans-by-cats">
             <div class="card-header d-flex align-items-center">
-              <h3 class="h5 mb-0">{{ 'page.statistics.chart_exp.title'|trans }}</h3>
+              <h3 class="h5 mb-0">{{ 'page.statistics.chart_exp_inc.title'|trans }}</h3>
             </div>
             <div class="card-body text-center">
-              <div class="chart-js mb-3" data-chartjs-type="pie" data-chartjs-aspect-ratio="1.4"
-                data-chartjs-data-name="total_expenses"
-                  data-chartjs-legend-position="right" data-chartjs-legend-hide="xs|sm|md">
-                <canvas></canvas>
+              <div class="list-group list-group-horizontal mb-4 mx-auto" id="trans-list-tab" role="tablist">
+                <a class="list-group-item list-group-item-action py-1 active" id="trans-list-expenses-list"
+                  data-toggle="list" href="#trans-list-expenses" role="tab" aria-controls="expenses">
+                  {{ 'page.dashboard.chart_exp_inc.nav_tab.expenses'|trans }}
+                </a>
+                <a class="list-group-item list-group-item-action py-1" id="trans-list-incomes-list"
+                  data-toggle="list" href="#trans-list-incomes" role="tab" aria-controls="incomes">
+                  {{ 'page.dashboard.chart_exp_inc.nav_tab.incomes'|trans }}
+                </a>
               </div>
-              <script type="text/javascript">
-                var total_expenses = {
-                  labels    : [],
-                  datasets  : [{
-                    data: [],
-                    backgroundColor : [],
-                  }]
-                };
 
-                {% for exp in total_expenses_by_cats %}
-                  total_expenses.labels.push('{{ exp.label }}');
-                  total_expenses.datasets[0].data.push(Math.round(({{ exp.amount_sum }} + Number.EPSILON) * 100) / 100);
-                  total_expenses.datasets[0].backgroundColor.push('{{ exp.color }}');
-                {% endfor %}
-              </script>
+              <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="trans-list-expenses" role="tabpanel" aria-labelledby="trans-list-expenses-list">
+                  {% if total_expenses_by_cats is not empty %}
+                    <div class="chart-js" data-chartjs-type="pie" data-chartjs-aspect-ratio="1.6"
+                      data-chartjs-data-name="total_expenses"
+                        data-chartjs-legend-position="right" data-chartjs-legend-hide="xs|sm|md">
+                      <canvas></canvas>
+                    </div>
+                    <script type="text/javascript">
+                      var total_expenses = {
+                        labels    : [],
+                        datasets  : [{
+                          data: [],
+                          backgroundColor : [],
+                        }]
+                      };
+
+                      {% for exp in total_expenses_by_cats %}
+                        total_expenses.labels.push('{{ exp.label }}');
+                        total_expenses.datasets[0].data.push(Math.round(({{ exp.amount_sum }} + Number.EPSILON) * 100) / 100);
+                        total_expenses.datasets[0].backgroundColor.push('{{ exp.color }}');
+                      {% endfor %}
+                    </script>
+                  {% else %}
+                    <div class="alert alert-secondary my-5">
+                      {{ 'page.dashboard.chart_exp_inc.no_expenses'|trans({ '%date%': (month_literal|capitalize), '%for_literal%': for_literal })|raw }}
+                    </div>
+                  {% endif %}
+                </div>
+
+                <div class="tab-pane fade" id="trans-list-incomes" role="tabpanel" aria-labelledby="trans-list-incomes-list">
+                  {% if total_incomes_by_cats is not empty %}
+                    <div class="chart-js" data-chartjs-type="pie" data-chartjs-aspect-ratio="1.6"
+                      data-chartjs-data-name="total_incomes"
+                        data-chartjs-legend-position="right" data-chartjs-legend-hide="xs|sm|md">
+                      <canvas></canvas>
+                    </div>
+                    <script type="text/javascript">
+                      var total_incomes = {
+                        labels    : [],
+                        datasets  : [{
+                          data: [],
+                          backgroundColor : [],
+                        }]
+                      };
+
+                      {% for inc in total_incomes_by_cats %}
+                        total_incomes.labels.push('{{ inc.label }}');
+                        total_incomes.datasets[0].data.push(Math.round(({{ inc.amount_sum }} + Number.EPSILON) * 100) / 100);
+                        total_incomes.datasets[0].backgroundColor.push('{{ inc.color }}');
+                      {% endfor %}
+                    </script>
+                  {% else %}
+                    <div class="alert alert-secondary my-5">
+                      {{ 'page.dashboard.chart_exp_inc.no_incomes'|trans({ '%date%': (month_literal|capitalize), '%for_literal%': for_literal })|raw }}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
             </div>
           </div>
         </div>

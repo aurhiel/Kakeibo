@@ -28,9 +28,6 @@ class AutomatonController extends AbstractController
      */
     public function index($id, Request $request, Security $security, TranslatorInterface $translator)
     {
-        if ($this->getParameter('kernel.environment') !== 'dev')
-            return $this->redirectToRoute('dashboard');
-
         // Retrieve user object
         $user = $security->getUser();
 

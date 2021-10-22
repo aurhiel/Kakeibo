@@ -290,10 +290,10 @@ form_transaction :
 form_trans_auto :
   label :
     label       : "Intitulé de la transaction récurrente"
-    placeholder : "ex: Courses au marché"
+    placeholder : "ex: Loyer, Assurance, ..."
   amount :
     label       : "Montant"
-    placeholder : "ex: 256,52"
+    placeholder : "ex: 560,48"
   repeat_type :
     label       : "Type de récurrence"
   date_start :

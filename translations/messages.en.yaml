@@ -226,10 +226,10 @@ form_transaction :
 form_trans_auto :
   label :
     label       : "Title of the recurrent transaction"
-    placeholder : "ex: Market shopping"
+    placeholder : "ex: Rent, Insurance, ..."
   amount :
     label       : "Amount"
-    placeholder : "ex: 256,52"
+    placeholder : "ex: 560,48"
   repeat_type :
     label       : "Recurrence Type"
   date_start :

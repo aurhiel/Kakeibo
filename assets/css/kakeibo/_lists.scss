@@ -74,6 +74,19 @@
       }
     }
 
+    &-repeat-type {
+      padding-right: 1.4em;
+      max-width: $list-trans--col-repeat-type-max-width;
+      position: relative;
+
+      .icon {
+        position: absolute;
+        top: 50%;
+        margin-top: -.5em;
+        right: 0;
+      }
+    }
+
     &-price {
       text-align: right;
       max-width: $list-trans--col-price-max-width;

@@ -34,6 +34,7 @@ class TransactionType extends AbstractType
             ->add('amount',   NumberType::class, array(
                 'label'         => 'form_transaction.amount.label',
                 'scale'         => 2,
+                'html5'         => true,
                 'attr'          => array(
                     'placeholder'   => 'form_transaction.amount.placeholder',
                     'class'         => 'text-right',
@@ -49,6 +50,7 @@ class TransactionType extends AbstractType
                 'class'         => Category::class,
                 'label'         => 'form_transaction.category.label',
                 'placeholder'   => 'form_transaction.category.placeholder',
+                'attr'          => ['class' => 'custom-select'],
                 'query_builder' => function (CategoryRepository $r) {
                     return $r->createQueryBuilder('c')
                         // Order on theme name

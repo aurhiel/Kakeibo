@@ -2,6 +2,11 @@
 global :
   speech  : "Take back control of your expenses !"
   soon    : "coming soon"
+  repeat_types :
+    YEARLY : "Yearly"
+    MONTHLY : "Monthly"
+    WEEKLY : "Weekly"
+    DAILY : "Daily"
 
 ## MENU
 menu :
@@ -93,6 +98,19 @@ page :
   # PAGE:TRANSACTIONS
   transactions :
     title : "Transactions"
+  # PAGE:TRANSACTIONS AUTO
+  trans_auto :
+    meta :
+      title : "Recurrences transactions"
+    title : "Recurrences"
+    form :
+      title : "Add a recurrence transaction"
+    list :
+      title : "Recurrences transactions list"
+      empty : "No recurrence transaction defined."
+      col_label   : "Label"
+      col_amount  : "Amount"
+      col_actions : "Actions"
   # PAGE:ABOUT
   about :
     meta :
@@ -200,6 +218,22 @@ form_transaction :
     placeholder : "ex: 256,52"
   date :
     label       : "Date of the transaction"
+  category :
+    label       : "Category"
+    placeholder : "Choose a category"
+
+# Form transaction auto
+form_trans_auto :
+  label :
+    label       : "Title of the recurrent transaction"
+    placeholder : "ex: Market shopping"
+  amount :
+    label       : "Amount"
+    placeholder : "ex: 256,52"
+  repeat_type :
+    label       : "Recurrence Type"
+  date_start :
+    label       : "Date of the first transaction"
   category :
     label       : "Category"
     placeholder : "Choose a category"

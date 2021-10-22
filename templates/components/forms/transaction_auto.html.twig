@@ -1,0 +1,52 @@
+{% set default_bank_account = app.user.getDefaultBankAccount() %}
+
+{# Set default values if in DEV environment #}
+{% set category_attrs = {} %}
+{% if is_edit is not defined or (is_edit is defined and is_edit == false) %}
+  {% set category_attrs = { 'data-form-default-value' : (app.environment == 'dev') ? 325 : 145 } %}
+{% endif %}
+
+{# Delete errors form label ! #}
+{% form_theme form_trans_auto _self %}
+{% block form_label_errors %}{% endblock %}
+
+<div class="form-row">
+  <div class="col-sm-6 mb-3">
+    {{ form_label(form_trans_auto.label) }}
+    {{ form_widget(form_trans_auto.label) }}
+    {{ form_errors(form_trans_auto.label) }}
+  </div>
+
+  <div class="col-sm-6 mb-3">
+    {{ form_label(form_trans_auto.date_start) }}
+    {{ form_widget(form_trans_auto.date_start, { attr: { 'data-form-clear': 'false' } }) }}
+    {{ form_errors(form_trans_auto.date_start) }}
+  </div>
+</div>
+
+<div class="form-row">
+  <div class="col-sm-6 mb-3">
+    {{ form_label(form_trans_auto.repeat_type) }}
+    {{ form_widget(form_trans_auto.repeat_type) }}
+    {{ form_errors(form_trans_auto.repeat_type) }}
+  </div>
+
+  <div class="col-sm-6 mb-3">
+    {{ form_label(form_trans_auto.amount) }}
+    <div class="input-group">
+      {{ form_widget(form_trans_auto.amount) }}
+      <div class="input-group-append">
+        <span class="input-group-text">{{ default_bank_account.currency.label }}</span>
+      </div>
+    </div>
+    {{ form_errors(form_trans_auto.amount) }}
+  </div>
+</div>
+
+<div class="form-row">
+  <div class="col-sm-12 mb-3">
+    {{ form_label(form_trans_auto.category) }}
+    {{ form_widget(form_trans_auto.category, { attr: category_attrs }) }}
+    {{ form_errors(form_trans_auto.category) }}
+  </div>
+</div>

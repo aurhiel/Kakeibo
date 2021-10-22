@@ -18,6 +18,151 @@
     content: $icon-microsoft;
   }
 }
+.icon-smartphone {
+  &:before {
+    content: $icon-smartphone;
+  }
+}
+.icon-laptop {
+  &:before {
+    content: $icon-laptop;
+  }
+}
+.icon-desktop {
+  &:before {
+    content: $icon-desktop;
+  }
+}
+.icon-security {
+  &:before {
+    content: $icon-security;
+  }
+}
+.icon-tablet {
+  &:before {
+    content: $icon-tablet;
+  }
+}
+.icon-rotate-right {
+  &:before {
+    content: $icon-rotate-right;
+  }
+}
+.icon-travel-bus {
+  &:before {
+    content: $icon-travel-bus;
+  }
+}
+.icon-travel-car {
+  &:before {
+    content: $icon-travel-car;
+  }
+}
+.icon-gas-station {
+  &:before {
+    content: $icon-gas-station;
+  }
+}
+.icon-cart {
+  &:before {
+    content: $icon-cart;
+  }
+}
+.icon-hospital {
+  &:before {
+    content: $icon-hospital;
+  }
+}
+.icon-food {
+  &:before {
+    content: $icon-food;
+  }
+}
+.icon-ev-station {
+  &:before {
+    content: $icon-ev-station;
+  }
+}
+.icon-fastfood {
+  &:before {
+    content: $icon-fastfood;
+  }
+}
+.icon-cake {
+  &:before {
+    content: $icon-cake;
+  }
+}
+.icon-earth {
+  &:before {
+    content: $icon-earth;
+  }
+}
+.icon-bank {
+  &:before {
+    content: $icon-bank;
+  }
+}
+.icon-wallet {
+  &:before {
+    content: $icon-wallet;
+  }
+}
+.icon-credit-card {
+  &:before {
+    content: $icon-credit-card;
+  }
+}
+.icon-gift {
+  &:before {
+    content: $icon-gift;
+  }
+}
+.icon-gavel {
+  &:before {
+    content: $icon-gavel;
+  }
+}
+.icon-pets {
+  &:before {
+    content: $icon-pets;
+  }
+}
+.icon-cases {
+  &:before {
+    content: $icon-cases;
+  }
+}
+.icon-housing {
+  &:before {
+    content: $icon-housing;
+  }
+}
+.icon-gaming {
+  &:before {
+    content: $icon-gaming;
+  }
+}
+.icon-clothes {
+  &:before {
+    content: $icon-clothes;
+  }
+}
+.icon-hammer {
+  &:before {
+    content: $icon-hammer;
+  }
+}
+.icon-nightlife {
+  &:before {
+    content: $icon-nightlife;
+  }
+}
+.icon-donation {
+  &:before {
+    content: $icon-donation;
+  }
+}
 .icon-at-sign {
   &:before {
     content: $icon-at-sign;
@@ -133,14 +278,14 @@
     content: $icon-save;
   }
 }
-.icon-cog {
-  &:before {
-    content: $icon-cog;
-  }
-}
 .icon-settings {
   &:before {
     content: $icon-settings;
+  }
+}
+.icon-sliders {
+  &:before {
+    content: $icon-sliders;
   }
 }
 .icon-trash {
@@ -151,105 +296,5 @@
 .icon-user {
   &:before {
     content: $icon-user;
-  }
-}
-.icon-smartphone {
-  &:before {
-    content: $icon-smartphone;
-  }
-}
-.icon-laptop {
-  &:before {
-    content: $icon-laptop;
-  }
-}
-.icon-desktop {
-  &:before {
-    content: $icon-desktop;
-  }
-}
-.icon-security {
-  &:before {
-    content: $icon-security;
-  }
-}
-.icon-tablet {
-  &:before {
-    content: $icon-tablet;
-  }
-}
-.icon-rotate-right {
-  &:before {
-    content: $icon-rotate-right;
-  }
-}
-.icon-travel-bus {
-  &:before {
-    content: $icon-travel-bus;
-  }
-}
-.icon-travel-car {
-  &:before {
-    content: $icon-travel-car;
-  }
-}
-.icon-gas-station {
-  &:before {
-    content: $icon-gas-station;
-  }
-}
-.icon-hospital {
-  &:before {
-    content: $icon-hospital;
-  }
-}
-.icon-food {
-  &:before {
-    content: $icon-food;
-  }
-}
-.icon-bank {
-  &:before {
-    content: $icon-bank;
-  }
-}
-.icon-wallet {
-  &:before {
-    content: $icon-wallet;
-  }
-}
-.icon-credit-card {
-  &:before {
-    content: $icon-credit-card;
-  }
-}
-.icon-gift {
-  &:before {
-    content: $icon-gift;
-  }
-}
-.icon-cases {
-  &:before {
-    content: $icon-cases;
-  }
-}
-.icon-housing {
-  &:before {
-    content: $icon-housing;
-  }
-}
-.icon-clothes {
-  &:before {
-    content: $icon-clothes;
-  }
-}
-.icon-nightlife {
-  &:before {
-    content: $icon-nightlife;
-  }
-}
-.icon-donation {
-  &:before {
-    content: $icon-donation;
   }
 }

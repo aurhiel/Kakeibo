@@ -3,7 +3,7 @@
 {# Set default values if in DEV environment #}
 {% set default_amount_value = (app.environment == 'dev') ? (random(25, 400) * ((random()%2) ? 1 : -1)) : '' %}
 {% set default_label_value = (app.environment == 'dev') ? ('Test #' ~ ('now'|date('u'))) : '' %}
-{% set default_category_id = (app.environment == 'dev') ? 313 : 145 %}
+{% set default_category_id = (app.environment == 'dev') ? 325 : 145 %}
 
 {# Delete errors form label ! #}
 {% form_theme form_transaction _self %}
@@ -19,7 +19,7 @@
   <div class="col-sm-6 mb-3">
     {{ form_label(form_transaction.amount) }}
     <div class="input-group">
-      {{ form_widget(form_transaction.amount, { type: 'number', attr: { 'data-form-default-value': default_amount_value } }) }}
+      {{ form_widget(form_transaction.amount, { attr: { 'data-form-default-value': default_amount_value } }) }}
       <div class="input-group-append">
         <span class="input-group-text">{{ default_bank_account.currency.label }}</span>
       </div>

@@ -9,6 +9,10 @@
 .card {
   .list-transactions {
     overflow: auto;
+    &.-no-scroll {
+      overflow: initial !important;
+      max-height: auto !important;
+    }
   }
 
   &--first-transactions {

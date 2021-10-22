@@ -16,7 +16,12 @@
             </tr>
             <tr>
               <td><b>{{ 'page.admin.users.last_user.label'|trans|raw }}</b></td>
-              <td>{{ users[0].username }}</td>
+              <td class="text-right">
+                {{ users[0].username|anonymize }},<br>
+                <span class="text-muted">
+                  le <b>{{ users[0].registerDate|format_datetime('medium', 'short') }}</b>
+                </span>
+              </td>
             </tr>
           </tbody>
         </table>

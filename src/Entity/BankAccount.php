@@ -58,11 +58,18 @@ class BankAccount
     */
     private $balance = null;
 
+    /**
+     * @ORM\OneToMany(targetEntity=TransactionAuto::class, mappedBy="bank_account", orphanRemoval=true)
+     */
+    private $transaction_autos;
+
     public function __construct($user)
     {
         $this->transactions = new ArrayCollection();
 
         $this->setUser($user);
+        $this->transactionAutos = new ArrayCollection();
+        $this->transaction_autos = new ArrayCollection();
     }
 
     public function getId()
@@ -172,6 +179,36 @@ class BankAccount
     public function setIsDefault(bool $is_default): self
     {
         $this->is_default = $is_default;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|TransactionAuto[]
+     */
+    public function getTransactionAutos(): Collection
+    {
+        return $this->transaction_autos;
+    }
+
+    public function addTransactionAuto(TransactionAuto $transactionAuto): self
+    {
+        if (!$this->transaction_autos->contains($transactionAuto)) {
+            $this->transaction_autos[] = $transactionAuto;
+            $transactionAuto->setBankAccount($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransactionAuto(TransactionAuto $transactionAuto): self
+    {
+        if ($this->transaction_autos->removeElement($transactionAuto)) {
+            // set the owning side to null (unless already changed)
+            if ($transactionAuto->getBankAccount() === $this) {
+                $transactionAuto->setBankAccount(null);
+            }
+        }
 
         return $this;
     }

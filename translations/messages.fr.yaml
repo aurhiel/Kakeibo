@@ -2,6 +2,11 @@
 global :
   speech  : "Reprenez le contrôle de vos dépenses !"
   soon    : "à venir"
+  repeat_types :
+    YEARLY : "Annuelle"
+    MONTHLY : "Mensuelle"
+    WEEKLY : "Hebdomadaire"
+    DAILY : "Journalière"
 
 ## MENU
 menu :
@@ -88,10 +93,23 @@ page :
     title_period_yearly : "Statistiques de l'année %year%"
     title_period_custom : "Statistiques du %date_start% au %date_end%"
     chart_exp_inc :
-      title : "Transactions par catégorie"
+      title             : "Transactions par catégorie"
   # PAGE:TRANSACTIONS
   transactions :
     title : "Transactions"
+  # PAGE:TRANSACTIONS AUTO
+  trans_auto :
+    meta :
+      title : "Transactions récurrentes"
+    title   : "Récurrences"
+    form :
+      title : "Ajouter une transaction récurrente"
+    list :
+      title : "Liste des transactions récurrentes"
+      empty : "Aucune transaction récurrente définie."
+      col_label   : "Libellé"
+      col_amount  : "Montant"
+      col_actions : "Actions"
   # PAGE:ABOUT
   about :
     link :
@@ -205,6 +223,7 @@ block :
     total_text      : "Total de <b>%amount%</b> transaction%plural%"
     empty           : "Aucune transaction à afficher"
 
+
 ## FORMS
 form :
   required : "Champs obligatoires"
@@ -263,6 +282,22 @@ form_transaction :
     placeholder : "ex: 256,52"
   date :
     label       : "Date de la transaction"
+  category :
+    label       : "Catégorie"
+    placeholder : "Choisissez une catégorie"
+
+# Form transaction auto
+form_trans_auto :
+  label :
+    label       : "Intitulé de la transaction récurrente"
+    placeholder : "ex: Courses au marché"
+  amount :
+    label       : "Montant"
+    placeholder : "ex: 256,52"
+  repeat_type :
+    label       : "Type de récurrence"
+  date_start :
+    label       : "Date de la 1ère transaction récurrente"
   category :
     label       : "Catégorie"
     placeholder : "Choisissez une catégorie"

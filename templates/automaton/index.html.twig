@@ -2,8 +2,105 @@
 
 {% block body %}
 <div class="container">
-  <div class="alert alert-warning">
-    En travaux... // TODO
+  <div class="row">
+    <div class="col-12 col-lg-6 col-xl-5 mb-3 mb-lg-0 order-lg-last">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="h4 mb-0">{{ 'page.trans_auto.form.title'|trans }}</h3>
+        </div>
+        <div class="card-body">
+          {{ form_start(form_trans_auto) }}
+            {% include 'components/forms/transaction_auto.html.twig' with { is_edit: is_trans_auto_edit } %}
+
+            <div class="mt-2 text-center">
+              <button class="btn btn-primary mx-1" type="submit" name="submit">
+              {% if is_trans_auto_edit == true %}
+                <span class="icon icon-edit"></span>
+                Modifier
+              {% else %}
+                <span class="icon icon-plus-square"></span>
+                Ajouter
+              {% endif %}
+              </button>
+            </div>
+          {{ form_end(form_trans_auto) }}
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-6 col-xl-7">
+      <div class="card overflow-hidden">
+        <div class="card-header">
+          <h3 class="h4 mb-0">{{ 'page.trans_auto.list.title'|trans }}</h3>
+        </div>
+        {% if trans_auto is not empty %}
+          <div class="list-transactions -no-scroll">
+          {% for ta in trans_auto %}
+            <div class="-item -item-transac" data-kb-id-transaction="{{ ta.id }}">
+              {# TRANS:CATEGORY/ICON & COLOR #}
+              <div class="col col-auto col-icon">
+                <span class="-transac-category avatar" title="{{ ta.category.label }}" data-toggle="tooltip" data-placement="top">
+                  <span class="avatar-text rounded-circle" style="background-color: {{ ta.category.color }};">
+                    <span class="icon icon-{{ ta.category.icon }}"></span>
+                  </span>
+                </span>
+              </div>
+              {# TRANS:TEXT #}
+              <div class="col col-text">
+                <span class="-transac-label">{{ ta.label }}</span>
+              {% if ta.details is not empty %}
+                <div class="-transac-details -more-info small text-muted">
+                  {{ ta.details }}
+                </div>
+              {% endif %}
+              </div>
+              {# TRANS:REPEAT TYPE #}
+              <div class="col col-repeat-type d-none d-sm-block d-lg-none d-xl-block">
+                <span class="d-inline-block" tabindex="0" data-toggle="tooltip" data-placement="left" title="{{ 'global.soon'|trans }}">
+                  <select class="custom-select custom-select-sm" name="trans-auto-repeat-type" disabled="disabled" style="pointer-events: none;">
+                  {% for curr_repeat_type in ta_repeat_types_list %}
+                    <option value="{{ curr_repeat_type }}"{% if curr_repeat_type == ta.repeatType %} selected="selected"{% endif %}>
+                      {{ ('global.repeat_types.' ~ curr_repeat_type)|trans }}
+                    </option>
+                  {% endfor %}
+                  </select>
+                </span>
+                {% if ta.dateLast is not empty %}
+                  <span class="icon icon-help-circle" title="dernière exéc. <b>{{ ta.dateLast|format_datetime('long', 'none') }}</b>" data-toggle="tooltip" data-placement="left" data-html="true"></span>
+                {% endif %}
+              </div>
+              {# TRANS:AMOUNT/PRICE #}
+              <div class="col col-price">
+                {% include 'components/price.html.twig' with {
+                  amount        : ta.amount,
+                  currency      : ta.bankAccount.currency.label,
+                  custom_class  : '-transac-amount' } %}
+              </div>
+              {# TRANS:ACTIONS #}
+              <div class="col col-more">
+                <span class="kb-more-dots align-middle" data-toggle="dropdown" aria-expanded="false">
+                  <span class="dot"></span>
+                </span>
+                <div class="dropdown-menu dropdown-menu-right text-right">
+                  <a class="dropdown-item" href="{{ path('automaton', { id: ta.id }) }}">
+                    Modifier <span class="ml-1 icon icon-edit"></span>
+                  </a>
+                  <a class="dropdown-item" href="{{ path('automaton_trans_auto_delete', { id: ta.id }) }}">
+                    Supprimer <span class="ml-1 icon icon-trash"></span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+          </div>
+        {% else %}
+          <div class="card-body">
+            <div class="alert alert-secondary my-3">
+              {{ 'page.trans_auto.list.empty'|trans }}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
   </div>
 </div>
 {% endblock %}

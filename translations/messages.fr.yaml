@@ -104,6 +104,7 @@ page :
     title   : "Récurrences"
     form :
       title : "Ajouter une transaction récurrente"
+      title_edit : "Modifier une transaction récurrente"
     list :
       title : "Liste des transactions récurrentes"
       empty : "Aucune transaction récurrente définie."

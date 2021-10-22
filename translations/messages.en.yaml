@@ -105,6 +105,7 @@ page :
     title : "Recurrences"
     form :
       title : "Add a recurrence transaction"
+      title_edit : "Edit a recurrence transaction"
     list :
       title : "Recurrences transactions list"
       empty : "No recurrence transaction defined."

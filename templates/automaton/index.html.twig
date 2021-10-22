@@ -6,7 +6,11 @@
     <div class="col-12 col-lg-6 col-xl-5 mb-3 mb-lg-0 order-lg-last">
       <div class="card">
         <div class="card-header">
+        {% if is_trans_auto_edit == true %}
+          <h3 class="h4 mb-0">{{ 'page.trans_auto.form.title_edit'|trans }}</h3>
+        {% else %}
           <h3 class="h4 mb-0">{{ 'page.trans_auto.form.title'|trans }}</h3>
+        {% endif %}
         </div>
         <div class="card-body">
           {{ form_start(form_trans_auto) }}
@@ -29,9 +33,9 @@
     </div>
     <div class="col-12 col-lg-6 col-xl-7">
       <div class="card">
-        <div class="card-header">
+        {#<div class="card-header">
           <h3 class="h4 mb-0">{{ 'page.trans_auto.list.title'|trans }}</h3>
-        </div>
+        </div>#}
         {% if trans_auto is not empty %}
           <div class="list-transactions">
           {% for ta in trans_auto %}

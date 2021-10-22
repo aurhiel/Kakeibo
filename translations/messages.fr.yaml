@@ -187,7 +187,7 @@ page :
           desc  : "Permettre d'<b>automatiser des transactions récurrentes</b>, comme
             le loyer, le virement d'une paie, de manière périodique (mensuelle, hebdomadaire)
             selon le choix de l'utilisateur."
-          percent_status : 20
+          percent_status : 60
         item_3 :
           label : "Transactions automatiques par pourcentage"
           desc  : "Ajouter des transactions récurrentes <b>basés sur

@@ -124,8 +124,8 @@ class AutomatonController extends AbstractController
             if (isset($return_data['exception']))
                 dump($return_data['exception']);
 
-            // Redirect to home after edit
-            if ($is_edit && $trans_auto_form->isSubmitted())
+            // Redirect to home after form submit to clear it
+            if ($trans_auto_form->isSubmitted())
               return $this->redirectToRoute('automaton');
 
             return $this->render('automaton/index.html.twig', [

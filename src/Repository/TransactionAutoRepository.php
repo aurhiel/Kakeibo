@@ -43,6 +43,21 @@ class TransactionAutoRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findTotal($bank_account, $spent_type = 'incomes')
+    {
+        $qb = $this->createQueryBuilder('ta')
+            ->select('SUM(ta.amount) AS amount_sum')
+            ->andWhere('ta.bank_account = :bank_account')
+            ->setParameter('bank_account', $bank_account);
+
+        // WHERE: Incomes or Expenses ?
+        if ($spent_type == 'incomes') $qb->andWhere('ta.amount > 0');
+        else $qb->andWhere('ta.amount < 0');
+
+        return $qb->getQuery()
+            ->getSingleScalarResult();
+    }
+
     // /**
     //  * @return TransactionAuto[] Returns an array of TransactionAuto objects
     //  */

@@ -37,9 +37,11 @@
             </span>
           </div>
         </div>
+      {% if no_subtext is not defined or (no_subtext is defined and no_subtext == false) %}
         <div class="pt-1 mt-3 small text-muted border-top">
           {{ period_text }}
         </div>
+      {% endif %}
       </div>
     </div>
   </div>
@@ -66,9 +68,11 @@
             </span>
           </div>
         </div>
+      {% if no_subtext is not defined or (no_subtext is defined and no_subtext == false) %}
         <div class="pt-1 mt-3 small text-muted border-top">
           {{ period_text }}
         </div>
+      {% endif %}
       </div>
     </div>
   </div>

@@ -140,7 +140,6 @@ class StatisticsController extends AbstractController
             // 'scripts'         => [ 'kb-dashboard.js' ],
             'curr_date_start' => $date_start,
             'curr_date_end'   => $date_end,
-            'current_bank_account'  => $default_bank_account,
             'transactions'          => $transactions,
             'nb_transactions'       => $nb_transactions,
             'trans_period_type'     => $period_type,

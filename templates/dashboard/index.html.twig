@@ -39,7 +39,7 @@
           incomes: total_incomes,
           date_start: dashboard_date_start,
           date_end: dashboard_date_end,
-          bank_account: current_bank_account
+          bank_account: app.user.getDefaultBankAccount()
         } %}
 
         <div class="card d-none d-md-block charts-trans-by-cats">

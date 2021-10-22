@@ -126,7 +126,7 @@
               incomes: total_incomes,
               date_start: curr_date_start,
               date_end: curr_date_end,
-              bank_account: current_bank_account,
+              bank_account: app.user.getDefaultBankAccount(),
               full_width: (trans_period_type != 'yearly')
             } %}
           </div>

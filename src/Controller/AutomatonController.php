@@ -114,6 +114,10 @@ class AutomatonController extends AbstractController
         // Retrieve transactions auto
         $return_data['trans_auto'] = $r_trans_auto->findAllByBankAccount($default_bank_account);
 
+        // Retrieve total auto expenses & incomes
+        $return_data['total_auto_expenses'] = $r_trans_auto->findTotal($default_bank_account, 'expenses');
+        $return_data['total_auto_incomes'] = $r_trans_auto->findTotal($default_bank_account, 'incomes');
+
         if ($request->isXmlHttpRequest()) {
             return $this->json($return_data);
         } else {
@@ -135,6 +139,8 @@ class AutomatonController extends AbstractController
                 'is_trans_auto_edit'    => $is_edit,
                 'form_trans_auto'       => $trans_auto_form->createView(),
                 'trans_auto'            => $return_data['trans_auto'],
+                'total_auto_expenses'   => $return_data['total_auto_expenses'],
+                'total_auto_incomes'    => $return_data['total_auto_incomes'],
                 'ta_repeat_types_list'  => TransactionAuto::RT_LIST,
             ]);
         }

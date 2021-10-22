@@ -77,7 +77,6 @@ class DashboardController extends AbstractController
             // 'stylesheets'           => [ 'kb-dashboard.css' ],
             // 'scripts'               => [ 'kb-dashboard.js' ],
             'user'                  => $user,
-            'current_bank_account'  => $default_bank_account,
             'dashboard_date_start'  => $date_start,
             'dashboard_date_end'    => $date_end,
             'last_transactions'     => $last_trans,

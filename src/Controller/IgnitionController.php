@@ -141,7 +141,6 @@ class IgnitionController extends AbstractController
             ],
             'step'      => 2,
             'nb_steps'  => $this->nb_steps,
-            'current_bank_account'        => $default_bank_account,
             'hide_form_trans_panel'       => true,
             'form_transaction_submitted'  => $trans_form->isSubmitted(),
             'form_transaction'            => $trans_form->createView()

@@ -19,7 +19,7 @@
       {% include 'components/incomes-and-expenses.html.twig' with {
         expenses: total_expenses,
         incomes: total_incomes,
-        bank_account: current_bank_account,
+        bank_account: app.user.getDefaultBankAccount(),
         full_width: true
       } %}
     </div>

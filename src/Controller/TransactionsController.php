@@ -261,7 +261,6 @@ class TransactionsController extends AbstractController
             // 'stylesheets'           => [ 'kb-dashboard.css' ],
             // 'scripts'               => [ 'kb-dashboard.js' ],
             'user'                  => $user,
-            'current_bank_account'  => $default_bank_account,
             'transactions'          => $transactions,
             'date_start'            => $date_start,
             'date_end'              => $date_end,

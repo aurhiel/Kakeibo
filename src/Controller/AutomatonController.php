@@ -144,7 +144,7 @@ class AutomatonController extends AbstractController
     }
 
     /**
-     * @Route("/automaton/trans-auto/delete/{id}", name="automaton_trans_auto_delete")
+     * @Route("/trans-auto/delete/{id}", name="automaton_trans_auto_delete")
      */
     public function trans_auto_delete($id, Request $request, Security $security, TranslatorInterface $translator)
     {

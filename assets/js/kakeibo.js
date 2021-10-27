@@ -321,9 +321,11 @@ var kakeibo = {
                     '</span>' +
                     '<div class="dropdown-menu dropdown-menu-right text-right">' +
                       btn_edit +
-                      '<a class="dropdown-item btn-delete-transac" href="' + url_delete + transaction.id + '">' +
+                      '<button class="dropdown-item" type="button" data-confirm-href="' + url_delete + transaction.id + '"' +
+                        'data-confirm-body="Êtes-vous sûr de vouloir supprimer la transaction : <br><b>&laquo;&nbsp;' + transaction.label + '&nbsp;&raquo;</b> ?"' +
+                          'data-toggle="modal" data-target="#modal-confirm-delete">' +
                         'Supprimer <span class="ml-1 icon icon-trash"></span>' +
-                      '</a>' +
+                      '</button>' +
                     '</div>' +
                   '</div>' +
                   '</div>'));
@@ -609,11 +611,14 @@ var kakeibo = {
   },
   // = ~ init/construct
   launch: function() {
+    var self = this;
     // ====================================
     // NODES ==============================
     this.$bank_account_balance = this.$body.find('.bank-account-balance');
     this.$bank_account_total_expenses = this.$body.find('.bank-account-total-expenses');
     this.$bank_account_total_incomes  = this.$body.find('.bank-account-total-incomes');
+    // Modals
+    this.$modal_confirm_delete = this.$body.find('#modal-confirm-delete');
 
     // ====================================
     // PLUGINS ============================
@@ -631,6 +636,63 @@ var kakeibo = {
 
     // Bootstrap tooltips
     $('[data-toggle="tooltip"]').tooltip();
+
+    // Modal: Confirm delete, add link to delete and add custom things (title, body, ...)
+    if (this.$modal_confirm_delete.length > 0) {
+      var $btn_clicked = null;
+      // Add links & custom things just before modal is showed
+      this.$modal_confirm_delete.on('show.bs.modal', function (e) {
+        var $modal_confirm_delete = $(this);
+        var $btn_confirm = $modal_confirm_delete.find('.btn-ok');
+
+        $btn_clicked = $(e.relatedTarget);
+
+        console.log($btn_clicked, $btn_confirm);
+
+        // Check if the confirm[data-href] is defined
+        if (typeof $btn_clicked.data('confirm-href') != 'undefined') {
+          // Reset modal body and set body if defined
+          $modal_confirm_delete.find('.modal-body').html('');
+          if (typeof $btn_clicked.data('confirm-body') != 'undefined')
+            $modal_confirm_delete.find('.modal-body').html($('<div>' + $btn_clicked.data('confirm-body') + '</div>'));
+
+          // Set delete link href
+          $btn_confirm.attr('href', $btn_clicked.data('confirm-href'));
+
+          // Set link additionnal CSS class
+          if (typeof $btn_clicked.data('confirm-link-class') !== 'undefined')
+            $btn_confirm.addClass($btn_clicked.data('confirm-link-class'));
+
+          // Always close modal (click on cancel or submit)
+          if ((typeof $btn_clicked.data('confirm-always-close') !== 'undefined') && $btn_clicked.data('confirm-always-close') === true)
+            $btn_confirm.attr('data-dismiss', 'modal');
+
+          // Update modal confirm delete z-index & backdrop z-index
+          //  (not confirm backdrop but it's working ! ...)
+          self.$body.find('.modal').last().css('z-index', 1090);
+          self.$body.find('.modal-backdrop').css('z-index', 1080);
+        } else {
+          console.log('[modal.confirm()] Must define a data-href');
+        }
+      });
+
+      // When confirm modal is hidden
+      this.$modal_confirm_delete.on('hidden.bs.modal', function (e) {
+        var $modal_confirm_delete = $(this);
+        var $btn_confirm = $modal_confirm_delete.find('.btn-ok');
+
+        // Clear custom link CSS classes
+        if ($btn_clicked != null && typeof $btn_clicked.data('confirm-link-class') !== 'undefined') {
+          $btn_confirm.removeClass($btn_clicked.data('confirm-link-class'));
+          $btn_clicked = null;
+        }
+        // & clear forced dismiss
+        $btn_confirm.removeAttr('data-dismiss');
+
+        // Clear shitty forcing backdrop z-index (can't use confirm backdrop upon overs modal)
+        self.$body.find('.modal-backdrop').removeAttr('style');
+      });
+    }
 
     // ====================================
     // EVENTS / TRANSACTIONS ==============

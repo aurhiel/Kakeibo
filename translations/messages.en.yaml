@@ -112,6 +112,8 @@ page :
       col_label   : "Label"
       col_amount  : "Amount"
       col_actions : "Actions"
+      next_exec   : "Next exec. <b>%date%</b>"
+      last_exec   : "Last exec. <b>%date%</b>"
   # PAGE:ABOUT
   about :
     meta :
@@ -225,6 +227,15 @@ form_transaction :
 
 # Form transaction auto
 form_trans_auto :
+  status :
+    add_ok    : "Recurrent transaction added."
+    add_nok   : "There was an issue during the process to add the recurrent transaction."
+    edit_ok   : "Recurrent transaction edited."
+    edit_nok  : "There was an issue during the process to edit the recurrent transaction."
+    # Delete call
+    delete_ok   : "Recurrent transaction deleted."
+    delete_nok  : "There was an issue during the process to delete the recurrent transaction."
+    delete_unknown_entity : "No recurrent transaction exists for this ID."
   label :
     label       : "Title of the recurrent transaction"
     placeholder : "ex: Rent, Insurance, ..."

@@ -57,13 +57,13 @@ class AutomatonController extends AbstractController
         if($is_edit) {
             // Get transaction auto to edit with id AND user (for security)
             $trans_auto_entity  = $r_trans_auto->findOneByIdAndUser($id, $user);
-            $message_status_ok  = 'Modificiation de la transaction récurrente effectuée.';
-            $message_status_nok = 'Un problème est survenu lors de la modification de la transaction récurrente';
+            $message_status_ok  = $translator->trans('form_trans_auto.status.edit_ok');
+            $message_status_nok = $translator->trans('form_trans_auto.status.edit_nok');
         } else {
             // New Entity
             $trans_auto_entity  = new TransactionAuto();
-            $message_status_ok  = 'Ajout de la transaction récurrente effectuée.';
-            $message_status_nok = 'Un problème est survenu lors de l\'ajout de la transaction récurrente';
+            $message_status_ok  = $translator->trans('form_trans_auto.status.add_ok');
+            $message_status_nok = $translator->trans('form_trans_auto.status.add_nok');
         }
 
         // 1) Build the form
@@ -125,9 +125,6 @@ class AutomatonController extends AbstractController
             if (isset($return_data['slug_status']) && isset($return_data['message_status']))
                 $request->getSession()->getFlashBag()->add($return_data['slug_status'], $return_data['message_status']);
 
-            if (isset($return_data['exception']))
-                dump($return_data['exception']);
-
             // Redirect to home after form submit to clear it
             if ($trans_auto_form->isSubmitted())
               return $this->redirectToRoute('automaton');
@@ -151,7 +148,57 @@ class AutomatonController extends AbstractController
      */
     public function trans_auto_delete($id, Request $request, Security $security, TranslatorInterface $translator)
     {
-        dump($id);
-        exit;
+        $user         = $security->getUser();
+        $em           = $this->getDoctrine()->getManager();
+        $r_trans_auto = $em->getRepository(TransactionAuto::class);
+        // Retrieve transaction auto with id AND user (for security)
+        $trans_auto   = $r_trans_auto->findOneByIdAndUser($id, $user);
+        $return_data  = [
+            'query_status'    => 0,
+            'slug_status'     => 'error',
+            'message_status'  => $translator->trans('form_trans_auto.status.delete_nok')
+        ];
+
+        if(!is_null($trans_auto)) {
+            $trans_auto_deleted     = $trans_auto;
+            $id_trans_auto_deleted  = $trans_auto_deleted->getId();
+
+            // Remove entity
+            $em->remove($trans_auto);
+
+            // Try to save (flush) or clear entity remove
+            try {
+                // Flush OK !
+                $em->flush();
+                // Retrieve user's default bank account
+                // $default_bank_account = $user->getDefaultBankAccount();
+
+                $return_data = [
+                    'query_status'    => 1,
+                    'slug_status'     => 'success',
+                    'message_status'  => $translator->trans('form_trans_auto.status.delete_ok'),
+                    // Data
+                    'entity'                => [ 'id' => $id_trans_auto_deleted ],
+                    // 'default_bank_account'  => self::format_json_bank_account($default_bank_account)
+                ];
+            } catch (\Exception $e) {
+                // Something goes wrong
+                $em->clear();
+                // Store exception message
+                $return_data['exception'] = $e->getMessage();
+            }
+        } else {
+            $return_data['message_status'] = $translator->trans('form_trans_auto.status.delete_unknown_entity');
+        }
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->json($return_data);
+        } else {
+            // Set message in flashbag on direct access
+            $request->getSession()->getFlashBag()->add($return_data['slug_status'], $return_data['message_status']);
+
+            // Redirect to previous page (= referer)
+            return $this->redirect($request->headers->get('referer'));
+        }
     }
 }

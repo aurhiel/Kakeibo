@@ -78,32 +78,40 @@
       <span class="d-none d-xl-block" data-viewport-size-slug="xl"></span>
     </span>
 
-    {% if app.user is defined and app.user is not null and form_transaction is defined and hide_form_trans_panel is not defined %}
-      <div class="app-panel app-panel--top app-panel--transaction-form">
-        <div class="-inner container">
-          {{ form_start(form_transaction, { 'action': path('transaction_manage'), 'attr' : { 'class': '-use-ajax-submit' } }) }}
-            {% include 'components/forms/transaction.html.twig' %}
+    {# Display some templates ONLY IF user is connected #}
+    {% if app.user is defined and app.user is not null %}
+      {# Modals #}
+      {% include 'components/modals/confirm-delete.html.twig' %}
 
-            <div class="mt-2 text-center">
-              <button class="btn btn-sm btn-outline-light mx-1 toggle-panel-transaction"
-                type="button" data-panel-type="close">
-                Annuler
-              </button>
+      {# Display panel to add/edit transaction ONLY IF user is connected AND
+        transaction form is defined (and not forced to hide) #}
+      {% if form_transaction is defined and hide_form_trans_panel is not defined %}
+        <div class="app-panel app-panel--top app-panel--transaction-form">
+          <div class="-inner container">
+            {{ form_start(form_transaction, { 'action': path('transaction_manage'), 'attr' : { 'class': '-use-ajax-submit' } }) }}
+              {% include 'components/forms/transaction.html.twig' %}
 
-              <button class="btn btn-primary mx-1" type="submit" name="submit">
-                <span class="d-edit-none">
-                  <span class="icon icon-plus-square"></span>
-                  Ajouter
-                </span>
-                <span class="d-edit-inline-block">
-                  <span class="icon icon-edit"></span>
-                  Modifier
-                </span>
-              </button>
-            </div>
-          {{ form_end(form_transaction) }}
+              <div class="mt-2 text-center">
+                <button class="btn btn-sm btn-outline-light mx-1 toggle-panel-transaction"
+                  type="button" data-panel-type="close">
+                  Annuler
+                </button>
+
+                <button class="btn btn-primary mx-1" type="submit" name="submit">
+                  <span class="d-edit-none">
+                    <span class="icon icon-plus-square"></span>
+                    Ajouter
+                  </span>
+                  <span class="d-edit-inline-block">
+                    <span class="icon icon-edit"></span>
+                    Modifier
+                  </span>
+                </button>
+              </div>
+            {{ form_end(form_transaction) }}
+          </div>
         </div>
-      </div>
+      {% endif %}
     {% endif %}
 
     <div class="app-loader"></div>

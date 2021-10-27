@@ -37,7 +37,7 @@
           <h3 class="h4 mb-0">{{ 'page.trans_auto.list.title'|trans }}</h3>
         </div>#}
         {% if trans_auto is not empty %}
-          <div class="list-transactions">
+          <div class="list-transactions py-1">
           {% for ta in trans_auto %}
             <div class="-item -item-transac" data-kb-id-transaction="{{ ta.id }}">
               {# TRANS:CATEGORY/ICON & COLOR #}
@@ -69,7 +69,12 @@
                   </select>
                 </span>
                 {% if ta.dateLast is not empty %}
-                  <span class="icon icon-help-circle" title="dernière exéc. <b>{{ ta.dateLast|format_datetime('long', 'none') }}</b>" data-toggle="tooltip" data-placement="left" data-html="true"></span>
+                  <span class="icon icon-help-circle" title="{{ 'page.trans_auto.list.last_exec'|trans({ '%date%': ta.dateLast|format_datetime('long', 'none') })|raw }}"
+                    data-toggle="tooltip" data-placement="left" data-html="true"></span>
+                {# Too much confusing #}
+                {# % else %}
+                  <span class="icon icon-help-circle" title="{{ 'page.trans_auto.list.next_exec'|trans({ '%date%': ta.dateStart|format_datetime('long', 'none') })|raw }}"
+                    data-toggle="tooltip" data-placement="left" data-html="true"></span> #}
                 {% endif %}
               </div>
               {# TRANS:AMOUNT/PRICE #}
@@ -88,9 +93,11 @@
                   <a class="dropdown-item" href="{{ path('automaton', { id: ta.id }) }}">
                     Modifier <span class="ml-1 icon icon-edit"></span>
                   </a>
-                  <a class="dropdown-item" href="{{ path('automaton_trans_auto_delete', { id: ta.id }) }}">
+                  <button class="dropdown-item" type="button" data-confirm-href="{{ path('automaton_trans_auto_delete', { id: ta.id }) }}"
+                    data-confirm-body="Êtes-vous sûr de vouloir supprimer la transaction récurrente : <br><b>&laquo;&nbsp;{{ ta.label }}&nbsp;&raquo;</b> ?"
+                      data-toggle="modal" data-target="#modal-confirm-delete">
                     Supprimer <span class="ml-1 icon icon-trash"></span>
-                  </a>
+                  </button>
                 </div>
               </div>
             </div>

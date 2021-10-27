@@ -157,7 +157,6 @@ class TransactionsController extends AbstractController
         ];
 
         if(!is_null($trans)) {
-            $em               = $this->getDoctrine()->getManager();
             $trans_deleted    = $trans;
             $id_trans_deleted = $trans_deleted->getId();
 
@@ -194,8 +193,11 @@ class TransactionsController extends AbstractController
         } else {
             // Set message in flashbag on direct access
             $request->getSession()->getFlashBag()->add($return_data['slug_status'], $return_data['message_status']);
+
+            // Redirect to previous page (= referer)
+            return $this->redirect($request->headers->get('referer'));
             // Redirect to dashboard
-            return $this->redirectToRoute('dashboard');
+            // return $this->redirectToRoute('dashboard');
         }
     }
 

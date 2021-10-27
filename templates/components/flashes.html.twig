@@ -19,6 +19,9 @@
     {% for message in flash_messages %}
       <div class="alert alert-{{ type_flash.css_class }}">
         {{ message|raw }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
     {% endfor %}
   {% endif %}

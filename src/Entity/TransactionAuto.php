@@ -23,6 +23,8 @@ class TransactionAuto
       self::RT_DAILY,
     ];
 
+    const ERR_UNKNOWN_RTYPE = -1;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

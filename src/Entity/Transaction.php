@@ -124,4 +124,16 @@ class Transaction
 
         return $this;
     }
+
+    public function fillWithTransAuto(TransactionAuto $trans_auto): self
+    {
+        $this->setBankAccount($trans_auto->getBankAccount())
+          ->setLabel($trans_auto->getLabel())
+          ->setDetails($trans_auto->getDetails())
+          ->setCategory($trans_auto->getCategory())
+          ->setAmount($trans_auto->getAmount())
+        ;
+
+        return $this;
+    }
 }

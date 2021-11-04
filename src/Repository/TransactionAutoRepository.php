@@ -58,13 +58,35 @@ class TransactionAutoRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    public function findAllToExecuteByRepeatType(string $repeat_type)
+    {
+        // Check if repeat type is valid
+        if (!in_array($repeat_type, TransactionAuto::RT_LIST)) {
+            return TransactionAuto::ERR_UNKNOWN_RTYPE;
+        } else {
+            // Retrieve date type to remove (day/week/month/year)
+            //  according to repeat type
+            $date_last_remove = ($repeat_type == TransactionAuto::RT_DAILY) ? 'DAY' : str_replace('LY', '', $repeat_type);
+
+            return $this->createQueryBuilder('ta')
+                ->andWhere('ta.date_start <= CURRENT_DATE()')
+                ->andWhere('ta.date_last IS NULL OR ta.date_last <= DATE_SUB(DATE(CURRENT_DATE()), 1, \'' . $date_last_remove . '\')')
+                ->andWhere('ta.repeat_type = :repeat_type')
+                ->setParameter('repeat_type', $repeat_type)
+                ->orderBy('ta.id', 'ASC')
+                ->getQuery()
+                ->getResult()
+            ;
+        }
+    }
+
     // /**
     //  * @return TransactionAuto[] Returns an array of TransactionAuto objects
     //  */
     /*
     public function findByExampleField($value)
     {
-        return $this->createQueryBuilder('t')
+        return $this->createQueryBuilder('ta')
             ->andWhere('ta.exampleField = :val')
             ->setParameter('val', $value)
             ->orderBy('ta.id', 'ASC')
@@ -78,7 +100,7 @@ class TransactionAutoRepository extends ServiceEntityRepository
     /*
     public function findOneBySomeField($value): ?TransactionAuto
     {
-        return $this->createQueryBuilder('t')
+        return $this->createQueryBuilder('ta')
             ->andWhere('ta.exampleField = :val')
             ->setParameter('val', $value)
             ->getQuery()

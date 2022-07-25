@@ -13,8 +13,19 @@
   {% set period_text = 'block.inc_exp.since_register'|trans %}
 {% endif %}
 
+{# Card Sizes #}
+{% set card_size = "col-12 col-sm-6" %}
+{% if half_width is defined and half_width == true %}
+  {% set card_size = card_size ~ " col-md-6" %}
+{% else %}
+  {% set card_size = card_size ~ " col-md-12" %}
+{% endif %}
+{% if full_width is not defined or (full_width is defined and full_width == false) %}
+  {% set card_size = card_size ~ " col-xl-6" %}
+{% endif %}
+
 <div class="row">
-  <div class="col-12{% if full_width is not defined or (full_width is defined and full_width == false) %} col-xl-6{% endif %} mb-4">
+  <div class="{{ card_size }} mb-4">
     <div class="card bg-gradient-success text-white text-shadow border-0">
       <div class="card-body">
         <div class="d-flex align-items-center">
@@ -45,7 +56,7 @@
       </div>
     </div>
   </div>
-  <div class="col-12{% if full_width is not defined or (full_width is defined and full_width == false) %} col-xl-6{% endif %} mb-4">
+  <div class="{{ card_size }} mb-4">
     <div class="card bg-gradient-danger text-white text-shadow border-0">
       <div class="card-body">
         <div class="d-flex align-items-center">

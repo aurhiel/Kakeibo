@@ -27,5 +27,5 @@ yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 
 ###> VS Code ###
-kakeibo.code-workspace
+*.code-workspace
 ###< VS Code ###

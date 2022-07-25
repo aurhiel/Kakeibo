@@ -193,13 +193,11 @@ page :
           percent_status : 60
         item_3 :
           label : "Transactions automatiques par pourcentage"
-          desc  : "Ajouter des transactions récurrentes <b>basés sur
-          un pourcentage</b>, défini préalablement par l'utilisateur, <b>des revenus du mois</b>."
+          desc  : "Ajouter des transactions récurrentes <b>basés sur un pourcentage</b>, défini préalablement par l'utilisateur, <b>des revenus du mois</b>."
           percent_status : 0
         item_4 :
           label : "Navigation dans les statistiques"
-          desc  : "Finaliser la page des statistiques afin de <b>naviguer par mois
-          ou via une période</b> choisi par l'utilisateur."
+          desc  : "Finaliser la page des statistiques afin de <b>naviguer par mois ou via une période</b> choisi par l'utilisateur."
           percent_status : 70
   # PAGE:ADMIN
   admin :

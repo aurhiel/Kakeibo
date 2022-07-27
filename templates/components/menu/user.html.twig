@@ -3,7 +3,7 @@
   {% if app.user is not null and app.user.username is defined %}
     <div class="dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       <span class="say-hello mr-1 d-none d-lg-inline">
-        {{ 'menu.say_hello'|trans({'%name%': app.user.username}) }}
+        {{ 'menu.say_hello'|trans({'%name%': app.user.username})|raw }}
       </span>
 
       {% include 'components/user/avatar.html.twig' %}

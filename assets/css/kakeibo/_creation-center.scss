@@ -1,0 +1,69 @@
+// Creation center, bottom right button to create new entities
+//
+
+
+.app-creation-center {
+  text-align: right;
+  position: fixed;
+  z-index: 90;
+  bottom: .8rem;
+  right: .8rem;
+  left: 0;
+  pointer-events: none;
+
+  &.show {
+    .list-actions {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  > .-inner {
+    max-width: map-get($container-max-widths, "xxl") + $grid-gutter-width * 2;
+    padding: 0;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .btn-toggler {
+    font-size: 1.4rem;
+    font-weight: normal;
+    line-height: 1;
+    border-radius: 50%;
+    padding: 1rem;
+    pointer-events: auto;
+
+    .icon {
+      vertical-align: middle;
+    }
+  }
+
+  .list-actions {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    bottom: 100%;
+    margin-bottom: .6rem;
+    right: .8rem;
+    opacity: 0;
+    transition: opacity $animation-duration ease;
+
+    .-item + .-item {
+      margin-top: .4rem;
+    }
+  }
+}
+
+
+//
+// Responsive
+//
+
+@include media-breakpoint-up(lg) {
+  .app-creation-center {
+    .btn-toggler {
+      padding: 1.05rem 1.2rem 1.2rem;
+    }
+  }
+}

@@ -139,11 +139,11 @@
 {% block body %}
   <div class="container">
     <div class="row">
-      <div class="col-12 {% if total_expenses_by_cats is not empty or total_incomes_by_cats is not empty %}col-md-7 col-xl-6 col-xxl-7{% endif %}">
+      <div class="col-12 {% if total_expenses_by_cats is not empty or total_incomes_by_cats is not empty %}col-md-7{% endif %}">
         {% include 'components/transactions/list.html.twig' %}
       </div>
       {% if total_expenses_by_cats is not empty or total_incomes_by_cats is not empty %}
-        <div class="col-12 col-md-5 col-xl-6 col-xxl-5">
+        <div class="col-12 col-md-5">
           <div class="card d-none d-md-block charts-trans-by-cats">
             <div class="card-header d-flex align-items-center">
               <h3 class="h5 mb-0">{{ 'page.statistics.chart_exp_inc.title'|trans }}</h3>

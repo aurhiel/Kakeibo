@@ -8,6 +8,12 @@
 .nav-item {
   .icon {
     font-size: 1.2em;
+    position: relative;
+    top: .125rem;
+  }
+
+  + .nav-item {
+    margin-top: .6rem;
   }
 }
 
@@ -52,7 +58,8 @@
   }
 
   .navbar-nav {
-    padding: .7rem .8rem 0 .8rem;
+    font-size: 1.2rem;
+    padding: 1.2rem 0 .4rem;
     position: relative;
     z-index: 5;
     overflow: hidden;
@@ -61,6 +68,8 @@
 
     .nav-link {
       color: $navbar-default-color;
+      padding-left: .75rem;
+      padding-right: .75rem;
 
       @include hover-focus {
         color: $navbar-default-hover-color;
@@ -75,7 +84,9 @@
     .active > .nav-link,
     .nav-link.show,
     .nav-link.active {
+      background-color: $navbar-default-active-bg;
       color: $navbar-default-active-color;
+      border-radius: .4rem;
     }
   }
 
@@ -140,6 +151,7 @@
   line-height: 1.2;
 
   .bank-account-label {
+    color: $light;
     max-width: 7.4rem;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -161,8 +173,10 @@
 
 @include media-breakpoint-up(sm) {
   // Bank account
-  .bank-account-label {
-    max-width: 8rem;
+  .navbar-bank-account {
+    .bank-account-label {
+      max-width: 8rem;
+    }
   }
 }
 
@@ -178,6 +192,13 @@
 }
 
 @include media-breakpoint-up(md) {
+  // Bank account
+  .navbar-bank-account {
+    .bank-account-label {
+      max-width: 10rem;
+    }
+  }
+
   // Navbar & elements
   .navbar {
     flex-flow: row nowrap;
@@ -186,15 +207,11 @@
     padding-bottom: 1rem;
 
     .navbar-nav {
+      font-size: 1rem;
       flex-direction: row;
 
       .dropdown-menu {
         position: absolute;
-      }
-
-      .nav-link {
-        padding-right: $navbar-nav-link-padding-x;
-        padding-left: $navbar-nav-link-padding-x;
       }
     }
 
@@ -220,8 +237,12 @@
     .icon {
       margin-right: .2rem;
     }
-  }
 
+    + .nav-item {
+      margin-left: .8rem;
+      margin-top: 0;
+    }
+  }
 
   // Default theme
   .navbar-default {
@@ -241,19 +262,27 @@
 
 @include media-breakpoint-up(lg) {
   // Bank account
-  .bank-account-label {
-    max-width: 16rem;
+  .navbar-bank-account {
+    .bank-account-label {
+      max-width: 16rem;
+    }
   }
 
   // Navbar elements
   .navbar {
     padding-top: 1.4rem;
     padding-bottom: 1.4rem;
+
+    .navbar-nav {
+      .nav-link {
+        padding-right: 1rem;
+        padding-left: 1rem;
+      }
+    }
   }
 
   .nav-item {
-    margin-right: 1rem;
-    &:last-child { margin-right: 0; }
+    + .nav-item { margin-left: 1rem; }
   }
 
   // Default theme
@@ -266,8 +295,10 @@
 
 @include media-breakpoint-up(xl) {
   // Bank account
-  .bank-account-label {
-    max-width: 20rem;
+  .navbar-bank-account {
+    .bank-account-label {
+      max-width: 20rem;
+    }
   }
 
   // Navbar elements
@@ -277,8 +308,7 @@
   }
 
   .nav-item {
-    margin-right: 1.6rem;
-    &:last-child { margin-right: 0; }
+    + .nav-item { margin-left: 1.6rem; }
   }
 
   // Default theme

@@ -164,6 +164,30 @@ var kakeibo = {
       window.addEventListener("beforeprint", beforePrintHandler);
     }
   },
+  // Creation center 
+  creation_center: {
+    $creation_center: null,
+    toggle: function(forced_state) {
+      this.$creation_center.toggleClass('show', typeof forced_state != 'undefined' ? forced_state : null);
+    },
+    auto_close: function(target) {
+      if ($(target).parents('.app-creation-center').length === 0) {
+        this.toggle(false);
+      }
+    },
+    init: function() {
+      var self = this;
+      this.$creation_center = kakeibo.$body.find('.app-creation-center');
+
+      // Events
+      this.$creation_center.on('click', '.btn-toggler', function() {
+        self.toggle();
+      });
+      this.$creation_center.on('click', '.list-actions .btn', function() {
+        self.toggle(false);
+      });
+    }
+  },
   // Transaction panel (add/edit transac.)
   transaction: {
     $panel: null,
@@ -288,50 +312,46 @@ var kakeibo = {
             }
 
             // Add new transaction
-            if (date_find.matched_date !== null) {
-              if (date_find.matched_date.index != -1) {
-                var btn_edit = '';
-                if (has_edit == true) {
-                  btn_edit = '<button class="dropdown-item btn-edit-transac toggle-panel-transaction"' +
-                    'type="button" data-panel-type="edit" data-panel-id-edit="' + transaction.id + '">' +
-                    'Modifier <span class="ml-1 icon icon-edit"></span>' +
-                  '</button>';
-                }
-
-                date_find.matched_date.$node.after($('<div class="-item -item-transac" data-kb-id-transaction="' + transaction.id + '">' +
-                  '<div class="col col-auto col-icon">' +
-                    '<span class="-transac-category avatar" title="' + category.label + '">' +
-                      '<span class="avatar-text rounded-circle" style="background-color: ' + category.color + ';">' +
-                        '<span class="icon icon-' + category.icon + '"></span>' +
-                      '</span>' +
-                    '</span>' +
-                  '</div>' +
-                  '<div class="col col-text">' +
-                    '<span class="-transac-label">' + transaction.label + '</span>' +
-                    '<div class="-transac-details -more-info small text-muted">' + ((transaction.details != null) ? transaction.details : '') + '</div>' +
-                  '</div>' +
-                  '<div class="col col-price">' +
-                    '<span class="-transac-amount text-price text-' + (transaction.amount > 0 ? 'success' : (transaction.amount < 0) ? 'danger' : 'warning') + '">' +
-                      kakeibo.format.price(transaction.amount, currency.slug) +
-                    '</span>' +
-                  '</div>' +
-                  '<div class="col col-more">'+
-                    '<span class="kb-more-dots align-middle" data-toggle="dropdown" aria-expanded="false">' +
-                      '<span class="dot"></span>' +
-                    '</span>' +
-                    '<div class="dropdown-menu dropdown-menu-right text-right">' +
-                      btn_edit +
-                      '<button class="dropdown-item" type="button" data-confirm-href="' + url_delete + transaction.id + '"' +
-                        'data-confirm-body="Êtes-vous sûr de vouloir supprimer la transaction : <br><b>&laquo;&nbsp;' + transaction.label + '&nbsp;&raquo;</b> ?"' +
-                          'data-toggle="modal" data-target="#modal-confirm-delete">' +
-                        'Supprimer <span class="ml-1 icon icon-trash"></span>' +
-                      '</button>' +
-                    '</div>' +
-                  '</div>' +
-                  '</div>'));
+            if (date_find.matched_date !== null && date_find.matched_date.index != -1) {
+              var btn_edit = '';
+              if (has_edit == true) {
+                btn_edit = '<button class="dropdown-item btn-edit-transac toggle-panel-transaction"' +
+                  'type="button" data-panel-type="edit" data-panel-id-edit="' + transaction.id + '">' +
+                  'Modifier <span class="ml-1 icon icon-edit"></span>' +
+                '</button>';
               }
-            } else {
-              // console.log('meh...', limit);
+
+              date_find.matched_date.$node.after($('<div class="-item -item-transac" data-kb-id-transaction="' + transaction.id + '">' +
+                '<div class="col col-auto col-icon">' +
+                  '<span class="-transac-category avatar" title="' + category.label + '">' +
+                    '<span class="avatar-text rounded-circle" style="background-color: ' + category.color + ';">' +
+                      '<span class="icon icon-' + category.icon + '"></span>' +
+                    '</span>' +
+                  '</span>' +
+                '</div>' +
+                '<div class="col col-text">' +
+                  '<span class="-transac-label">' + transaction.label + '</span>' +
+                  '<div class="-transac-details -more-info small text-muted">' + ((transaction.details != null) ? transaction.details : '') + '</div>' +
+                '</div>' +
+                '<div class="col col-price">' +
+                  '<span class="-transac-amount text-price text-' + (transaction.amount > 0 ? 'success' : (transaction.amount < 0) ? 'danger' : 'warning') + '">' +
+                    kakeibo.format.price(transaction.amount, currency.slug) +
+                  '</span>' +
+                '</div>' +
+                '<div class="col col-more">'+
+                  '<span class="kb-more-dots align-middle" data-toggle="dropdown" aria-expanded="false">' +
+                    '<span class="dot"></span>' +
+                  '</span>' +
+                  '<div class="dropdown-menu dropdown-menu-right text-right">' +
+                    btn_edit +
+                    '<button class="dropdown-item" type="button" data-confirm-href="' + url_delete + transaction.id + '"' +
+                      'data-confirm-body="Êtes-vous sûr de vouloir supprimer la transaction : <br><b>&laquo;&nbsp;' + transaction.label + '&nbsp;&raquo;</b> ?"' +
+                        'data-toggle="modal" data-target="#modal-confirm-delete">' +
+                      'Supprimer <span class="ml-1 icon icon-trash"></span>' +
+                    '</button>' +
+                  '</div>' +
+                '</div>' +
+                '</div>'));
             }
           }
         });
@@ -466,7 +486,7 @@ var kakeibo = {
       var self = this;
       type = (typeof type == 'undefined') ? 'add' : type;
 
-      if (self.$panel!= null && self.$panel.length > 0) {
+      if (self.$panel != null && self.$panel.length > 0) {
         // Display/Hide panel
         kakeibo.$body.toggleClass('app-panel--transaction-form--show');
         self.$panel.removeClass('-is-edit');
@@ -634,6 +654,9 @@ var kakeibo = {
     // Charts
     this.chartJS.init();
 
+    // Creation
+    this.creation_center.init();
+
     // Bootstrap tooltips
     $('[data-toggle="tooltip"]').tooltip();
 
@@ -696,20 +719,20 @@ var kakeibo = {
 
     // ====================================
     // EVENTS / TRANSACTIONS ==============
-    kakeibo.$trans_form_import = this.forms.$items.filter('.form-trans-import');
-    kakeibo.$trans_form_import.on('change', '.first-import-file', function() {
-      kakeibo.$trans_form_import.submit();
+    this.$trans_form_import = this.forms.$items.filter('.form-trans-import');
+    this.$trans_form_import.on('change', '.first-import-file', function() {
+      self.$trans_form_import.submit();
     });
     // Close panel on click on loader >>> TODO change by a click on a "mask" !!
-    kakeibo.$body.on('click', '.app-loader', function() {
-      kakeibo.transaction.toggle_panel('close');
+    this.$body.on('click', '.app-loader', function() {
+      self.transaction.toggle_panel('close');
     });
 
     // ====================================
     // EVENTS / TOGGLER ===================
-    kakeibo.$body.on('click', '[data-toggler-class]', function(e) {
+    this.$body.on('click', '[data-toggler-class]', function(e) {
       var $this = $(this);
-      var $target = (typeof $this.data('toggler-target') != 'undefined') ? kakeibo.$body.find($this.data('toggler-target')) : $this;
+      var $target = (typeof $this.data('toggler-target') != 'undefined') ? self.$body.find($this.data('toggler-target')) : $this;
       var self_class = (typeof $this.data('toggler-self') != 'undefined') ? $this.data('toggler-self') : null;
       var forced_state = (typeof $this.data('toggler-forced-state') != 'undefined') ? $this.data('toggler-forced-state') : null;
 
@@ -726,14 +749,21 @@ var kakeibo = {
     });
 
     // ====================================
+    // EVENTS / GLOBAL CLICK ==============
+    this.$window.on('click', function(e) {
+      // Auto-close creation-center (+ button at bottom right of the screen)
+      self.creation_center.auto_close(e.target);
+    });
+
+    // ====================================
     // EVENTS / RESIZE ====================
-    // kakeibo.$window.on('resize', function(e) {
+    // this.$window.on('resize', function(e) {
     // });
 
     // ====================================
     // UNLOAD (delay before hide "loading")
     setTimeout(function() {
-      kakeibo.unload();
+      self.unload();
     }, 400);
   }
 };

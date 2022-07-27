@@ -10,7 +10,7 @@ global :
 
 ## MENU
 menu :
-  say_hello : "Hello, %name%"
+  say_hello : "Hello, <span class=\"text-light\">%name%</span>"
   btn_toggle :
     aria_label : "Toggle navigation"
   # Menu's main links

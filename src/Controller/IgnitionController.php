@@ -33,10 +33,18 @@ class IgnitionController extends AbstractController
      */
     public function first_bank_account(Security $security, Request $request)
     {
+        /**
+         * @var User $user
+         */
         $user = $security->getUser();
 
         if (count($user->getBankAccounts()) > 0)
             return $this->redirectToRoute('ignition-first-transaction');
+
+        /**
+         * @var Session $session
+         */
+        $session = $request->getSession();
 
         // 1) build the form
         $ba_entity  = new BankAccount($user);
@@ -59,13 +67,13 @@ class IgnitionController extends AbstractController
                 $em->flush();
 
                 // Add success message
-                $request->getSession()->getFlashBag()->add('success', 'Création de votre 1er compte effectuée avec succès.');
+                $session->getFlashBag()->add('success', 'Création de votre 1er compte effectuée avec succès.');
 
                 // Redirect to first transaction
                 return $this->redirectToRoute('ignition-first-transaction');
             } catch (\Exception $e) {
                 // Something goes wrong
-                $request->getSession()->getFlashBag()->add('error', 'Une erreur inconnue est survenue, veuillez essayer de nouveau.');
+                $session->getFlashBag()->add('error', 'Une erreur inconnue est survenue, veuillez essayer de nouveau.');
                 $em->clear();
             }
         }
@@ -87,11 +95,19 @@ class IgnitionController extends AbstractController
      */
     public function first_transaction(Security $security, Request $request)
     {
+        /**
+         * @var User $user
+         */
         $user = $security->getUser();
 
         // Force user to create at least ONE bank account !
         if (empty($user) || count($user->getBankAccounts()) < 1)
             return $this->redirectToRoute('ignition-first-bank-account');
+
+        /**
+         * @var Session $session
+         */
+        $session = $request->getSession();
 
         // User has a bank account
         $default_bank_account = $user->getDefaultBankAccount();
@@ -121,7 +137,7 @@ class IgnitionController extends AbstractController
                 $em->flush();
 
                 // Add success message
-                $request->getSession()->getFlashBag()->add('success', 'Ajout de votre 1ère transaction effectuée avec succès.');
+                $session->getFlashBag()->add('success', 'Ajout de votre 1ère transaction effectuée avec succès.');
 
                 // Redirect to Dashboard
                 return $this->redirectToRoute('dashboard');
@@ -129,7 +145,7 @@ class IgnitionController extends AbstractController
                 dump($e);
 
                 // Something goes wrong
-                $request->getSession()->getFlashBag()->add('error', 'Une erreur inconnue est survenue, veuillez essayer de nouveau.');
+                $session->getFlashBag()->add('error', 'Une erreur inconnue est survenue, veuillez essayer de nouveau.');
                 $em->clear();
             }
         }
@@ -141,7 +157,7 @@ class IgnitionController extends AbstractController
             ],
             'step'      => 2,
             'nb_steps'  => $this->nb_steps,
-            'hide_form_trans_panel'       => true,
+            'hide_creation_center'        => true,
             'form_transaction_submitted'  => $trans_form->isSubmitted(),
             'form_transaction'            => $trans_form->createView()
         ]);

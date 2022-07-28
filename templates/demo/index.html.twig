@@ -2,9 +2,20 @@
 
 {% block body %}
 {% set theme_colors = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark'] %}
-<div class="container my-5">
+<div class="container my-4">
   <div class="row justify-content-center">
-    <div class="col-lg-10">
+    <div class="col-md-3 align-self-start d-none d-md-block mb-1" style="position: sticky; top: 10px;">
+      <h5 class="text-muted text-uppercase font-weight-bold small">Sommaire</h5>
+      <div class="list-group">
+        <a href="#alerts" class="list-group-item list-group-item-action py-2">Alerts</a>
+        <a href="#backgrounds" class="list-group-item list-group-item-action py-2">Backgrounds</a>
+        <a href="#buttons" class="list-group-item list-group-item-action py-2">Buttons</a>
+        <a href="#dropdowns" class="list-group-item list-group-item-action py-2">Dropdowns</a>
+        <a href="#avatars" class="list-group-item list-group-item-action py-2">Avatars</a>
+        <a href="#icons" class="list-group-item list-group-item-action py-2">Icons</a>
+      </div>
+    </div>
+    <div class="col-md-9">
       {% include 'demo/_alerts.html.twig' %}
 
       {% include 'demo/_backgrounds.html.twig' %}

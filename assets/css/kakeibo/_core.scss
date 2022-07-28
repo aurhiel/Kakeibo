@@ -44,7 +44,7 @@ html, body {
 }
 
 .app-body {
-  overflow: hidden; // Prevent margin top/bottom children's issue
+  padding: 1px 0; // Prevent margin top/bottom children's issue
   // loading animation
   position: relative;
   top: 0;

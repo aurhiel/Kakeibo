@@ -1,30 +1,45 @@
-{# OLD ICONS set icons = [ 'code', 'coffee', 'at-sign', 'bar-chart', 'chevron-down', 'chevron-left', 'chevron-right',
-  'chevron-up', 'clock', 'command', 'download', 'edit', 'home', 'lock', 'log-in',
-  'log-out', 'plus-square', 'save', 'cog', 'settings', 'trash', 'user', 'apparel',
-  'beverage', 'credit-card', 'currency-dollar', 'gift', 'globe', 'library', 'light-bulb', 'food',
-  'gas-station', 'marina', 'portfolio', 'refresh', 'shopping-cart', 'stethoscope', 'travel-bus', 'travel-car',
-  'wallet', 'yin-yang' ]  #}
-{% set icons = [ 'code', 'coffee', 'at-sign', 'bar-chart', 'chevron-down', 'chevron-left', 'chevron-right',
-  'chevron-up', 'clock', 'command', 'download', 'edit', 'help-circle', 'home', 'key', 'list', 'lock', 'log-in',
-  'log-out', 'pie-chart', 'plus-square', 'power', 'save', 'settings', 'trash', 'user', 'security', 'rotate-right',
-  'travel-bus', 'travel-car', 'gas-station', 'hospital', 'food', 'bank',
-  'wallet', 'credit-card', 'gift', 'cases', 'housing', 'clothes',
-  'nightlife', 'donation' ] %}
+{% set icons = {
+  'brands' : [
+    'android', 'apple', 'ios', 'microsoft'
+  ],
+  'material-icons' : [
+    'smartphone', 'paint', 'laptop', 'desktop', 'security', 'tablet', 'rotate-right',
+    'travel-bus', 'travel-car', 'gas-station', 'cart', 'hospital', 'store', 'food', 'ev-station', 
+    'train', 'fastfood', 'cake', 'earth', 'bank', 'wallet', 'credit-card', 'gift', 'flight-takeoff', 
+    'gavel', 'pets', 'cases', 'housing', 'gaming', 'clothes', 'hammer', 'nightlife', 'donation',
+    'smoking', 'spa', 'construction', 'hairdresser'
+  ],
+  'feather' : [ 
+    'at-sign', 'bar-chart', 'book', 'chevron-down', 'chevron-left', 'chevron-right', 'chevron-up', 'clock',
+    'code', 'coffee', 'command', 'download', 'edit', 'folder-plus', 'help-circle', 'home', 'key', 'list', 
+    'lock', 'log-in', 'log-out', 'pie-chart', 'plus', 'plus-square', 'power', 'repeat', 'save', 'settings', 
+    'sliders', 'tag', 'trash', 'user', 'watch'
+  ]
+} %}
 
-<h2 class="h3">Icons ({{ icons|length }})</h2>
-<p class="text-muted">Lorem ipsum !</p>
+{% set total_icons = 0 %}
+{% for list in icons %}
+  {% set total_icons = total_icons + list|length %}
+{% endfor %}
 
-<div class="row mx-0">
-  {% for icon_slug in icons %}
-  <div class="col-12 col-sm-4 col-md-3 col-lg-2 px-0">
-    <div class="card text-center" style="border-radius:0">
-      <div class="card-body">
-        <span class="h2 icon-{{ icon_slug }}"></span>
-      </div>
-      <div class="card-footer small">
-        .icon-{{ icon_slug }}
+<h2 class="h3" id="icons">Icons ({{ total_icons }})</h2>
+<p class="text-muted">Icons from IcoMoon webapp</p>
+
+{% for source, list in icons %}
+  <h3 class="h4">{{ source|replace({'-': ' '})|title }}</h3>
+  <div class="row mx-0">
+  {% for icon_slug in list %}
+    <div class="col-12 col-sm-4 col-md-3 col-lg-2 px-0">
+      <div class="card text-center" style="border-radius:0">
+        <div class="card-body">
+          <span class="h2 icon-{{ icon_slug }}"></span>
+        </div>
+        <div class="card-footer small px-2">
+          .icon-{{ icon_slug }}
+        </div>
       </div>
     </div>
-  </div>
   {% endfor %}
-</div>
+  </div>
+  {% if loop.last == false %}<hr class="my-4">{% endif %}
+{% endfor %}

@@ -1,25 +1,33 @@
 {% set has_action_transaction = form_transaction is defined %}
 {% set has_action_category = form_category is defined %}
+{% set has_action_bank_account = form_bank_account is defined %}
 {% set display_actions = (has_action_transaction or has_action_category) and hide_creation_center is not defined %}
 
 {% if display_actions %}
   <div class="app-creation-center">
     <div class="-inner">
       <button class="btn btn-toggler btn-primary">
-        <span class="icon icon-plus-square"></span>
+        <span class="icon icon-plus"></span>
       </button>
       <ul class="list-actions">
+      {% if has_action_bank_account %}
+        <li class="-item">
+          <button class="btn btn-sm btn-dark border-primary">
+            <span class="icon icon-folder-plus text-primary mr-1"></span> Ajouter compte
+          </button>
+        </li>
+      {% endif %}
       {% if has_action_category %}
         <li class="-item">
-          <button class="btn btn-sm btn-dark">
-            catégorie
+          <button class="btn btn-sm btn-dark border-primary">
+            <span class="icon icon-tag text-primary mr-1"></span> Ajouter catégorie
           </button>
         </li>
       {% endif %}
       {% if has_action_transaction %}
         <li class="-item">
-          <button class="btn btn-sm btn-dark toggle-panel-transaction" type="button" name="button" data-panel-type="add">
-            transaction
+          <button class="btn btn-sm btn-dark toggle-panel-transaction border-primary" type="button" name="button" data-panel-type="add">
+            <span class="icon icon-repeat text-primary mr-1"></span> Ajouter transaction
           </button>
         </li>
       {% endif %}

@@ -1,24 +1,28 @@
-<h2 class="h3">Buttons</h2>
+<h2 class="h3" id="buttons">Buttons</h2>
 <p class="text-muted">Some examples of buttons.</p>
 
-<h3 class="h5">Colors</h3>
-<div class="card mb-4">
-  <div class="card-body">
-  {% for color in theme_colors %}
-    <button type="button" class="btn btn-{{ color }} my-1">{{ color|capitalize }}</button>
-  {% endfor %}
-    <button type="button" class="btn btn-link my-1">Link</button>
+<div class="row">
+  <div class="col-12 col-lg-6">
+    <h3 class="h5">Colors</h3>
+    <div class="card">
+      <div class="card-body">
+      {% for color in theme_colors %}
+        <button type="button" class="btn btn-{{ color }} my-1">{{ color|capitalize }}</button>
+      {% endfor %}
+        <button type="button" class="btn btn-link my-1">Link</button>
+      </div>
+    </div>
+    <hr class="my-4 d-lg-none">
   </div>
-</div>
-
-<hr class="my-4">
-
-<h3 class="h5">Outlined colors</h3>
-<div class="card mb-4">
-  <div class="card-body">
-    {% for color in theme_colors %}
-      <button type="button" class="btn btn-outline-{{ color }} my-1">{{ color|capitalize }}</button>
-    {% endfor %}
+  <div class="col-12 col-lg-6">
+    <h3 class="h5">Outlined colors</h3>
+    <div class="card">
+      <div class="card-body">
+        {% for color in theme_colors %}
+          <button type="button" class="btn btn-outline-{{ color }} my-1">{{ color|capitalize }}</button>
+        {% endfor %}
+      </div>
+    </div>
   </div>
 </div>
 

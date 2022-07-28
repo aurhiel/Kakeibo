@@ -50,7 +50,7 @@
     transition: opacity $animation-duration ease;
 
     .-item + .-item {
-      margin-top: .4rem;
+      margin-top: .5rem;
     }
   }
 }

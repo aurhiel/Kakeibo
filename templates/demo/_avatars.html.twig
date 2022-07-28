@@ -1,44 +1,48 @@
-<h2 class="h3">Avatars</h2>
+<h2 class="h3" id="avatars">Avatars</h2>
 <p class="text-muted">Some examples of avatars.</p>
 
-<h3 class="h5">Sizing</h3>
-<div class="card mb-4">
-    <div class="card-body">
+<div class="row">
+  <div class="col-12 col-xl-6">
+    <h3 class="h5">Initials</h3>
+    <div class="card">
+      <div class="card-body">
+        {% for a_size in ['xl', 'lg', '', 'sm', 'xs'] %}
+          <span class="avatar{% if a_size is not empty %} avatar-{{ a_size }}{% endif %}">
+            <span class="avatar-text rounded-circle">KB</span>
+          </span>
+        {% endfor %}
+      </div>
+    </div>
+    <hr class="my-4 d-md-none">
+  </div>
+  <div class="col-12 col-xl-6">
+    <h3 class="h5">Sizing</h3>
+    <div class="card">
+      <div class="card-body">
         {% for a_size in ['xl', 'lg', '', 'sm', 'xs'] %}
         <span class="avatar{% if a_size is not empty %} avatar-{{ a_size }}{% endif %}">
-            <img src="{{ asset('build/avatars/avatar-1.png') }}" class="avatar-img rounded-circle">
+          <img src="{{ asset('build/avatars/avatar-1.png') }}" class="avatar-img rounded-circle">
         </span>
         {% endfor %}
+      </div>
     </div>
+  </div>
 </div>
 
 <hr class="my-4">
 
 <h3 class="h5">Shape</h3>
-<div class="card mb-4">
-    <div class="card-body">
-        {% for a_size in ['xl', 'lg', ''] %}
-        <span class="avatar{% if a_size is not empty %} avatar-{{ a_size }}{% endif %}">
-            <img src="{{ asset('build/avatars/avatar-2.png') }}" class="avatar-img rounded">
-        </span>
-        <span class="avatar{% if a_size is not empty %} avatar-{{ a_size }}{% endif %}">
-            <img src="{{ asset('build/avatars/avatar-2.png') }}" class="avatar-img rounded-circle">
-        </span>
-        {% endfor %}
-    </div>
-</div>
-
-<hr class="my-4">
-
-<h3 class="h5">Initials</h3>
-<div class="card mb-5">
-    <div class="card-body">
-        {% for a_size in ['xl', 'lg', '', 'sm', 'xs'] %}
-        <span class="avatar{% if a_size is not empty %} avatar-{{ a_size }}{% endif %}">
-            <span class="avatar-text rounded-circle">KB</span>
-        </span>
-        {% endfor %}
-    </div>
+<div class="card">
+  <div class="card-body">
+    {% for a_size in ['xl', 'lg', ''] %}
+      <span class="avatar{% if a_size is not empty %} avatar-{{ a_size }}{% endif %}">
+        <img src="{{ asset('build/avatars/avatar-2.png') }}" class="avatar-img rounded">
+      </span>
+      <span class="avatar{% if a_size is not empty %} avatar-{{ a_size }}{% endif %}">
+        <img src="{{ asset('build/avatars/avatar-2.png') }}" class="avatar-img rounded-circle">
+      </span>
+    {% endfor %}
+  </div>
 </div>
 
 <hr class="my-5">

@@ -20,6 +20,9 @@ class DemoController extends AbstractController
      */
     public function index(Security $security)
     {
+        /**
+         * @var User $user
+         */
         $user = $security->getUser();
 
         // Force user to create at least ONE bank account !
@@ -27,7 +30,7 @@ class DemoController extends AbstractController
             return $this->redirectToRoute('ignition-first-bank-account');
 
         return $this->render('demo/index.html.twig', [
-            'controller_name' => 'DemoController',
+            'page_title' => '<span class="icon icon-save"></span> Demo',
         ]);
     }
 }

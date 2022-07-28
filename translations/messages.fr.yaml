@@ -214,7 +214,7 @@ block :
   inc_exp :
     period          : "Période %for_literal%%date%"
     period_custom   : "Période du %date_start% au %date_end%"
-    since_register  : "Depuis votre inscription"
+    since_register  : "Depuis votre inscription <span class=\"d-inline-block\">le <b>%date_register%</b></span>"
     incomes :
       title         : "Revenus"
     expenses :

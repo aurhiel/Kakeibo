@@ -10,7 +10,7 @@
     {% set period_text = 'block.inc_exp.period_custom'|trans({ '%date_start%': date_start_text, '%date_end%': date_end|format_date(pattern='dd MMMM YYYY') }) %}
   {% endif %}
 {% else %}
-  {% set period_text = 'block.inc_exp.since_register'|trans %}
+  {% set period_text = 'block.inc_exp.since_register'|trans({ '%date_register%': user.registerDate|format_date(pattern='d MMMM YYYY') }) %}
 {% endif %}
 
 {# Card Sizes #}
@@ -50,7 +50,7 @@
         </div>
       {% if no_subtext is not defined or (no_subtext is defined and no_subtext == false) %}
         <div class="pt-1 mt-3 small text-muted border-top">
-          {{ period_text }}
+          {{ period_text|raw }}
         </div>
       {% endif %}
       </div>
@@ -81,7 +81,7 @@
         </div>
       {% if no_subtext is not defined or (no_subtext is defined and no_subtext == false) %}
         <div class="pt-1 mt-3 small text-muted border-top">
-          {{ period_text }}
+          {{ period_text|raw }}
         </div>
       {% endif %}
       </div>

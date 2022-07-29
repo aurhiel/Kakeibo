@@ -1,0 +1,35 @@
+<div class="modal modal-manage-entity fade" id="modal-manage-transaction" tabindex="-1" role="dialog" aria-labelledby="modal-manage-transaction-label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header pt-2 pb-0 border-0 h-0">
+        {#<h5 class="modal-title font-weight-bold" id="modal-manage-transaction-label">
+          Ajouter / Modifier
+        </h5>#}
+        <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    {{ form_start(form_transaction, { 'action': path('transaction_manage'), 'attr' : { 'class': '-use-ajax-submit' } }) }}
+      <div class="modal-body pt-0 mt-4">
+        {% include 'components/forms/transaction.html.twig' %}
+      </div>
+      <div class="modal-footer justify-content-center pt-0 border-0">
+        <button class="btn btn-outline-secondary btn-sm mx-1 d-edit-none -modal-stay-open" type="submit" name="submit">
+          Ajouter sans fermer
+        </button>
+
+        <button class="btn btn-primary mx-1" type="submit" name="submit">
+          <span class="d-edit-none">
+            <span class="icon icon-plus-square"></span>
+            Ajouter
+          </span>
+          <span class="d-edit-inline-block">
+            <span class="icon icon-edit"></span>
+            Modifier
+          </span>
+        </button>
+      </div>
+    {{ form_end(form_transaction) }}
+    </div>
+  </div>
+</div>

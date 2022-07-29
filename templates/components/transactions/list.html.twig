@@ -49,22 +49,13 @@
           </div>
           {# TRANS:ACTIONS #}
           <div class="col col-more">
-            {# absolute version #}
-            {#<a class="btn btn-secondary btn-edit-transac" href="#{{ transac.id }}">
-              <span class="sr-only">Modifier</span>
-              <span class="icon icon-edit"></span>
-            </a>
-            <a class="btn btn-danger btn-delete-transac" href="#{{ transac.id }}">
-              <span class="sr-only">Supprimer</span>
-              <span class="icon icon-trash"></span>
-            </a>#}
             <span class="kb-more-dots align-middle" data-toggle="dropdown" aria-expanded="false">
               <span class="dot"></span>
             </span>
             <div class="dropdown-menu dropdown-menu-right text-right">
               {% if form_transaction is defined %}
-                <button class="dropdown-item btn-edit-transac toggle-panel-transaction"
-                  type="button" data-panel-type="edit" data-panel-id-edit="{{ transac.id }}">
+                <button class="dropdown-item" type="button" data-id-edit="{{ transac.id }}"
+                  data-toggle="modal" data-target="#modal-manage-transaction">
                   Modifier <span class="ml-1 icon icon-edit"></span>
                 </button>
               {% endif %}

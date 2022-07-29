@@ -188,19 +188,14 @@ var kakeibo = {
       });
     }
   },
-  // Transaction panel (add/edit transac.)
+  // Transaction manager
   transaction: {
-    $panel: null,
+    $modal: null,
     $lists: null,
     init: function() {
       var self = this;
-      this.$panel = kakeibo.$body.find('.app-panel--transaction-form');
+      this.$modal = kakeibo.$body.find('#modal-manage-transaction');
       this.$lists = kakeibo.$body.find('.list-transactions');
-
-      kakeibo.$body.on('click', '.toggle-panel-transaction', function() {
-        var $btn = $(this);
-        self.toggle_panel($btn.data('panel-type'), $btn.data('panel-id-edit'));
-      });
     },
     // TODO get this using a config
     url_load: '/transactions/get/',
@@ -283,7 +278,7 @@ var kakeibo = {
       var currency = bank_account.currency_entity;
       var category = transaction.category_entity;
       var url_delete  = this.url_delete;
-      var has_edit    = this.$panel.length > 0;
+      var has_edit    = this.$modal.length > 0;
       var transaction_date  = new Date(transaction.date);
 
       // Add transaction to list
@@ -315,8 +310,8 @@ var kakeibo = {
             if (date_find.matched_date !== null && date_find.matched_date.index != -1) {
               var btn_edit = '';
               if (has_edit == true) {
-                btn_edit = '<button class="dropdown-item btn-edit-transac toggle-panel-transaction"' +
-                  'type="button" data-panel-type="edit" data-panel-id-edit="' + transaction.id + '">' +
+                btn_edit = '<button class="dropdown-item" type="button" data-id-edit="' + transaction.id + '"' +
+                  'data-toggle="modal" data-target="#modal-manage-transaction">' +
                   'Modifier <span class="ml-1 icon icon-edit"></span>' +
                 '</button>';
               }
@@ -409,7 +404,6 @@ var kakeibo = {
     },
     after_update: function(data, is_edit) {
       // console.log('[transaction.after_update]', data, is_edit);
-      // console.log(this.$lists);
 
       var bank_account  = data.default_bank_account;
       var currency      = bank_account.currency_entity;
@@ -421,9 +415,6 @@ var kakeibo = {
       // Manage amounts (balance, totals expenses & incomes)
       this.update_balance(bank_account.balance, currency);
       this.update_exp_and_inc(transaction, currency);
-
-      // Close panel
-      this.toggle_panel('close');
     },
     update_balance : function(new_balance, currency) {
       // console.log('update_balance: ', new_balance, currency);
@@ -480,40 +471,6 @@ var kakeibo = {
       // Update amount value ONLY IF transaction is in current displayed date in totals
       if ((date >= date_start || date_start == false) && (date <= date_end || date_end == false))
           $text.html(kakeibo.format.price(new_total, currency.slug));
-    },
-    // toggle_panel = add / edit transaction (toggle_panel())
-    toggle_panel: function(type, id_edit) {
-      var self = this;
-      type = (typeof type == 'undefined') ? 'add' : type;
-
-      if (self.$panel != null && self.$panel.length > 0) {
-        // Display/Hide panel
-        kakeibo.$body.toggleClass('app-panel--transaction-form--show');
-        self.$panel.removeClass('-is-edit');
-
-        // Load transaction data into form on edit
-        if (type == 'edit') {
-          id_edit = parseInt(id_edit);
-
-          if (id_edit > 0) {
-            self.$panel.addClass('-is-loading')
-              .addClass('-is-edit');
-
-            // load transaction data & fill form with them
-            self.load(id_edit, function(r) {
-              kakeibo.forms.fill('transaction', r.entity);
-              self.$panel.removeClass('-is-loading');
-            });
-          } else {
-            console.warn('[transaction.toggle_panel] invalid ID transaction, something went wrong...');
-          }
-        } else if (type == 'close') {
-          // Clear <form>
-          kakeibo.forms.clear('transaction');
-        }
-      } else {
-        // console.warn('Must define a valid kakeibo.$transaction');
-      }
     }
   },
   forms : {
@@ -521,9 +478,26 @@ var kakeibo = {
     init : function() {
       var self = this;
       this.$items = kakeibo.$body.find('form');
+      this.$modals = kakeibo.$body.find('.modal-manage-entity');
+
+      // EVENT:MODAL SHOW: Load entity (edit) or not (add) in form when opening the modal
+      this.$modals.on('show.bs.modal', function (e) {
+        var $modal = $(this);
+        var $btn_clicked = $(e.relatedTarget);
+        var id_edit = typeof $btn_clicked.data('id-edit') != 'undefined' ? $btn_clicked.data('id-edit') : null;
+        var type = id_edit != null && id_edit > 0 ? 'edit' : 'add';
+
+        self.toggle_modal($modal, type, id_edit);
+      });
+      // EVENT:MODAL HIDDEN: Reset form in the modal
+      this.$modals.on('hidden.bs.modal', function (e) {
+        var $form = $(this).find('form');
+        self.clear($form.attr('name'));
+      });
 
       // EVENT:AJAX SUBMIT
       this.$items.filter('.-use-ajax-submit').on('submit', function(e) {
+        // console.log('[forms:ajax-submit]', e);
         self.submit(this);
 
         e.stopPropagation();
@@ -535,9 +509,15 @@ var kakeibo = {
       this.$items.find('[data-form-default-value]').each(function() {
         $(this).val($(this).attr('data-form-default-value'));
       });
+
+      // To auto-close modal on form submit
+      this.$items.on('click', '.-modal-stay-open', function() {
+          $(this).parents('form').addClass('-modal-stay-open');
+      });
     },
     // ajax submit
     submit : function(form) {
+      var self      = this;
       var $form     = $(form);
       var form_name = $form.attr('name');
       var is_edit   = $form.find('#' + form_name + '_id').length > 0;
@@ -547,9 +527,20 @@ var kakeibo = {
         url     : $form.attr('action'),
         data    : $form.serialize(),
         success : function(r) {
+          var keep_modal = $form.hasClass('-modal-stay-open');
+
           // Call entity updater
-          if (typeof kakeibo[form_name]['after_update'] != 'undefined')
+          if (typeof kakeibo[form_name]['after_update'] != 'undefined') {
             kakeibo[form_name]['after_update'](r, is_edit);
+          }
+
+          // Clear <form>
+          self.clear(form_name);
+
+          // Auto-close modal if exists
+          if ($form.parents('.modal-manage-entity').length == 1 && keep_modal == false) {
+            self.toggle_modal($form.parents('.modal-manage-entity'), 'close');
+          }
         },
         error   : function() { /* TODO */ }
       })
@@ -597,6 +588,46 @@ var kakeibo = {
 
       // Clear inputs (TODO)
       // console.log('TODO full clear form !');
+
+      $form.removeClass('-auto-close');
+    },
+    toggle_modal: function($modal, type, id_edit) {
+      var self = this;
+      var $form = $modal.find('form');
+      var form_name = $form.attr('name');
+      type = (typeof type == 'undefined') ? 'add' : type;
+
+      // console.log('[forms:toggle_modal]', $modal, type, id_edit, form_name);
+
+      if ($modal != null && $modal.length > 0) {
+        // Reset modal CSS classes
+        $modal.removeClass('-is-edit');
+
+        // Load entity data into form on edit
+        if (type == 'edit') {
+          id_edit = parseInt(id_edit);
+
+          if (id_edit > 0) {
+            $modal.addClass('-is-loading')
+              .addClass('-is-edit');
+
+            // load entity data & fill form with them
+            if (typeof kakeibo[form_name]['load'] != 'undefined') {
+              kakeibo[form_name]['load'](id_edit, function(r) {
+                self.fill(form_name, r.entity);
+                $modal.removeClass('-is-loading');
+              });
+            } else {
+              $modal.removeClass('-is-loading');
+              console.warn('[forms.toggle_modal] can\'t find the method to load entity data in order to fill the form !');
+            }
+          } else {
+            console.warn('[forms.toggle_modal] invalid entity ID, something went wrong...');
+          }
+        } else if (type == 'close') {
+          $modal.modal('hide');
+        }
+      }
     }
   },
   // Loader
@@ -670,8 +701,6 @@ var kakeibo = {
 
         $btn_clicked = $(e.relatedTarget);
 
-        console.log($btn_clicked, $btn_confirm);
-
         // Check if the confirm[data-href] is defined
         if (typeof $btn_clicked.data('confirm-href') != 'undefined') {
           // Reset modal body and set body if defined
@@ -722,10 +751,6 @@ var kakeibo = {
     this.$trans_form_import = this.forms.$items.filter('.form-trans-import');
     this.$trans_form_import.on('change', '.first-import-file', function() {
       self.$trans_form_import.submit();
-    });
-    // Close panel on click on loader >>> TODO change by a click on a "mask" !!
-    this.$body.on('click', '.app-loader', function() {
-      self.transaction.toggle_panel('close');
     });
 
     // ====================================

@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 // Forms
-// use App\Form\TransactionType;
+use App\Form\TransactionType;
 
 // Entities
 use App\Entity\Transaction;
@@ -48,8 +48,8 @@ class StatisticsController extends AbstractController
         $r_trans  = $em->getRepository(Transaction::class);
 
         // Build the transaction form
-        // $trans_entity = new Transaction();
-        // $trans_form   = $this->createForm(TransactionType::class, $trans_entity);
+        $trans_entity = new Transaction();
+        $trans_form   = $this->createForm(TransactionType::class, $trans_entity);
 
         // Get totals
         $total_incomes  = (float) $r_trans->findTotal($default_bank_account, $date_start, $date_end, 'incomes');
@@ -153,7 +153,7 @@ class StatisticsController extends AbstractController
             'total_incomes_by_cats'   => $total_incomes_by_cats,
             'total_expenses_by_date'  => $total_expenses_by_date,
             'total_expenses_by_cats'  => $total_expenses_by_cats,
-            // 'form_transaction'        => $trans_form->createView(),
+            'form_transaction'        => $trans_form->createView(),
         ]);
     }
 

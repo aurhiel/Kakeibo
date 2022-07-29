@@ -1,0 +1,29 @@
+// Modal
+//
+
+.modal-manage-entity {
+  &.-is-loading {
+    > form {
+      pointer-events: none;
+    }
+  }
+
+  .d-edit-block,
+  .d-edit-inline-block {
+    display: none;
+  }
+
+  &.-is-edit {
+    .d-add-block,
+    .d-add-inline-block,
+    .d-edit-none {
+      display: none;
+    }
+    .d-edit-block {
+      display: block;
+    }
+    .d-edit-inline-block {
+      display: inline-block;
+    }
+  }
+}

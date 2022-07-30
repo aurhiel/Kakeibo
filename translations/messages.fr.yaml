@@ -208,7 +208,6 @@ page :
       last_user :
         label : "Dernier&middot;ère utilisateur&middot;rice inscrit&middot;e"
 
-
 ## BLOCKS
 block :
   inc_exp :
@@ -223,7 +222,6 @@ block :
     default_title   : "Liste des transactions"
     total_text      : "Total de <b>%amount%</b> transaction%plural%"
     empty           : "Aucune transaction à afficher"
-
 
 ## FORMS
 form :
@@ -261,7 +259,6 @@ form_user :
     label : "Droits"
   is_active :
     label : "Actif(ve)"
-
 # Form bank account
 form_bank_account :
   label :
@@ -272,7 +269,15 @@ form_bank_account :
     placeholder :  "Choisissez un établissement"
   currency :
     label :        "Monnaie"
-
+# Form category
+form_category :
+  label :
+    label       : "Intitulé de la catégorie"
+    placeholder : "ex: Restaurant, Cinéma, ..."
+  icon :
+    label       : "Icône"
+  color :
+    label       : "Couleur"
 # Form transaction
 form_transaction :
   label :
@@ -286,7 +291,6 @@ form_transaction :
   category :
     label       : "Catégorie"
     placeholder : "Choisissez une catégorie"
-
 # Form transaction auto
 form_trans_auto :
   # Messages status
@@ -313,3 +317,43 @@ form_trans_auto :
   category :
     label       : "Catégorie"
     placeholder : "Choisissez une catégorie"
+
+## CATEGORY
+category:
+  icons:
+    paint: "Rouleau à peinture"
+    security: "Sécurité"
+    smartphone: "Smartphone"
+    tablet: "Tablette"
+    laptop: "Portable"
+    desktop: "Ordinateur"
+    travel-car: "Voiture"
+    travel-bus: "Bus"
+    train: "Train"
+    gas-station: "Station essence"
+    ev-station: "Station électrique"
+    flight-takeoff: "Avion décollage"
+    earth: "Terre"
+    donation: "Donation"
+    housing: "Maison"
+    store: "Magasin"
+    bank: "Banque"
+    gavel: "Justice"
+    hospital: "Hopital"
+    construction: "Construction"
+    hammer: "Marteau"
+    cases: "Malettes"
+    wallet: "Porte-feuille"
+    credit-card: "Carte de crédit"
+    cart: "Caddie"
+    pets: "Animaux"
+    clothes: "Vêtements"
+    hairdresser: "Coiffeur"
+    spa: "SPA"
+    smoking: "Cigarette"
+    nightlife: "Soirée"
+    gaming: "Jeu-vidéo"
+    gift: "Cadeau"
+    cake: "Gâteau"
+    fastfood: "Fast-food"
+    food: "Nourriture"

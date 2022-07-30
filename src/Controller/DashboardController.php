@@ -4,9 +4,11 @@ namespace App\Controller;
 
 // Forms
 use App\Form\TransactionType;
+use App\Form\CategoryType;
 
 // Entities
 use App\Entity\Transaction;
+use App\Entity\Category;
 
 // Components
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,6 +32,9 @@ class DashboardController extends AbstractController
      */
     public function index(Security $security, Request $request, TranslatorInterface $translator)
     {
+        /**
+         * @var User $user
+         */
         $user = $security->getUser();
 
         // Force user to create at least ONE bank account !
@@ -47,7 +52,14 @@ class DashboardController extends AbstractController
         $trans_entity = new Transaction($user);
         $trans_form   = $this->createForm(TransactionType::class, $trans_entity);
 
+        // Build the transaction form
+        $cat_entity = new Category();
+        $cat_form   = $this->createForm(CategoryType::class, $cat_entity);
+
         $em = $this->getDoctrine()->getManager();
+        /**
+         * @var TransactionRepository $r_trans
+         */
         $r_trans  = $em->getRepository(Transaction::class);
         $last_trans = $r_trans->findLastByBankAccount($default_bank_account, self::NB_LAST_TRANS);
 
@@ -85,7 +97,8 @@ class DashboardController extends AbstractController
             'total_expenses'        => $total_expenses,
             'total_incomes_by_cats'   => $total_incomes_by_cats,
             'total_expenses_by_cats'  => $total_expenses_by_cats,
-            'form_transaction'      => $trans_form->createView()
+            'form_transaction'  => $trans_form->createView(),
+            'form_category'     => $cat_form->createView()
         ]);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 // Forms
 use App\Form\TransactionType;
+use App\Form\CategoryType;
 
 // Entities
 use App\Entity\Transaction;
@@ -30,22 +31,28 @@ class TransactionsController extends AbstractController
      */
     public function manage(Security $security, Request $request)
     {
-        $user     = $security->getUser();
-        $em       = $this->getDoctrine()->getManager();
-        $r_trans  = $em->getRepository(Transaction::class);
+        /**
+         * @var User $user
+         */
+        $user = $security->getUser();
+        $em = $this->getDoctrine()->getManager();
+        /**
+         * @var TransactionRepository $r_trans
+         */
+        $r_trans = $em->getRepository(Transaction::class);
         $id_trans = (int) $request->request->get('id');
-        $is_edit  = (!empty($id_trans) && $id_trans > 0); // Edit transaction ?
+        $is_edit = (!empty($id_trans) && $id_trans > 0); // Edit transaction ?
 
         if($is_edit) {
             // Get transaction to edit with id AND user (for security)
-            $trans_entity   = $r_trans->findOneByIdAndUser($id_trans, $user);
+            $trans_entity = $r_trans->findOneByIdAndUser($id_trans, $user);
             $old_trans_json = self::format_json($trans_entity);
-            $message_status_ok  = 'Modificiation de la transaction effectuée.';
+            $message_status_ok = 'Modificiation de la transaction effectuée.';
             $message_status_nok = 'Un problème est survenu lors de la modification de la transaction';
         } else {
             // New Entity
             $trans_entity = new Transaction();
-            $message_status_ok  = 'Ajout de la transaction effectuée.';
+            $message_status_ok = 'Ajout de la transaction effectuée.';
             $message_status_nok = 'Un problème est survenu lors de l\'ajout de la transaction';
         }
 
@@ -57,9 +64,9 @@ class TransactionsController extends AbstractController
         $default_bank_account = $user->getDefaultBankAccount();
         // Data to return/display
         $return_data = array(
-            'query_status'      => 0,
-            'slug_status'       => 'error',
-            'message_status'    => $message_status_nok
+            'query_status' => 0,
+            'slug_status' => 'error',
+            'message_status' => $message_status_nok
         );
 
         // 1) Build the form
@@ -81,12 +88,12 @@ class TransactionsController extends AbstractController
                 $em->flush();
 
                 $return_data = array(
-                    'query_status'    => 1,
-                    'slug_status'     => 'success',
-                    'message_status'  => $message_status_ok,
+                    'query_status' => 1,
+                    'slug_status' => 'success',
+                    'message_status' => $message_status_ok,
                     // Data
-                    'entity'                => self::format_json($trans_entity),
-                    'default_bank_account'  => self::format_json_bank_account($default_bank_account)
+                    'entity' => self::format_json($trans_entity),
+                    'default_bank_account' => self::format_json_bank_account($default_bank_account)
                 );
 
                 // Force old entity values into entity data (useful for JS edit)
@@ -116,19 +123,25 @@ class TransactionsController extends AbstractController
      */
     public function retrieve($id, Security $security, Request $request)
     {
-        $user     = $security->getUser();
-        $em       = $this->getDoctrine()->getManager();
-        $r_trans  = $em->getRepository(Transaction::class);
-        $data     = [ 'query_status' => 0, 'slug_status' => 'error', 'message_status' => 'Error...' ];
+        /**
+         * @var User $user
+         */
+        $user = $security->getUser();
+        $em = $this->getDoctrine()->getManager();
+        /**
+         * @var TransactionRepository $r_trans
+         */
+        $r_trans = $em->getRepository(Transaction::class);
+        $data = [ 'query_status' => 0, 'slug_status' => 'error', 'message_status' => 'Error...' ];
         // Retrieve transaction with id AND user (for security)
-        $trans    = $r_trans->findOneByIdAndUser($id, $user);
+        $trans = $r_trans->findOneByIdAndUser($id, $user);
 
         if (!is_null($trans)) {
             $data = [
-                'query_status'    => 1,
-                'slug_status'     => 'success',
-                'message_status'  => 'Success !',
-                'entity'          => self::format_json($trans)
+                'query_status' => 1,
+                'slug_status' => 'success',
+                'message_status' => 'Success !',
+                'entity' => self::format_json($trans)
             ];
         }
 
@@ -145,19 +158,25 @@ class TransactionsController extends AbstractController
      */
     public function delete($id, Security $security, Request $request)
     {
-        $user     = $security->getUser();
-        $em       = $this->getDoctrine()->getManager();
-        $r_trans  = $em->getRepository(Transaction::class);
+        /**
+         * @var User $user
+         */
+        $user = $security->getUser();
+        $em = $this->getDoctrine()->getManager();
+        /**
+         * @var TransactionRepository $r_trans
+         */
+        $r_trans = $em->getRepository(Transaction::class);
         // Retrieve transaction with id AND user (for security)
-        $trans    = $r_trans->findOneByIdAndUser($id, $user);
+        $trans = $r_trans->findOneByIdAndUser($id, $user);
         $return_data = [
-            'query_status'    => 0,
-            'slug_status'     => 'error',
-            'message_status'  => 'Un problème est survenu lors de la suppression de la transaction'
+            'query_status' => 0,
+            'slug_status' => 'error',
+            'message_status' => 'Un problème est survenu lors de la suppression de la transaction'
         ];
 
         if(!is_null($trans)) {
-            $trans_deleted    = $trans;
+            $trans_deleted = $trans;
             $id_trans_deleted = $trans_deleted->getId();
 
             // Remove entity
@@ -171,12 +190,12 @@ class TransactionsController extends AbstractController
                 $default_bank_account = $user->getDefaultBankAccount();
 
                 $return_data = [
-                    'query_status'    => 1,
-                    'slug_status'     => 'success',
-                    'message_status'  => 'Suppression de la transaction effectuée.',
+                    'query_status' => 1,
+                    'slug_status' => 'success',
+                    'message_status' => 'Suppression de la transaction effectuée.',
                     // Data
-                    'entity'                => [ 'id' => $id_trans_deleted ],
-                    'default_bank_account'  => self::format_json_bank_account($default_bank_account)
+                    'entity' => [ 'id' => $id_trans_deleted ],
+                    'default_bank_account' => self::format_json_bank_account($default_bank_account)
                 ];
             } catch (\Exception $e) {
                 // Something goes wrong
@@ -206,6 +225,9 @@ class TransactionsController extends AbstractController
      */
     public function index($page, Security $security, Request $request, TranslatorInterface $translator)
     {
+        /**
+         * @var User $user
+         */
         $user = $security->getUser();
 
         // Force user to create at least ONE bank account !
@@ -221,15 +243,22 @@ class TransactionsController extends AbstractController
 
         // Build the transaction form
         $trans_entity = new Transaction();
-        $trans_form   = $this->createForm(TransactionType::class, $trans_entity);
+        $trans_form = $this->createForm(TransactionType::class, $trans_entity);
 
-        $em       = $this->getDoctrine()->getManager();
-        $r_trans  = $em->getRepository(Transaction::class);
+        // Build the transaction form
+        $cat_entity = new Category();
+        $cat_form = $this->createForm(CategoryType::class, $cat_entity);
+
+        $em = $this->getDoctrine()->getManager();
+        /**
+         * @var TransactionRepository $r_trans
+         */
+        $r_trans = $em->getRepository(Transaction::class);
 
         // Get nb pages of newsletter subscribes
         $nb_transactions = $r_trans->countAllByBankAccountAndByDate($default_bank_account);
         $nb_pages_raw = ($nb_transactions / self::NB_TRANSAC_BY_PAGE);
-        $nb_pages     = floor($nb_pages_raw);
+        $nb_pages = floor($nb_pages_raw);
 
         // If there is decimal numbers,
         //  there is less than 50 subs (=self::NB_TRANSAC_BY_PAGE) to display
@@ -246,37 +275,37 @@ class TransactionsController extends AbstractController
         }
 
         // Get incomes & expenses totals
-        $total_incomes  = (float) $r_trans->findTotal($default_bank_account, null, null, 'incomes');
+        $total_incomes = (float) $r_trans->findTotal($default_bank_account, null, null, 'incomes');
         $total_expenses = (float) $r_trans->findTotal($default_bank_account, null, null, 'expenses');
 
         // Get transactions according to current page
         $transactions = $r_trans->findByBankAccountAndDateAndPage($default_bank_account, null, null, $page, self::NB_TRANSAC_BY_PAGE);
 
         // Get date start and date end
-        $date_end   = (isset($transactions[0]) && $page > 1) ? $transactions[0]->getDate()->format('Y-m-d') : null;
+        $date_end = (isset($transactions[0]) && $page > 1) ? $transactions[0]->getDate()->format('Y-m-d') : null;
         $date_start = (count($transactions) > 1) ? $transactions[count($transactions)-1]->getDate()->format('Y-m-d') : null;
 
         return $this->render('transactions/index.html.twig', [
-            'page_title'            => '<span class="icon icon-list"></span> ' . $translator->trans('page.transactions.title'),
-            'meta'                  => [ 'title' => $translator->trans('page.transactions.title') ],
-            'core_class'            => 'app-core--transactions app-core--merge-body-in-header',
-            // 'stylesheets'           => [ 'kb-dashboard.css' ],
-            // 'scripts'               => [ 'kb-dashboard.js' ],
-            'user'                  => $user,
-            'transactions'          => $transactions,
-            'date_start'            => $date_start,
-            'date_end'              => $date_end,
-            'limit_max'             => self::NB_TRANSAC_BY_PAGE,
-            'nb_transactions'       => $nb_transactions,
-            'current_page'          => $page,
-            'nb_pages'              => $nb_pages,
-            'nb_by_page'            => self::NB_TRANSAC_BY_PAGE,
-            'total_incomes'         => $total_incomes,
-            'total_expenses'        => $total_expenses,
-            'form_transaction'      => $trans_form->createView()
+            'page_title'        => '<span class="icon icon-list"></span> ' . $translator->trans('page.transactions.title'),
+            'meta'              => [ 'title' => $translator->trans('page.transactions.title') ],
+            'core_class'        => 'app-core--transactions app-core--merge-body-in-header',
+            // 'stylesheets'       => [ 'kb-dashboard.css' ],
+            // 'scripts'           => [ 'kb-dashboard.js' ],
+            'user'              => $user,
+            'transactions'      => $transactions,
+            'date_start'        => $date_start,
+            'date_end'          => $date_end,
+            'limit_max'         => self::NB_TRANSAC_BY_PAGE,
+            'nb_transactions'   => $nb_transactions,
+            'current_page'      => $page,
+            'nb_pages'          => $nb_pages,
+            'nb_by_page'        => self::NB_TRANSAC_BY_PAGE,
+            'total_incomes'     => $total_incomes,
+            'total_expenses'    => $total_expenses,
+            'form_transaction'  => $trans_form->createView(),
+            'form_category'     => $cat_form->createView(),
         ]);
     }
-
 
     /**
      * @Route("/trans/import-csv", name="transaction_import_csv")
@@ -286,6 +315,9 @@ class TransactionsController extends AbstractController
      */
     public function import_csv(Security $security, Request $request)
     {
+        /**
+         * @var User $user
+         */
         $user = $security->getUser();
 
         // Force user to create at least ONE bank account !

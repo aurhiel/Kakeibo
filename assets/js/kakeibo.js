@@ -183,6 +183,10 @@ var kakeibo = {
       this.$creation_center.on('click', '.btn-toggler', function() {
         self.toggle();
       });
+      this.$creation_center.on('dblclick', '.btn-toggler', function() {
+        kakeibo.forms.$modals.filter('#modal-manage-transaction').modal('show');
+        self.toggle(false);
+      });
       this.$creation_center.on('click', '.list-actions .btn', function() {
         self.toggle(false);
       });
@@ -475,6 +479,7 @@ var kakeibo = {
   },
   forms : {
     $items : null,
+    $modals : null,
     init : function() {
       var self = this;
       this.$items = kakeibo.$body.find('form');
@@ -530,7 +535,7 @@ var kakeibo = {
           var keep_modal = $form.hasClass('-modal-stay-open');
 
           // Call entity updater
-          if (typeof kakeibo[form_name]['after_update'] != 'undefined') {
+          if (typeof kakeibo[form_name] != 'undefined' && typeof kakeibo[form_name]['after_update'] != 'undefined') {
             kakeibo[form_name]['after_update'](r, is_edit);
           }
 

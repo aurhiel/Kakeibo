@@ -145,7 +145,6 @@ page :
       last_user :
         label : "Last registered user"
 
-
 ## BLOCKS
 block :
   inc_exp :
@@ -160,7 +159,6 @@ block :
     default_title   : "Transactions list"
     total_text      : "<b>%amount%</b> transaction%plural% in total"
     empty           : "No transaction to display"
-
 
 ## FORMS
 form :
@@ -199,32 +197,38 @@ form_user :
     label : "Rights"
   is_active :
     label : "Active"
-
 # Form bank account
 form_bank_account :
   label :
     label       : "Bank account title"
-    placeholder : "ex: Checking account"
+    placeholder : "eg. Checking account"
   bank_brand :
     label       : "Banking establishment"
     placeholder : "Choose an establishment"
   currency :
     label       : "Currency"
-
+# Form category
+form_category :
+  label :
+    label       : "Title of the category"
+    placeholder : "eg. Restaurant, Cinema, ..."
+  icon :
+    label       : "Icon"
+  color :
+    label       : "Color"
 # Form transaction
 form_transaction :
   label :
     label       : "Title of the transaction"
-    placeholder : "ex: Market shopping"
+    placeholder : "eg. Market shopping"
   amount :
     label       : "Amount"
-    placeholder : "ex: 256,52"
+    placeholder : "eg. 256,52"
   date :
     label       : "Date of the transaction"
   category :
     label       : "Category"
     placeholder : "Choose a category"
-
 # Form transaction auto
 form_trans_auto :
   status :
@@ -238,10 +242,10 @@ form_trans_auto :
     delete_unknown_entity : "No recurrent transaction exists for this ID."
   label :
     label       : "Title of the recurrent transaction"
-    placeholder : "ex: Rent, Insurance, ..."
+    placeholder : "eg. Rent, Insurance, ..."
   amount :
     label       : "Amount"
-    placeholder : "ex: 560,48"
+    placeholder : "eg. 560,48"
   repeat_type :
     label       : "Recurrence Type"
   date_start :
@@ -249,3 +253,43 @@ form_trans_auto :
   category :
     label       : "Category"
     placeholder : "Choose a category"
+
+## CATEGORY
+category:
+  icons:
+    paint: "Painting brush"
+    security: "Security"
+    smartphone: "Smartphone"
+    tablet: "Tablet"
+    laptop: "Laptop"
+    desktop: "Desktop"
+    travel-car: "Car"
+    travel-bus: "Bus"
+    train: "Train"
+    gas-station: "Gas Station"
+    ev-station: "EV Station"
+    flight-takeoff: "Flight Takeoff"
+    earth: "Earth"
+    donation: "Donation"
+    housing: "Housing"
+    store: "Store"
+    bank: "Bank"
+    gavel: "Gavel"
+    hospital: "Hospital"
+    construction: "Construction"
+    hammer: "Hammer"
+    cases: "Cases"
+    wallet: "Wallet"
+    credit-card: "Credit Card"
+    cart: "Cart"
+    pets: "Pets"
+    clothes: "Clothes"
+    hairdresser: "Hairdresser"
+    spa: "SPA"
+    smoking: "Smoking"
+    nightlife: "Nightlife"
+    gaming: "Gaming"
+    gift: "Gift"
+    cake: "Cake"
+    fastfood: "Fastfood"
+    food: "Food"

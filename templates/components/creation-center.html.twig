@@ -13,14 +13,16 @@
       <ul class="list-actions">
       {% if has_action_bank_account %}
         <li class="-item">
-          <button class="{{ btn_actions_class }}">
+          <button class="{{ btn_actions_class }}" type="button" name="display-modal-bank-account" 
+            data-toggle="modal" data-target="#modal-manage-bank-account">
             <span class="icon icon-folder-plus text-primary mr-1"></span> Ajouter compte
           </button>
         </li>
       {% endif %}
       {% if has_action_category %}
         <li class="-item">
-          <button class="{{ btn_actions_class }}">
+          <button class="{{ btn_actions_class }}" type="button" name="display-modal-category" 
+            data-toggle="modal" data-target="#modal-manage-category">
             <span class="icon icon-tag text-primary mr-1"></span> Ajouter catégorie
           </button>
         </li>
@@ -38,9 +40,11 @@
     </div>
   </div>
 
-
-  {# Add modal to add/edit transaction ONLY IF transaction form is defined #}
   {% if has_action_transaction %}
     {% include 'components/modals/manage-transaction.html.twig' %}
+  {% endif %}
+
+  {% if has_action_category %}
+    {% include 'components/modals/manage-category.html.twig' %}
   {% endif %}
 {% endif %}

@@ -4,9 +4,11 @@ namespace App\Controller;
 
 // Forms
 use App\Form\TransactionType;
+use App\Form\CategoryType;
 
 // Entities
 use App\Entity\Transaction;
+use App\Entity\Category;
 
 // Components
 use Symfony\Component\HttpFoundation\Request;
@@ -28,6 +30,9 @@ class StatisticsController extends AbstractController
      */
     public function index($date_start, $date_end, Security $security, Request $request, TranslatorInterface $translator)
     {
+        /**
+         * @var User $user
+         */
         $user = $security->getUser();
 
         // Force user to create at least ONE bank account !
@@ -41,18 +46,25 @@ class StatisticsController extends AbstractController
         }
 
         // Default values/params
-        $is_now     = ($date_start == 'current' && $date_end == 'current');
+        $is_now = ($date_start == 'current' && $date_end == 'current');
         $date_start = ($date_start == 'current') ? date('Y-m-01') : $date_start;
-        $date_end   = ($date_end == 'current') ? date('Y-m-t') : $date_end;
-        $em       = $this->getDoctrine()->getManager();
-        $r_trans  = $em->getRepository(Transaction::class);
+        $date_end = ($date_end == 'current') ? date('Y-m-t') : $date_end;
+        $em = $this->getDoctrine()->getManager();
+        /**
+         * @var TransactionRepository $r_trans
+         */
+        $r_trans = $em->getRepository(Transaction::class);
 
         // Build the transaction form
         $trans_entity = new Transaction();
-        $trans_form   = $this->createForm(TransactionType::class, $trans_entity);
+        $trans_form = $this->createForm(TransactionType::class, $trans_entity);
+
+        // Build the transaction form
+        $cat_entity = new Category();
+        $cat_form = $this->createForm(CategoryType::class, $cat_entity);
 
         // Get totals
-        $total_incomes  = (float) $r_trans->findTotal($default_bank_account, $date_start, $date_end, 'incomes');
+        $total_incomes = (float) $r_trans->findTotal($default_bank_account, $date_start, $date_end, 'incomes');
         $total_expenses = (float) $r_trans->findTotal($default_bank_account, $date_start, $date_end, 'expenses');
 
         // Get transactions according to current page
@@ -66,8 +78,8 @@ class StatisticsController extends AbstractController
             if (!empty($last_transaction) && isset($last_transaction[0])) {
                 $last_transaction = $last_transaction[0];
                 return $this->redirectToRoute('statistics', [
-                    'date_start'  => $last_transaction->getDate()->format('Y-m-01'),
-                    'date_end'    => $last_transaction->getDate()->format('Y-m-t'),
+                    'date_start' => $last_transaction->getDate()->format('Y-m-01'),
+                    'date_end' => $last_transaction->getDate()->format('Y-m-t'),
                 ]);
             }
         }
@@ -86,9 +98,9 @@ class StatisticsController extends AbstractController
 
         // Get period selected type (monthly, yearly or custom)
         //    & create previous + next links
-        $period_type  = 'custom';
-        $prev_link    = $next_link = null;
-        $prev_date    = $next_date = null;
+        $period_type = 'custom';
+        $prev_link = $next_link = null;
+        $prev_date = $next_date = null;
         if ($date_start != 'current' && $date_end != 'current') {
             // Split date start & end into few variables
             list($st_year, $st_month, $st_day)    = explode('-', $date_start);
@@ -113,19 +125,19 @@ class StatisticsController extends AbstractController
                     if ($nb_prev_trans > 0) {
                         $prev_date_start = date('Y-m-d', strtotime('first day of -1 '. $search_period, strtotime($date_start)));
                         $prev_link = $this->generateUrl('statistics', [
-                            'date_start'  => $prev_date_start,
-                            'date_end'    => $prev_date_end
+                            'date_start' => $prev_date_start,
+                            'date_end' => $prev_date_end
                         ]);
                         $prev_date = $prev_date_start;
                     }
                     //  & check next transactions and create link
-                    $next_date_start  = date('Y-m-d', strtotime('first day of +1 '. $search_period, strtotime($date_start)));
-                    $nb_next_trans    = (int)$r_trans->countAllByBankAccountAndByDate($default_bank_account, $next_date_start, null);
+                    $next_date_start = date('Y-m-d', strtotime('first day of +1 '. $search_period, strtotime($date_start)));
+                    $nb_next_trans = (int)$r_trans->countAllByBankAccountAndByDate($default_bank_account, $next_date_start, null);
                     if ($nb_next_trans > 0) {
                         $next_date_end = date('Y-m-d', strtotime('last day of +1 '. $search_period, strtotime($date_end)));
                         $next_link = $this->generateUrl('statistics', [
-                            'date_start'  => $next_date_start,
-                            'date_end'    => $next_date_end
+                            'date_start' => $next_date_start,
+                            'date_end' => $next_date_end
                         ]);
                         $next_date = $next_date_start;
                     }
@@ -154,14 +166,16 @@ class StatisticsController extends AbstractController
             'total_expenses_by_date'  => $total_expenses_by_date,
             'total_expenses_by_cats'  => $total_expenses_by_cats,
             'form_transaction'        => $trans_form->createView(),
+            'form_category'           => $cat_form->createView(),
         ]);
     }
 
     private static function reindexByDate($transactions)
     {
         $tmp = array();
-        foreach ($transactions as $trans)
+        foreach ($transactions as $trans) {
             $tmp[$trans['date']->format('Y-m-d')] = $trans;
+        }
 
         return $tmp;
     }
@@ -169,8 +183,9 @@ class StatisticsController extends AbstractController
     private static function completeEmptyDate(&$transactions, $completer)
     {
         foreach ($completer as $date => $comp) {
-            if (!isset($transactions[$date]))
+            if (!isset($transactions[$date])) {
                 $transactions[$date] = array('amount_sum' => 0, 'date' => $date);
+            }
         }
 
         ksort($transactions);

@@ -1,0 +1,21 @@
+<div class="form-row">
+  <div class="col-12 mb-3">
+    {{ form_label(form_category.label) }}
+    {{ form_widget(form_category.label) }}
+    {{ form_errors(form_category.label) }}
+  </div>
+</div>
+
+<div class="form-row">
+  <div class="col-sm-3 col-md-4 mb-3">
+    {{ form_label(form_category.color) }}
+    {{ form_widget(form_category.color) }}
+    {{ form_errors(form_category.color) }}
+  </div>
+
+  <div class="col-sm-9 col-md-8 mb-3">
+    {{ form_label(form_category.icon) }}
+    {{ form_widget(form_category.icon) }}
+    {{ form_errors(form_category.icon) }}
+  </div>
+</div>

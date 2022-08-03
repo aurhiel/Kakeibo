@@ -11,7 +11,7 @@
     overflow: auto;
     &.-no-scroll {
       overflow: initial !important;
-      max-height: auto !important;
+      max-height: 100% !important;
     }
   }
 

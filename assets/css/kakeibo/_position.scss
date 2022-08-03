@@ -1,0 +1,28 @@
+// Position
+//
+
+
+@each $size, $length in $spacers {
+  .top-#{$size} {
+    top: $length !important;
+  }
+}
+
+
+//
+// Responsive
+//
+
+@each $breakpoint in map-keys($grid-breakpoints) {
+  @include media-breakpoint-up($breakpoint) {
+    .position-#{$breakpoint}-sticky {
+      position: sticky !important;
+    }
+
+    @each $size, $length in $spacers {
+      .top-#{$breakpoint}-#{$size} {
+        top: $length !important;
+      }
+    }
+  }
+}

@@ -3,7 +3,7 @@
 {% block body %}
 <div class="container">
   <div class="row">
-    <div class="col-12 col-lg-6 col-xl-5 mb-3 mb-lg-0 order-lg-last">
+    <div class="col-12 col-lg-6 col-xl-5 mb-3 mb-lg-0 order-lg-last align-self-start position-lg-sticky top-lg-3">
       <div class="card">
         <div class="card-header">
         {% if is_trans_auto_edit == true %}
@@ -37,7 +37,7 @@
           <h3 class="h4 mb-0">{{ 'page.trans_auto.list.title'|trans }}</h3>
         </div>#}
         {% if trans_auto is not empty %}
-          <div class="list-transactions py-1">
+          <div class="list-transactions -no-scroll py-1">
           {% for ta in trans_auto %}
             <div class="-item -item-transac" data-kb-id-transaction="{{ ta.id }}">
               {# TRANS:CATEGORY/ICON & COLOR #}

@@ -140,10 +140,10 @@
   <div class="container">
     <div class="row">
       <div class="col-12 {% if total_expenses_by_cats is not empty or total_incomes_by_cats is not empty %}col-md-7{% endif %}">
-        {% include 'components/transactions/list.html.twig' %}
+        {% include 'components/transactions/list.html.twig' with { no_scroll: true } %}
       </div>
       {% if total_expenses_by_cats is not empty or total_incomes_by_cats is not empty %}
-        <div class="col-12 col-md-5">
+        <div class="col-12 col-md-5 align-self-start position-md-sticky top-md-3">
           <div class="card d-none d-md-block charts-trans-by-cats">
             <div class="card-header d-flex align-items-center">
               <h3 class="h5 mb-0">{{ 'page.statistics.chart_exp_inc.title'|trans }}</h3>

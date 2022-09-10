@@ -546,6 +546,7 @@ var kakeibo = {
           if ($form.parents('.modal-manage-entity').length == 1 && keep_modal == false) {
             self.toggle_modal($form.parents('.modal-manage-entity'), 'close');
           }
+          $form.removeClass('-modal-stay-open');
         },
         error   : function() { /* TODO */ }
       })

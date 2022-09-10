@@ -52,6 +52,10 @@ html, body {
   transition:
     opacity $animation-duration*1.5 ease $animation-duration/2,
     top $animation-duration*1.5 ease;
+
+  &.vertical-container {
+    padding: 0;
+  }
 }
 
 .app-loader {

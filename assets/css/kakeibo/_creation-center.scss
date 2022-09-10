@@ -1,6 +1,7 @@
 // Creation center, bottom right button to create new entities
 //
 
+$cc-drop-shadow-size: 24rem;
 
 .app-creation-center {
   text-align: right;
@@ -12,6 +13,12 @@
   pointer-events: none;
 
   &.show {
+    .btn-toggler {
+      &:after {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
     .list-actions {
       opacity: 1;
       pointer-events: auto;
@@ -32,12 +39,35 @@
     border-radius: 50%;
     padding: 1rem;
     pointer-events: auto;
+    height: 4rem;
+    width: 4rem;
+    position: relative;
+    
+    // Drop-shadow on active
+    &:after {
+      content: '';
+      background-color: rgba(0, 0, 0, 0.1);
+      position: absolute;
+      z-index: -1;
+      top: 50%;
+      left: 50%;
+      margin-top: -$cc-drop-shadow-size / 2;
+      margin-left: -$cc-drop-shadow-size / 2;
+      height: $cc-drop-shadow-size;
+      width: $cc-drop-shadow-size;
+      border-radius: 50%;
+      transform: scale(.8);
+      opacity: 0;
+      transition: transform $animation-duration ease,
+        opacity $animation-duration ease;
+      pointer-events: none;
+    }
 
     .icon {
       display: inline-block;
       vertical-align: middle;
-      height: 1.4rem;
-      width: 1.4rem;
+      height: 1.5rem;
+      width: 1.5rem;
     }
   }
 

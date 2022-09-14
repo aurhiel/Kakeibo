@@ -1,0 +1,10 @@
+// Forms
+//
+
+form {
+  &.-is-loading, &.-is-submitted {
+    opacity: .75;
+    filter: grayscale(1);
+    pointer-events: none;
+  }
+}

@@ -177,7 +177,7 @@ class TransactionsController extends AbstractController
 
         if(!is_null($trans)) {
             $trans_deleted = $trans;
-            $id_trans_deleted = $trans_deleted->getId();
+            $trans_deleted_json = self::format_json($trans_deleted);
 
             // Remove entity
             $em->remove($trans);
@@ -194,9 +194,11 @@ class TransactionsController extends AbstractController
                     'slug_status' => 'success',
                     'message_status' => 'Suppression de la transaction effectuée.',
                     // Data
-                    'entity' => [ 'id' => $id_trans_deleted ],
+                    'entity' => $trans_deleted_json,
                     'default_bank_account' => self::format_json_bank_account($default_bank_account)
                 ];
+                $return_data['entity']['amount'] = 0;
+                $return_data['entity']['old'] = $trans_deleted_json;
             } catch (\Exception $e) {
                 // Something goes wrong
                 $em->clear();

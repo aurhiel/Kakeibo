@@ -24,27 +24,28 @@
 // Kakeibo
 //
 
+// Bootstrap libs
 @import 'kakeibo/reboot';
+@import 'kakeibo/type';
+@import 'kakeibo/grid';
+@import "kakeibo/forms";
+@import 'kakeibo/buttons';
+@import 'kakeibo/dropdown';
+@import 'kakeibo/navbar';
+@import 'kakeibo/card';
+@import 'kakeibo/modal';
+@import 'kakeibo/tooltip';
+@import 'kakeibo/utilities';
+// Main Theme libs
 @import 'kakeibo/core';
 @import 'kakeibo/header';
-@import 'kakeibo/buttons';
-@import 'kakeibo/card';
-@import 'kakeibo/grid';
-@import 'kakeibo/type';
 @import 'kakeibo/brand';
 @import 'kakeibo/avatar';
 @import 'kakeibo/lists';
-@import 'kakeibo/navbar';
-@import 'kakeibo/modal';
 @import 'kakeibo/more-dots';
-@import 'kakeibo/position';
 @import 'kakeibo/creation-center';
-@import 'kakeibo/dropdown';
-@import 'kakeibo/sizing';
-@import 'kakeibo/tooltip';
 @import 'kakeibo/chartjs';
 @import 'kakeibo/footer';
-@import 'kakeibo/utilities';
 // Specific pages styles
 @import 'kakeibo/page-login';
 @import 'kakeibo/page-register';

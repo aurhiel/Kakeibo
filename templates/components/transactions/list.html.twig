@@ -60,8 +60,9 @@
                 </button>
               {% endif %}
               <button class="dropdown-item" type="button" data-confirm-href="{{ path('transaction_delete', { id: transac.id }) }}"
-                data-confirm-body="Êtes-vous sûr de vouloir supprimer la transaction : <br><b>&laquo;&nbsp;{{ transac.label }}&nbsp;&raquo;</b> ?"
-                  data-toggle="modal" data-target="#modal-confirm-delete">
+                data-entity-name="transaction" data-entity-id="{{ transac.id }}"
+                  data-confirm-body="Êtes-vous sûr de vouloir supprimer la transaction : <br><b>&laquo;&nbsp;{{ transac.label }}&nbsp;&raquo;</b> ?"
+                    data-toggle="modal" data-target="#modal-confirm-delete">
                 Supprimer <span class="ml-1 icon icon-trash"></span>
               </button>
             </div>

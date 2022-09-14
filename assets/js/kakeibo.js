@@ -215,17 +215,17 @@ var kakeibo = {
         }
       });
     },
-    delete: function() {
-      console.log('[transaction:delete]');
-      // $.ajax({
-      //   url     : this.url_delete + id_trans,
-      //   success : function(response) {
-      //     callback(response);
-      //   },
-      //   error   : function(response) {
-      //     console.warn(response);
-      //   }
-      // });
+    delete: function(id_trans, callback) {
+      // console.log('[transaction:delete]');
+      var self = this;
+      $.ajax({
+        url     : this.url_delete + id_trans,
+        success : function(response) {
+          self.after_delete(response);
+          callback(response);
+        },
+        error   : function(response) { /* TODO */ }
+      });
     },
     create_item_date_row: function(date) {
       var date_obj = new Date(date);
@@ -344,8 +344,9 @@ var kakeibo = {
                   '<div class="dropdown-menu dropdown-menu-right text-right">' +
                     btn_edit +
                     '<button class="dropdown-item" type="button" data-confirm-href="' + url_delete + transaction.id + '"' +
-                      'data-confirm-body="Êtes-vous sûr de vouloir supprimer la transaction : <br><b>&laquo;&nbsp;' + transaction.label + '&nbsp;&raquo;</b> ?"' +
-                        'data-toggle="modal" data-target="#modal-confirm-delete">' +
+                      'data-entity-name="transaction" data-entity-id="' + transaction.id + '"' +
+                        'data-confirm-body="Êtes-vous sûr de vouloir supprimer la transaction : <br><b>&laquo;&nbsp;' + transaction.label + '&nbsp;&raquo;</b> ?"' +
+                          'data-toggle="modal" data-target="#modal-confirm-delete">' +
                       'Supprimer <span class="ml-1 icon icon-trash"></span>' +
                     '</button>' +
                   '</div>' +
@@ -408,13 +409,25 @@ var kakeibo = {
     },
     after_update: function(data, is_edit) {
       // console.log('[transaction.after_update]', data, is_edit);
-
       var bank_account  = data.default_bank_account;
       var currency      = bank_account.currency_entity;
       var transaction   = data.entity;
 
       // Manage transaction in list & co
       this.manage(transaction, bank_account, is_edit);
+
+      // Manage amounts (balance, totals expenses & incomes)
+      this.update_balance(bank_account.balance, currency);
+      this.update_exp_and_inc(transaction, currency);
+    },
+    after_delete: function(data) {
+      // console.log('[transaction.after_delete]', data);
+      var bank_account = data.default_bank_account;
+      var currency = bank_account.currency_entity;
+      var transaction = data.entity;
+
+      // Remove deleted transaction from $lists
+      this.$lists.find('.-item-transac[data-kb-id-transaction="' + transaction.id + '"]').remove();
 
       // Manage amounts (balance, totals expenses & incomes)
       this.update_balance(bank_account.balance, currency);
@@ -527,6 +540,8 @@ var kakeibo = {
       var form_name = $form.attr('name');
       var is_edit   = $form.find('#' + form_name + '_id').length > 0;
 
+      $form.addClass('-is-submitted');
+
       $.ajax({
         method  : $form.attr('method'),
         url     : $form.attr('action'),
@@ -546,7 +561,7 @@ var kakeibo = {
           if ($form.parents('.modal-manage-entity').length == 1 && keep_modal == false) {
             self.toggle_modal($form.parents('.modal-manage-entity'), 'close');
           }
-          $form.removeClass('-modal-stay-open');
+          $form.removeClass('-modal-stay-open -is-submitted');
         },
         error   : function() { /* TODO */ }
       })
@@ -592,9 +607,6 @@ var kakeibo = {
       // Delete hidden input for id
       $form.find('#' + name + '_id').remove();
 
-      // Clear inputs (TODO)
-      // console.log('TODO full clear form !');
-
       $form.removeClass('-auto-close');
     },
     toggle_modal: function($modal, type, id_edit) {
@@ -614,17 +626,17 @@ var kakeibo = {
           id_edit = parseInt(id_edit);
 
           if (id_edit > 0) {
-            $modal.addClass('-is-loading')
-              .addClass('-is-edit');
+            $form.addClass('-is-loading');
+            $modal.addClass('-is-edit');
 
             // load entity data & fill form with them
             if (typeof kakeibo[form_name]['load'] != 'undefined') {
               kakeibo[form_name]['load'](id_edit, function(r) {
                 self.fill(form_name, r.entity);
-                $modal.removeClass('-is-loading');
+                $form.removeClass('-is-loading');
               });
             } else {
-              $modal.removeClass('-is-loading');
+              $form.removeClass('-is-loading');
               console.warn('[forms.toggle_modal] can\'t find the method to load entity data in order to fill the form !');
             }
           } else {
@@ -703,19 +715,28 @@ var kakeibo = {
       // Add links & custom things just before modal is showed
       this.$modal_confirm_delete.on('show.bs.modal', function (e) {
         var $modal_confirm_delete = $(this);
-        var $btn_confirm = $modal_confirm_delete.find('.btn-ok');
+        var $btn_confirm = $modal_confirm_delete.find('.btn-submit-delete');
 
         $btn_clicked = $(e.relatedTarget);
 
         // Check if the confirm[data-href] is defined
-        if (typeof $btn_clicked.data('confirm-href') != 'undefined') {
+        if (typeof $btn_clicked.data('confirm-href') != 'undefined' 
+          || (typeof $btn_clicked.data('entity-name') != 'undefined' && typeof $btn_clicked.data('entity-id') != 'undefined')
+        ) {
           // Reset modal body and set body if defined
           $modal_confirm_delete.find('.modal-body').html('');
           if (typeof $btn_clicked.data('confirm-body') != 'undefined')
             $modal_confirm_delete.find('.modal-body').html($('<div>' + $btn_clicked.data('confirm-body') + '</div>'));
 
           // Set delete link href
-          $btn_confirm.attr('href', $btn_clicked.data('confirm-href'));
+          if (typeof $btn_clicked.data('confirm-href') != 'undefined') {
+            $btn_confirm.attr('href', $btn_clicked.data('confirm-href'));
+          }
+          // ... or set data for ajax submit
+          if (typeof $btn_clicked.attr('data-entity-name') != 'undefined' && typeof $btn_clicked.attr('data-entity-id') != 'undefined') {
+            $btn_confirm.attr('data-entity-name', $btn_clicked.attr('data-entity-name'));
+            $btn_confirm.attr('data-entity-id', $btn_clicked.attr('data-entity-id'));
+          }
 
           // Set link additionnal CSS class
           if (typeof $btn_clicked.data('confirm-link-class') !== 'undefined')
@@ -729,15 +750,16 @@ var kakeibo = {
           //  (not confirm backdrop but it's working ! ...)
           self.$body.find('.modal').last().css('z-index', 1090);
           self.$body.find('.modal-backdrop').css('z-index', 1080);
+        // ... or check if the confirm[data-entity-name][data-entity-id] are defined
         } else {
-          console.log('[modal.confirm()] Must define a data-href');
+          console.log('[modal.confirm()] Must define a "data-confirm-href" or a "data-entity-name" and a "data-entity-id"');
         }
       });
 
       // When confirm modal is hidden
       this.$modal_confirm_delete.on('hidden.bs.modal', function (e) {
         var $modal_confirm_delete = $(this);
-        var $btn_confirm = $modal_confirm_delete.find('.btn-ok');
+        var $btn_confirm = $modal_confirm_delete.find('.btn-submit-delete');
 
         // Clear custom link CSS classes
         if ($btn_clicked != null && typeof $btn_clicked.data('confirm-link-class') !== 'undefined') {
@@ -745,10 +767,29 @@ var kakeibo = {
           $btn_clicked = null;
         }
         // & clear forced dismiss
-        $btn_confirm.removeAttr('data-dismiss');
+        $btn_confirm.attr('href', '#')
+          .removeAttr('data-dismiss data-entity-name data-entity-name');
 
         // Clear shitty forcing backdrop z-index (can't use confirm backdrop upon overs modal)
         self.$body.find('.modal-backdrop').removeAttr('style');
+      });
+    
+      this.$modal_confirm_delete.on('click', '.btn-submit-delete', function(e) {
+        var $btn = $(this);
+        var entity_name = $btn.attr('data-entity-name');
+        var entity_id = $btn.attr('data-entity-id');
+
+        if (typeof entity_name !== 'undefined' && typeof entity_id !== 'undefined' 
+          && typeof kakeibo[entity_name]['load'] != 'undefined'
+        ) {
+          kakeibo[entity_name]['delete'](entity_id, function(r) {
+            kakeibo.$modal_confirm_delete.modal('hide');
+          });
+
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        }
       });
     }
 

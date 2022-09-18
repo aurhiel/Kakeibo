@@ -1,6 +1,27 @@
 // Modal
 //
 
+
+// Effects on body children when modal is open (eg. blur effect)
+.modal-open {
+  .app-header, .app-body, .app-footer {
+    filter: blur($modal-open-blur-size);
+  }
+
+  .app-header {
+    position: relative;
+    &:before {
+      content: "";
+      background-color: $header-bg;
+      position: absolute;
+      top: -10%;
+      left: -5%;
+      right: -5%;
+      bottom: 0;
+    }
+  }
+}
+
 .modal-manage-entity {
   &.-is-loading {
     > form {

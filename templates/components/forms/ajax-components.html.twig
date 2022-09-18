@@ -1,0 +1,9 @@
+{# HTML components required for forms submitted using ajax (loader / cancel button) #}
+
+<span class="app-loader-icon"></span>
+<div class="app-disclaimer-too-long">
+  <p>{{ 'form.too_long_text'|trans|raw }}</p>
+  <button type="button" class="btn btn-outline-dark btn-sm btn-refresh">
+    {{ 'form.too_long_button'|trans }}
+  </button>
+</div>

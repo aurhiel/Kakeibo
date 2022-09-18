@@ -46,21 +46,21 @@ var kakeibo = {
       return show;
     },
     init: function() {
-      var self    = this;
+      var self = this;
       this.$items = kakeibo.$body.find('.chart-js');
 
       this.$items.each(function() {
         var $chart = $(this),
             canvas = $chart.find('canvas'),
-            data_name   = $chart.data('chartjs-data-name'),
-            data_type   = $chart.data('chartjs-data-type'),
-            chart_type  = $chart.data('chartjs-type'),
-            chart_min   = $chart.data('chartjs-min'),
-            chart_max   = $chart.data('chartjs-max'),
-            grid_color  = $chart.data('chartjs-grid-color'),
+            data_name = $chart.data('chartjs-data-name'),
+            data_type = $chart.data('chartjs-data-type'),
+            chart_type = $chart.data('chartjs-type'),
+            chart_min = $chart.data('chartjs-min'),
+            chart_max = $chart.data('chartjs-max'),
+            grid_color = $chart.data('chartjs-grid-color'),
             aspect_ratio = ((typeof $chart.data('chartjs-aspect-ratio') != 'undefined') ? $chart.data('chartjs-aspect-ratio') : null),
-            legend_display    = ((typeof $chart.data('chartjs-legend-display') != 'undefined') ? $chart.data('chartjs-legend-display') : true),
-            legend_position   = $chart.data('chartjs-legend-position'),
+            legend_display = ((typeof $chart.data('chartjs-legend-display') != 'undefined') ? $chart.data('chartjs-legend-display') : true),
+            legend_position = $chart.data('chartjs-legend-position'),
             legend_hide_sizes = ((typeof $chart.data('chartjs-legend-hide') == 'string') ? $chart.data('chartjs-legend-hide').split('|') : []);
 
         if (typeof data_name != 'undefined' && typeof window[data_name] != 'undefined') {
@@ -204,27 +204,41 @@ var kakeibo = {
     // TODO get this using a config
     url_load: '/transactions/get/',
     url_delete: '/transactions/delete/',
-    load: function(id_trans, callback) {
+    load: function(id_trans, on_success, on_error) {
       $.ajax({
-        url     : this.url_load + id_trans,
+        url : this.url_load + id_trans,
         success : function(response) {
-          callback(response);
+          on_success(response);
         },
-        error   : function(response) {
-          console.warn(response);
+        error : function(xhr) {
+          // TODO: Replace by a toaster !
+          if ('abort' !== xhr.statusText) {
+            alert('Un problème est survenu lors du chargement de la transaction, fermez la pop-in pour ré-essayer ou bien actualisez la page.');
+          }
+          if (typeof on_error !== 'undefined') {
+            on_error(xhr);
+          }
         }
       });
     },
-    delete: function(id_trans, callback) {
+    delete: function(id_trans, on_success, on_error) {
       // console.log('[transaction:delete]');
       var self = this;
       $.ajax({
-        url     : this.url_delete + id_trans,
+        url : this.url_delete + id_trans,
         success : function(response) {
           self.after_delete(response);
-          callback(response);
+          on_success(response);
         },
-        error   : function(response) { /* TODO */ }
+        error : function(xhr) {
+          // TODO: Replace by a toaster !
+          if ('abort' !== xhr.statusText) {
+            alert('Un problème est survenu lors de la suppression de la transaction, cliquez sur le bouton "Supprimer" pour ré-essayer ou bien actualisez la page.');
+          }
+          if (typeof on_error !== 'undefined') {
+            on_error(xhr);
+          }
+        }
       });
     },
     create_item_date_row: function(date) {
@@ -235,10 +249,10 @@ var kakeibo = {
       '</div>';
     },
     find_item_date_in_list: function($list, transaction) {
-      var item_date_matched   = null;
-      var last_date_matched   = null;
-      var total_transactions  = 0;
-      var transaction_date    = new Date(transaction.date);
+      var item_date_matched = null;
+      var last_date_matched = null;
+      var total_transactions = 0;
+      var transaction_date = new Date(transaction.date);
 
       // Loop on item to find a matching date
       $list.find('.-item').each(function(index) {
@@ -257,8 +271,8 @@ var kakeibo = {
             $item.before($new_item);
 
             item_date_matched = {
-              index       : index,
-              $node       : $new_item
+              index : index,
+              $node : $new_item
             };
 
             return false;
@@ -271,9 +285,9 @@ var kakeibo = {
       });
 
       return {
-        matched_date  : item_date_matched,
-        last_date     : last_date_matched,
-        total_trans   : total_transactions
+        matched_date : item_date_matched,
+        last_date : last_date_matched,
+        total_trans : total_transactions
       };
     },
     manage: function(transaction, bank_account, is_edit) {
@@ -281,18 +295,18 @@ var kakeibo = {
       // Data
       var currency = bank_account.currency_entity;
       var category = transaction.category_entity;
-      var url_delete  = this.url_delete;
-      var has_edit    = this.$modal.length > 0;
-      var transaction_date  = new Date(transaction.date);
+      var url_delete = this.url_delete;
+      var has_edit = this.$modal.length > 0;
+      var transaction_date = new Date(transaction.date);
 
       // Add transaction to list
       if (is_edit == false) {
         this.$lists.each(function() {
           var $list = $(this);
           // List data attributes/config
-          var limit       = typeof $list.data('kb-limit-items') != 'undefined' ? parseInt($list.data('kb-limit-items')) : null;
-          var date_start  = typeof $list.data('kb-date-start') != 'undefined' ? new Date($list.data('kb-date-start')) : null ;
-          var date_end    = typeof $list.data('kb-date-end') != 'undefined' ? new Date($list.data('kb-date-end')) : null ;
+          var limit = typeof $list.data('kb-limit-items') != 'undefined' ? parseInt($list.data('kb-limit-items')) : null;
+          var date_start = typeof $list.data('kb-date-start') != 'undefined' ? new Date($list.data('kb-date-start')) : null ;
+          var date_end = typeof $list.data('kb-date-end') != 'undefined' ? new Date($list.data('kb-date-end')) : null ;
           var is_period_valid = (date_start === null || transaction_date >= date_start) &&
               (date_end === null || transaction_date <= date_end);
 
@@ -358,9 +372,9 @@ var kakeibo = {
       } else {
         // Edit transaction item
         var $item_to_edit = this.$lists.find('.-item-transac[data-kb-id-transaction="' + transaction.id + '"]');
-        var $transac_cat  = $item_to_edit.find('.-transac-category');
+        var $transac_cat = $item_to_edit.find('.-transac-category');
         var $transac_amount = $item_to_edit.find('.-transac-amount');
-        var amount_status   = (transaction.amount > 0) ? 'success' : ((transaction.amount < 0) ? 'danger' : 'warning');
+        var amount_status = (transaction.amount > 0) ? 'success' : ((transaction.amount < 0) ? 'danger' : 'warning');
 
         // // Update transaction data
         $transac_amount.html(kakeibo.format.price(transaction.amount, currency.slug))
@@ -380,9 +394,9 @@ var kakeibo = {
           this.$lists.each(function() {
             var $list = $(this);
             // List data attributes/config
-            var limit       = typeof $list.data('kb-limit-items') != 'undefined' ? parseInt($list.data('kb-limit-items')) : null;
-            var date_start  = typeof $list.data('kb-date-start') != 'undefined' ? new Date($list.data('kb-date-start')) : null ;
-            var date_end    = typeof $list.data('kb-date-end') != 'undefined' ? new Date($list.data('kb-date-end')) : null ;
+            var limit = typeof $list.data('kb-limit-items') != 'undefined' ? parseInt($list.data('kb-limit-items')) : null;
+            var date_start = typeof $list.data('kb-date-start') != 'undefined' ? new Date($list.data('kb-date-start')) : null ;
+            var date_end = typeof $list.data('kb-date-end') != 'undefined' ? new Date($list.data('kb-date-end')) : null ;
             var is_period_valid = (date_start === null || transaction_date >= date_start) &&
                 (date_end === null || transaction_date <= date_end);
 
@@ -409,9 +423,9 @@ var kakeibo = {
     },
     after_update: function(data, is_edit) {
       // console.log('[transaction.after_update]', data, is_edit);
-      var bank_account  = data.default_bank_account;
-      var currency      = bank_account.currency_entity;
-      var transaction   = data.entity;
+      var bank_account = data.default_bank_account;
+      var currency = bank_account.currency_entity;
+      var transaction = data.entity;
 
       // Manage transaction in list & co
       this.manage(transaction, bank_account, is_edit);
@@ -433,7 +447,7 @@ var kakeibo = {
       this.update_balance(bank_account.balance, currency);
       this.update_exp_and_inc(transaction, currency);
     },
-    update_balance : function(new_balance, currency) {
+    update_balance: function(new_balance, currency) {
       // console.log('update_balance: ', new_balance, currency);
       var $text = kakeibo.$bank_account_balance.find('.text-price');
 
@@ -446,7 +460,7 @@ var kakeibo = {
       else if (new_balance > 0) $text.addClass('text-success');
       else $text.addClass('text-warning');
     },
-    update_exp_and_inc : function(transaction, currency) {
+    update_exp_and_inc: function(transaction, currency) {
       // console.log('[update_exp_and_inc] ', transaction);
       var amount = transaction.amount;
       var $bank_total = (amount < 0) ? kakeibo.$bank_account_total_expenses : kakeibo.$bank_account_total_incomes;
@@ -462,12 +476,12 @@ var kakeibo = {
         } else {
           // Need to add add money to expenses if change to income and vice-versa
           var $bank_total_to_adjust = (transaction.old.amount < 0) ? kakeibo.$bank_account_total_expenses : kakeibo.$bank_account_total_incomes;
-          var date_start_adjust     = typeof $bank_total_to_adjust.data('kb-date-start') != 'undefined' ? new Date($bank_total_to_adjust.data('kb-date-start')) : false;
-          var date_end_adjust       = typeof $bank_total_to_adjust.data('kb-date-end') != 'undefined' ? new Date($bank_total_to_adjust.data('kb-date-end')) : false;
-          var date_old              = new Date(transaction.old.date);
+          var date_start_adjust = typeof $bank_total_to_adjust.data('kb-date-start') != 'undefined' ? new Date($bank_total_to_adjust.data('kb-date-start')) : false;
+          var date_end_adjust = typeof $bank_total_to_adjust.data('kb-date-end') != 'undefined' ? new Date($bank_total_to_adjust.data('kb-date-end')) : false;
+          var date_old = new Date(transaction.old.date);
 
-          var $text       = $bank_total_to_adjust.find('.text-price');
-          var old_total   = parseFloat($text.html().replace(/ /g, '').replace(',', '.'));
+          var $text = $bank_total_to_adjust.find('.text-price');
+          var old_total = parseFloat($text.html().replace(/ /g, '').replace(',', '.'));
           var adjusted_total = old_total + (transaction.old.amount * -1);
 
           // Update amount value ONLY IF transaction is in current displayed date in totals
@@ -477,23 +491,26 @@ var kakeibo = {
         }
       }
 
-      var date_start  = typeof $bank_total.data('kb-date-start') != 'undefined' ? new Date($bank_total.data('kb-date-start')) : false;
-      var date_end    = typeof $bank_total.data('kb-date-end') != 'undefined' ? new Date($bank_total.data('kb-date-end')) : false;
-      var date        = new Date(transaction.date);
+      var date_start = typeof $bank_total.data('kb-date-start') != 'undefined' ? new Date($bank_total.data('kb-date-start')) : false;
+      var date_end = typeof $bank_total.data('kb-date-end') != 'undefined' ? new Date($bank_total.data('kb-date-end')) : false;
+      var date = new Date(transaction.date);
 
-      var $text       = $bank_total.find('.text-price');
-      var old_total   = parseFloat($text.html().replace(/ /g, '').replace(',', '.'));
-      var new_total   = old_total + amount;
+      var $text = $bank_total.find('.text-price');
+      var old_total = parseFloat($text.html().replace(/ /g, '').replace(',', '.'));
+      var new_total = old_total + amount;
 
       // Update amount value ONLY IF transaction is in current displayed date in totals
       if ((date >= date_start || date_start == false) && (date <= date_end || date_end == false))
           $text.html(kakeibo.format.price(new_total, currency.slug));
     }
   },
-  forms : {
-    $items : null,
-    $modals : null,
-    init : function() {
+  forms: {
+    $items: null,
+    $modals: null,
+    xhr: null,
+    ms_before_cancel: 5000,
+    to_before_cancel: null,
+    init: function() {
       var self = this;
       this.$items = kakeibo.$body.find('form');
       this.$modals = kakeibo.$body.find('.modal-manage-entity');
@@ -521,7 +538,24 @@ var kakeibo = {
         e.stopPropagation();
         e.preventDefault();
         return false;
-      });
+      })
+      // EVENT:CANCEL AJAX SUBMIT
+      .on('click', '.btn-cancel-submit', function(e) {
+        self.xhr.abort();
+
+        e.stopPropagation();
+        e.preventDefault();
+        return false;
+      })
+      // EVENT:REFRESH PAGE
+      .on('click', '.btn-refresh', function(e) {
+        location.reload();
+
+        e.stopPropagation();
+        e.preventDefault();
+        return false;
+      })
+      ;
 
       // INPUT, TEXTAREA & SELECT DEFAULT VALUES
       this.$items.find('[data-form-default-value]').each(function() {
@@ -534,18 +568,18 @@ var kakeibo = {
       });
     },
     // ajax submit
-    submit : function(form) {
-      var self      = this;
-      var $form     = $(form);
+    submit: function(form) {
+      var self = this;
+      var $form = $(form);
       var form_name = $form.attr('name');
-      var is_edit   = $form.find('#' + form_name + '_id').length > 0;
+      var is_edit = $form.find('#' + form_name + '_id').length > 0;
 
       $form.addClass('-is-submitted');
 
-      $.ajax({
-        method  : $form.attr('method'),
-        url     : $form.attr('action'),
-        data    : $form.serialize(),
+      self.xhr = $.ajax({
+        method : $form.attr('method'),
+        url : $form.attr('action'),
+        data : $form.serialize(),
         success : function(r) {
           var keep_modal = $form.hasClass('-modal-stay-open');
 
@@ -561,12 +595,20 @@ var kakeibo = {
           if ($form.parents('.modal-manage-entity').length == 1 && keep_modal == false) {
             self.toggle_modal($form.parents('.modal-manage-entity'), 'close');
           }
-          $form.removeClass('-modal-stay-open -is-submitted');
         },
-        error   : function() { /* TODO */ }
-      })
+        error : function(xhr) {
+          // TODO: Replace by a toaster !
+          if ('abort' !== xhr.statusText) {
+            alert('Un problème est survenu, vous pouvez ré-essayer ou bien actualiser la page.');
+          }
+          
+          self.unlock($form);
+        }
+      });
+      
+      self.timeout_too_long($form);
     },
-    fill : function(name, data) {
+    fill: function(name, data) {
       var $form = this.$items.filter('[name="' + name + '"]');
 
       // Force input hidden for id
@@ -577,10 +619,10 @@ var kakeibo = {
         $form.find('#'+ name +'_' + property).val(data[property]);
       }
     },
-    clear : function(name) {
-      var $form     = this.$items.filter('[name="' + name + '"]');
-      var $texts    = $form.find('input, textarea');
-      var $selects  = $form.find('select');
+    clear: function(name) {
+      var $form = this.$items.filter('[name="' + name + '"]');
+      var $texts = $form.find('input, textarea');
+      var $selects = $form.find('select');
 
       // Reset classic <input|textarea>
       $texts.not('[type="hidden"], [data-form-clear="false"]').val('');
@@ -607,7 +649,17 @@ var kakeibo = {
       // Delete hidden input for id
       $form.find('#' + name + '_id').remove();
 
-      $form.removeClass('-auto-close');
+      this.unlock($form);
+    },
+    timeout_too_long: function($form) {
+      this.to_before_cancel = setTimeout(function() {
+        $form.addClass('-is-too-long');
+      }, this.ms_before_cancel);
+    },
+    // "Unlock" the form
+    unlock: function($form) {
+      $form.removeClass('-modal-stay-open -is-submitted -is-loading -is-too-long');
+      clearTimeout(this.to_before_cancel);
     },
     toggle_modal: function($modal, type, id_edit) {
       var self = this;
@@ -629,14 +681,20 @@ var kakeibo = {
             $form.addClass('-is-loading');
             $modal.addClass('-is-edit');
 
+            // NOTE: Not very useful, because user can simply close the modal to retry
+            // self.timeout_too_long($form);
+
             // load entity data & fill form with them
-            if (typeof kakeibo[form_name]['load'] != 'undefined') {
+            if (typeof kakeibo[form_name] !== 'undefined' && typeof kakeibo[form_name]['load'] != 'undefined') {
               kakeibo[form_name]['load'](id_edit, function(r) {
                 self.fill(form_name, r.entity);
-                $form.removeClass('-is-loading');
+                self.unlock($form);
+              }, function() {
+                self.unlock($form);
+                $modal.removeClass('-is-edit');
               });
             } else {
-              $form.removeClass('-is-loading');
+              self.unlock($form);
               console.warn('[forms.toggle_modal] can\'t find the method to load entity data in order to fill the form !');
             }
           } else {
@@ -649,15 +707,15 @@ var kakeibo = {
     }
   },
   // Loader
-  is_loading    : false,
-  loading_class : 'app-core--is-loading',
-  load : function() {
+  is_loading: false,
+  loading_class: 'app-core--is-loading',
+  load: function() {
     this.is_loading = true;
     // NOTE: Add loading class in base.html.twig right after body creation,
     //  in order to avoid blinking when it's done here
     // this.$body.addClass(this.loading_class);
   },
-  unload : function() {
+  unload: function() {
     this.is_loading = false;
     this.$body.removeClass(this.loading_class);
   },
@@ -665,8 +723,8 @@ var kakeibo = {
   lock: function() {
     // console.log("Hi ! I'm kakeibo.js");
     // Nodes
-    this.$body    = $('body');
-    this.$window  = $(window);
+    this.$body = $('body');
+    this.$window = $(window);
 
     // Set loading
     this.load();

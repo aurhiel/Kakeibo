@@ -226,6 +226,9 @@ block :
 ## FORMS
 form :
   required : "Champs obligatoires"
+  too_long_text : "Ça en prend du temps !<br>Actualiser pour ré-essayer ?"
+  too_long_button : "Actualiser"
+# Form login
 form_login :
   password :
     label       : "Mot de passe"

@@ -163,6 +163,8 @@ block :
 ## FORMS
 form :
   required : "Required fields"
+  too_long_text : "It takes some times !<br>Refresh to retry ?"
+  too_long_button : "Refresh"
 # Form login
 form_login :
   password :

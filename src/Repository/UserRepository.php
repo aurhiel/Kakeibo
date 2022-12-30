@@ -21,6 +21,11 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
         ]);
     }
 
+    public function findAllBy(array $orderBy, $limit = null)
+    {
+        return $this->findBy([], $orderBy, $limit);
+    }
+
     public function countAll()
     {
         return $this->createQueryBuilder('u')
@@ -37,5 +42,10 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
             ->setParameter('email', $username)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function loadUserByIdentifier(string $username): ?User 
+    {
+        return $this->loadUserByUsername($username);
     }
 }

@@ -30,6 +30,6 @@ class AppExtension extends AbstractExtension
               $str_array[$k] = $anonymizeCharacter;
         }
 
-        return implode($str_array, '');
+        return implode('', $str_array);
     }
 }

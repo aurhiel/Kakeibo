@@ -2,19 +2,16 @@
 
 namespace App\Controller;
 
-// Forms
+use App\Entity\User;
 use App\Form\UserType;
 
-// Entities
-use App\Entity\User;
-
-// Components
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
@@ -24,37 +21,43 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
   */
 class ProfileController extends AbstractController
 {
+    private User $user;
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(
+        Security $security,
+        EntityManagerInterface $entityManager
+    ) {
+        $this->user = $security->getUser();
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @Route("/profil", name="user_profile")
      */
-    public function profile(Request $request, Security $security, UserPasswordEncoderInterface $passwordEncoder)
-    {
-        $user = $security->getUser();
+    public function profile(
+        Request $request,
+        UserPasswordHasherInterface $passwordHasher
+    ) {
+        /** @var Session $session */
+        $session = $request->getSession();
 
-        // 1) create the profile form
-        $form = $this->createForm(UserType::class, $user, array('type_form' => 'edit'));
-
-        // 2) handle the submit (will only happen on POST)
+        $form = $this->createForm(UserType::class, $this->user, array('type_form' => 'edit'));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // 3) change password only if is not default password // TODO find a better way
-            if($user->getPlainPassword() != '0ld-pa$$wo|2d') {
-                $password = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
-                $user->setPassword($password);
+            // Change password only if is not default password (TODO find a better way)
+            if($this->user->getPlainPassword() != '0ld-pa$$wo|2d') {
+                $password = $passwordHasher->hashPassword($this->user, $this->user->getPlainPassword());
+                $this->user->setPassword($password);
             }
 
-            $entityManager = $this->getDoctrine()->getManager();
-
-            // 4) Try or clear
             try {
-                $request->getSession()->getFlashBag()->add('success', 'Modification(s) effectuée(s) avec succès.');
-                $entityManager->flush();
-                // Flush OK !
+                $session->getFlashBag()->add('success', 'Modification(s) effectuée(s) avec succès.');
+                $this->entityManager->flush();
             } catch (\Exception $e) {
-                // Something goes wrong
-                $request->getSession()->getFlashBag()->add('error', 'Une erreur inconnue est survenue, veuillez essayer de nouveau.');
-                $entityManager->clear();
+                $session->getFlashBag()->add('error', 'Une erreur inconnue est survenue, veuillez essayer de nouveau.');
+                $this->entityManager->clear();
             }
         }
 

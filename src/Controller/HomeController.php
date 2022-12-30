@@ -12,14 +12,14 @@ class HomeController extends AbstractController
      */
     public function index()
     {
-      return $this->render(
-          'home/index.html.twig',
-          array(
-              'core_class'  => 'app-core--home',
-              'stylesheets' => [ 'kb-home' ],
-              'scripts'     => [ 'kb-home' ],
-              'meta'        => array('title' => '')
-          )
-      );
+        return $this->render(
+            'home/index.html.twig',
+            array(
+                'core_class'  => 'app-core--home',
+                'stylesheets' => [ 'kb-home' ],
+                'scripts'     => [ 'kb-home' ],
+                'meta'        => array('title' => '')
+            )
+        );
     }
 }

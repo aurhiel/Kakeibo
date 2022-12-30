@@ -2,17 +2,12 @@
 
 namespace App\Controller;
 
-// Forms
-use App\Form\TransactionType;
+use App\Entity\User;
 use App\Form\CategoryType;
+use App\Form\TransactionType;
+use App\Repository\TransactionRepository;
 
-// Entities
-use App\Entity\Transaction;
-use App\Entity\Category;
-
-// Components
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\Security;
@@ -27,68 +22,60 @@ class DashboardController extends AbstractController
 {
     const NB_LAST_TRANS = 20;
 
+    private User $user;
+    private TranslatorInterface $translator;
+    private TransactionRepository $transcationRepository;
+
+    public function __construct(
+        Security $security,
+        TranslatorInterface $translator,
+        TransactionRepository $transcationRepository
+    ) {
+        $this->user = $security->getUser();
+        $this->translator = $translator;
+        $this->transcationRepository = $transcationRepository;
+    }
+
     /**
      * @Route("/dashboard", name="dashboard")
      */
-    public function index(Security $security, Request $request, TranslatorInterface $translator)
-    {
-        /**
-         * @var User $user
-         */
-        $user = $security->getUser();
-
+    public function index() {
         // Force user to create at least ONE bank account !
-        if (count($user->getBankAccounts()) < 1)
+        if (count($this->user->getBankAccounts()) < 1)
             return $this->redirectToRoute('ignition-first-bank-account');
 
         // User has a bank account
-        $default_bank_account = $user->getDefaultBankAccount();
+        $default_bank_account = $this->user->getDefaultBankAccount();
 
         // Force user to add or import transaction(s) first
         if (count($default_bank_account->getTransactions()) < 1)
             return $this->redirectToRoute('ignition-first-transaction');
 
-        // Build the transaction form
-        $trans_entity = new Transaction($user);
-        $trans_form   = $this->createForm(TransactionType::class, $trans_entity);
-
-        // Build the transaction form
-        $cat_entity = new Category();
-        $cat_form   = $this->createForm(CategoryType::class, $cat_entity);
-
-        $em = $this->getDoctrine()->getManager();
-        /**
-         * @var TransactionRepository $r_trans
-         */
-        $r_trans  = $em->getRepository(Transaction::class);
-        $last_trans = $r_trans->findLastByBankAccount($default_bank_account, self::NB_LAST_TRANS);
-
+        $last_trans = $this->transcationRepository->findLastByBankAccount($default_bank_account, self::NB_LAST_TRANS);
         $date_start = date('Y-m-01');
-        $date_end   = date('Y-m-d');
-
+        $date_end = date('Y-m-d');
         // Retrieve totals for incomes & expenses
-        $total_incomes  = (float) $r_trans->findTotal($default_bank_account, $date_start, 'now', 'incomes');
-        $total_expenses = (float) $r_trans->findTotal($default_bank_account, $date_start, 'now', 'expenses');
+        $total_incomes = (float) $this->transcationRepository->findTotal($default_bank_account, $date_start, 'now', 'incomes');
+        $total_expenses = (float) $this->transcationRepository->findTotal($default_bank_account, $date_start, 'now', 'expenses');
 
         // NOTE If there is no expenses and incomes in the current month, try
         //  to get last month expenses and incomes.
         // if ($total_incomes == 0 && $total_expenses == 0) {
         //     $curr_month = (($curr_month - 1) < 0) ? 12 : ($curr_month - 1);
-        //     $total_incomes  = (float) $r_trans->findTotal($default_bank_account, $date_start, 'now', 'incomes');
-        //     $total_expenses = (float) $r_trans->findTotal($default_bank_account, $date_start, 'now', 'expenses');
+        //     $total_incomes  = (float) $this->transcationRepository->findTotal($default_bank_account, $date_start, 'now', 'incomes');
+        //     $total_expenses = (float) $this->transcationRepository->findTotal($default_bank_account, $date_start, 'now', 'expenses');
         // }
 
         // Retrieve totals grouped by categories for incomes & expenses
-        $total_incomes_by_cats = $r_trans->findTotalGroupBy($default_bank_account, $date_start, 'now', 'category', 'incomes');
-        $total_expenses_by_cats = $r_trans->findTotalGroupBy($default_bank_account, $date_start, 'now', 'category', 'expenses');
+        $total_incomes_by_cats = $this->transcationRepository->findTotalGroupBy($default_bank_account, $date_start, 'now', 'category', 'incomes');
+        $total_expenses_by_cats = $this->transcationRepository->findTotalGroupBy($default_bank_account, $date_start, 'now', 'category', 'expenses');
 
         return $this->render('dashboard/index.html.twig', [
-            'page_title'            => $translator->trans('page.dashboard.title'),
-            'meta'                  => [ 'title' => $translator->trans('page.dashboard.title') ],
+            'page_title'            => $this->translator->trans('page.dashboard.title'),
+            'meta'                  => [ 'title' => $this->translator->trans('page.dashboard.title') ],
             'core_class'            => 'app-core--dashboard app-core--merge-body-in-header',
             // 'stylesheets'           => [ 'kb-dashboard.css' ],
             // 'scripts'               => [ 'kb-dashboard.js' ],
-            'user'                  => $user,
             'dashboard_date_start'  => $date_start,
             'dashboard_date_end'    => $date_end,
             'last_transactions'     => $last_trans,
@@ -97,8 +84,8 @@ class DashboardController extends AbstractController
             'total_expenses'        => $total_expenses,
             'total_incomes_by_cats'   => $total_incomes_by_cats,
             'total_expenses_by_cats'  => $total_expenses_by_cats,
-            'form_transaction'  => $trans_form->createView(),
-            'form_category'     => $cat_form->createView()
+            'form_transaction'  => $this->createForm(TransactionType::class)->createView(),
+            'form_category'     => $this->createForm(CategoryType::class)->createView()
         ]);
     }
 }

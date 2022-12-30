@@ -8,11 +8,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User implements UserInterface, \Serializable
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\Id
@@ -73,7 +74,6 @@ class User implements UserInterface, \Serializable
      */
     private $bankAccounts;
 
-
     public function __construct()
     {
         $this->isActive = true;
@@ -85,12 +85,10 @@ class User implements UserInterface, \Serializable
         // $this->salt = md5(uniqid('', true));
     }
 
-
     public function getId()
     {
         return $this->id;
     }
-
 
     // Register date (= now())
     public function getRegisterDate(): ?\DateTimeInterface
@@ -111,7 +109,6 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
-
     // Username
     public function getUsername()
     {
@@ -123,6 +120,10 @@ class User implements UserInterface, \Serializable
         $this->username = $username;
     }
 
+    public function getUserIdentifier()
+    {
+        return $this->username;
+    }
 
     // Pain password
     public function getPlainPassword()
@@ -137,9 +138,8 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
-
     // Password
-    public function getPassword()
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -151,13 +151,11 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
-
     // Salt
     public function getSalt()
     {
         return null;
     }
-
 
     // Roles
     public function getRoles()
@@ -171,7 +169,6 @@ class User implements UserInterface, \Serializable
 
         return $this;
     }
-
 
     // Active/lock/expired methods
     public function isAccountNonExpired()
@@ -204,36 +201,9 @@ class User implements UserInterface, \Serializable
         $this->isActive = $isActive;
     }
 
-
     // Credentials & Serialize
     public function eraseCredentials()
     {
-    }
-
-    /** @see \Serializable::serialize() */
-    public function serialize()
-    {
-        return serialize(array(
-            $this->id,
-            $this->username,
-            $this->password,
-            $this->isActive,
-            // see section on salt below
-            // $this->salt,
-        ));
-    }
-
-    /** @see \Serializable::unserialize() */
-    public function unserialize($serialized)
-    {
-        list (
-            $this->id,
-            $this->username,
-            $this->password,
-            $this->isActive,
-            // see section on salt below
-            // $this->salt
-        ) = unserialize($serialized, ['allowed_classes' => false]);
     }
 
     /**

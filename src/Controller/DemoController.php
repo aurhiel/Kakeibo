@@ -2,7 +2,8 @@
 
 namespace App\Controller;
 
-// Components
+use App\Entity\User;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
@@ -20,9 +21,7 @@ class DemoController extends AbstractController
      */
     public function index(Security $security)
     {
-        /**
-         * @var User $user
-         */
+        /** @var User $user */
         $user = $security->getUser();
 
         // Force user to create at least ONE bank account !

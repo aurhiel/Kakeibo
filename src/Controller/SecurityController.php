@@ -2,43 +2,55 @@
 
 namespace App\Controller;
 
-// Forms
-use App\Form\UserType;
-
-// Entities
 use App\Entity\User;
+use App\Form\UserType;
+use App\Repository\UserRepository;
 
-// Components
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-// use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-// Mailer components
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Address;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 
 class SecurityController extends AbstractController
 {
+    private TranslatorInterface $translator;
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(
+        TranslatorInterface $translator,
+        EntityManagerInterface $entityManager
+    ) {
+        $this->translator = $translator;
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @Route("/inscription", name="user_registration")
      */
-    public function register(Request $request, UserPasswordHasherInterface $passwordHasher, MailerInterface $mailer, AuthorizationCheckerInterface $authChecker, TranslatorInterface $translator)
-    {
+    public function register(
+      Request $request,
+      AuthorizationCheckerInterface $authChecker,
+      UserPasswordHasherInterface $passwordHasher,
+      MailerInterface $mailer,
+      UserRepository $userRepository
+    ) {
         if (true === $authChecker->isGranted('IS_AUTHENTICATED_FULLY'))
             return $this->redirectToRoute('dashboard');
 
-        $em             = $this->getDoctrine()->getManager();
-        $max_users      = $this->getParameter('app.max_users');
-        $r_user         = $em->getRepository(User::class);
-        $nb_registered  = (int) $r_user->countAll();
-        $max_reached    = ($max_users != null && $nb_registered >= $max_users);
+        /** @var Session $session */
+        $session = $request->getSession();
+        $max_users = $this->getParameter('app.max_users');
+        $nb_registered = (int) $userRepository->countAll();
+        $max_reached = ($max_users != null && $nb_registered >= $max_users);
 
         // 1) Build the form
         $user = new User();
@@ -57,15 +69,15 @@ class SecurityController extends AbstractController
                 $user->setRole('ROLE_USER');
 
                 // 5) Save the User!
-                $em->persist($user);
+                $this->entityManager->persist($user);
 
                 // 6) User already exist ?
-                if(!empty($r_user->loadUserByUsername($user->getUsername()))) {
-                    $request->getSession()->getFlashBag()->add('error', $translator->trans('page.register.messages.already_registered'));
+                if(!empty($userRepository->loadUserByUsername($user->getUsername()))) {
+                  $session->getFlashBag()->add('error', $this->translator->trans('page.register.messages.already_registered'));
                 } else {
                     // 7) Try or clear
                     try {
-                        $em->flush();
+                        $this->entityManager->flush();
                         // Flush OK ! > Send email to user and redirect to dashboard
 
                         // TODO Send email to user in order to validate his subscribe
@@ -88,26 +100,26 @@ class SecurityController extends AbstractController
                         // $mailer->send($message);
 
                         // Add success message
-                        $request->getSession()->getFlashBag()->add('success', $translator->trans('page.register.messages.registration_success'));
+                        $session->getFlashBag()->add('success', $this->translator->trans('page.register.messages.registration_success'));
 
                         // Redirect to login page
                         return $this->redirectToRoute('login');
                     } catch (\Exception $e) {
                         // Something goes wrong
-                        $request->getSession()->getFlashBag()->add('error', $translator->trans('page.register.messages.unknown_error'));
-                        $em->clear();
+                        $session->getFlashBag()->add('error', $this->translator->trans('page.register.messages.unknown_error'));
+                        $this->entityManager->clear();
                     }
                 }
             }
         } else {
             // Set message that max users amount is reached
-            $request->getSession()->getFlashBag()->add('notice', $translator->trans('page.register.messages.max_users_reached'));
+            $session->getFlashBag()->add('notice', $this->translator->trans('page.register.messages.max_users_reached'));
         }
 
         return $this->render(
             'security/register.html.twig',
             array(
-              'meta'              => [ 'title' => $translator->trans('page.register.title') ],
+              'meta'              => [ 'title' => $this->translator->trans('page.register.title') ],
               'form'              => $form->createView(),
               'max_users_reached' => $max_reached,
             )
@@ -118,8 +130,10 @@ class SecurityController extends AbstractController
     /**
      * @Route("/connexion", name="login")
      */
-    public function login(Request $request, AuthenticationUtils $authenticationUtils, AuthorizationCheckerInterface $authChecker, TranslatorInterface $translator)
-    {
+    public function login(
+        AuthenticationUtils $authenticationUtils,
+        AuthorizationCheckerInterface $authChecker
+    ) {
         if (true === $authChecker->isGranted('IS_AUTHENTICATED_FULLY'))
             return $this->redirectToRoute('dashboard');
 
@@ -130,7 +144,7 @@ class SecurityController extends AbstractController
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('security/login.html.twig', array(
-            'meta'          => [ 'title' => $translator->trans('page.login.title') ],
+            'meta'          => [ 'title' => $this->translator->trans('page.login.title') ],
             'last_username' => $lastUsername,
             'error'         => $error,
         ));

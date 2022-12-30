@@ -2,14 +2,15 @@
 
 namespace App\Controller;
 
-// Forms
+use App\Entity\Transaction;
+use App\Entity\User;
 use App\Form\TransactionType;
 use App\Form\CategoryType;
+use App\Repository\CategoryRepository;
+use App\Repository\TransactionRepository;
 
-// Entities
-use App\Entity\Transaction;
-use App\Entity\Category;
-
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,26 +27,32 @@ class TransactionsController extends AbstractController
 {
     const NB_TRANSAC_BY_PAGE = 50;
 
+    private User $user;
+    private EntityManagerInterface $entityManager;
+    private TransactionRepository $transactionRepository;
+
+    public function __construct(
+        Security $security,
+        EntityManagerInterface $entityManager,
+        TransactionRepository $transactionRepository
+    ) {
+        $this->user = $security->getUser();
+        $this->entityManager = $entityManager;
+        $this->transactionRepository = $transactionRepository;
+    }
+
     /**
      * @Route("/transactions/manage", name="transaction_manage")
      */
-    public function manage(Security $security, Request $request)
-    {
-        /**
-         * @var User $user
-         */
-        $user = $security->getUser();
-        $em = $this->getDoctrine()->getManager();
-        /**
-         * @var TransactionRepository $r_trans
-         */
-        $r_trans = $em->getRepository(Transaction::class);
+    public function manage(
+        Request $request
+    ) {
         $id_trans = (int) $request->request->get('id');
         $is_edit = (!empty($id_trans) && $id_trans > 0); // Edit transaction ?
 
         if($is_edit) {
             // Get transaction to edit with id AND user (for security)
-            $trans_entity = $r_trans->findOneByIdAndUser($id_trans, $user);
+            $trans_entity = $this->transactionRepository->findOneByIdAndUser($id_trans, $this->user);
             $old_trans_json = self::format_json($trans_entity);
             $message_status_ok = 'Modificiation de la transaction effectuée.';
             $message_status_nok = 'Un problème est survenu lors de la modification de la transaction';
@@ -57,11 +64,11 @@ class TransactionsController extends AbstractController
         }
 
         // Force user to create at least ONE bank account !
-        if (count($user->getBankAccounts()) < 1)
+        if (count($this->user->getBankAccounts()) < 1)
             return $this->redirectToRoute('ignition-first-bank-account');
 
         // User has a bank account
-        $default_bank_account = $user->getDefaultBankAccount();
+        $default_bank_account = $this->user->getDefaultBankAccount();
         // Data to return/display
         $return_data = array(
             'query_status' => 0,
@@ -80,12 +87,12 @@ class TransactionsController extends AbstractController
             $trans_entity->setBankAccount($default_bank_account);
 
             // 4) Save by persisting entity
-            $em->persist($trans_entity);
+            $this->entityManager->persist($trans_entity);
 
             // 5) Try or clear
             try {
                 // Flush OK !
-                $em->flush();
+                $this->entityManager->flush();
 
                 $return_data = array(
                     'query_status' => 1,
@@ -100,9 +107,8 @@ class TransactionsController extends AbstractController
                 if ($is_edit && isset($old_trans_json))
                     $return_data['entity']['old'] = $old_trans_json;
             } catch (\Exception $e) {
-                // Something goes wrong
-                $em->clear();
-                // Store exception message
+                // Something goes wrong > Store exception message
+                $this->entityManager->clear();
                 $return_data['exception'] = $e->getMessage();
             }
         }
@@ -110,8 +116,9 @@ class TransactionsController extends AbstractController
         if ($request->isXmlHttpRequest()) {
             return $this->json($return_data);
         } else {
-            // Set message in flashbag on direct access
-            $request->getSession()->getFlashBag()->add($return_data['slug_status'], $return_data['message_status']);
+            /** @var Session $session */
+            $session = $request->getSession();
+            $session->getFlashBag()->add($return_data['slug_status'], $return_data['message_status']);
 
             // Redirect to dashboard
             return $this->redirectToRoute('dashboard');
@@ -121,20 +128,13 @@ class TransactionsController extends AbstractController
     /**
      * @Route("/transactions/get/{id}", name="transaction_get")
      */
-    public function retrieve($id, Security $security, Request $request)
-    {
-        /**
-         * @var User $user
-         */
-        $user = $security->getUser();
-        $em = $this->getDoctrine()->getManager();
-        /**
-         * @var TransactionRepository $r_trans
-         */
-        $r_trans = $em->getRepository(Transaction::class);
+    public function retrieve(
+        $id,
+        Request $request
+    ) {
         $data = [ 'query_status' => 0, 'slug_status' => 'error', 'message_status' => 'Error...' ];
         // Retrieve transaction with id AND user (for security)
-        $trans = $r_trans->findOneByIdAndUser($id, $user);
+        $trans = $this->transactionRepository->findOneByIdAndUser($id, $this->user);
 
         if (!is_null($trans)) {
             $data = [
@@ -156,19 +156,12 @@ class TransactionsController extends AbstractController
     /**
      * @Route("/transactions/delete/{id}", name="transaction_delete")
      */
-    public function delete($id, Security $security, Request $request)
-    {
-        /**
-         * @var User $user
-         */
-        $user = $security->getUser();
-        $em = $this->getDoctrine()->getManager();
-        /**
-         * @var TransactionRepository $r_trans
-         */
-        $r_trans = $em->getRepository(Transaction::class);
+    public function delete(
+        $id,
+        Request $request
+    ) {
         // Retrieve transaction with id AND user (for security)
-        $trans = $r_trans->findOneByIdAndUser($id, $user);
+        $trans = $this->transactionRepository->findOneByIdAndUser($id, $this->user);
         $return_data = [
             'query_status' => 0,
             'slug_status' => 'error',
@@ -180,14 +173,14 @@ class TransactionsController extends AbstractController
             $trans_deleted_json = self::format_json($trans_deleted);
 
             // Remove entity
-            $em->remove($trans);
+            $this->entityManager->remove($trans);
 
             // Try to save (flush) or clear entity remove
             try {
                 // Flush OK !
-                $em->flush();
+                $this->entityManager->flush();
                 // Retrieve user's default bank account
-                $default_bank_account = $user->getDefaultBankAccount();
+                $default_bank_account = $this->user->getDefaultBankAccount();
 
                 $return_data = [
                     'query_status' => 1,
@@ -200,9 +193,8 @@ class TransactionsController extends AbstractController
                 $return_data['entity']['amount'] = 0;
                 $return_data['entity']['old'] = $trans_deleted_json;
             } catch (\Exception $e) {
-                // Something goes wrong
-                $em->clear();
-                // Store exception message
+                // Something goes wrong > Store exception message
+                $this->entityManager->clear();
                 $return_data['exception'] = $e->getMessage();
             }
         } else {
@@ -212,53 +204,35 @@ class TransactionsController extends AbstractController
         if ($request->isXmlHttpRequest()) {
             return $this->json($return_data);
         } else {
-            // Set message in flashbag on direct access
-            $request->getSession()->getFlashBag()->add($return_data['slug_status'], $return_data['message_status']);
+            /** @var Session $session */
+            $session = $request->getSession();
+            $session->getFlashBag()->add($return_data['slug_status'], $return_data['message_status']);
 
             // Redirect to previous page (= referer)
             return $this->redirect($request->headers->get('referer'));
-            // Redirect to dashboard
-            // return $this->redirectToRoute('dashboard');
         }
     }
 
     /**
      * @Route("/transactions/{page}", name="transactions", defaults={"page"=1})
      */
-    public function index($page, Security $security, Request $request, TranslatorInterface $translator)
-    {
-        /**
-         * @var User $user
-         */
-        $user = $security->getUser();
-
+    public function index(
+      $page,
+      TranslatorInterface $translator
+    ) {
         // Force user to create at least ONE bank account !
-        if (count($user->getBankAccounts()) < 1)
+        if (count($this->user->getBankAccounts()) < 1)
             return $this->redirectToRoute('ignition-first-bank-account');
 
         // User has a bank account
-        $default_bank_account = $user->getDefaultBankAccount();
+        $default_bank_account = $this->user->getDefaultBankAccount();
 
         // Force user to add or import transaction(s) first
         if (count($default_bank_account->getTransactions()) < 1)
             return $this->redirectToRoute('ignition-first-transaction');
 
-        // Build the transaction form
-        $trans_entity = new Transaction();
-        $trans_form = $this->createForm(TransactionType::class, $trans_entity);
-
-        // Build the transaction form
-        $cat_entity = new Category();
-        $cat_form = $this->createForm(CategoryType::class, $cat_entity);
-
-        $em = $this->getDoctrine()->getManager();
-        /**
-         * @var TransactionRepository $r_trans
-         */
-        $r_trans = $em->getRepository(Transaction::class);
-
         // Get nb pages of newsletter subscribes
-        $nb_transactions = $r_trans->countAllByBankAccountAndByDate($default_bank_account);
+        $nb_transactions = $this->transactionRepository->countAllByBankAccountAndByDate($default_bank_account);
         $nb_pages_raw = ($nb_transactions / self::NB_TRANSAC_BY_PAGE);
         $nb_pages = floor($nb_pages_raw);
 
@@ -277,11 +251,11 @@ class TransactionsController extends AbstractController
         }
 
         // Get incomes & expenses totals
-        $total_incomes = (float) $r_trans->findTotal($default_bank_account, null, null, 'incomes');
-        $total_expenses = (float) $r_trans->findTotal($default_bank_account, null, null, 'expenses');
+        $total_incomes = (float) $this->transactionRepository->findTotal($default_bank_account, null, null, 'incomes');
+        $total_expenses = (float) $this->transactionRepository->findTotal($default_bank_account, null, null, 'expenses');
 
         // Get transactions according to current page
-        $transactions = $r_trans->findByBankAccountAndDateAndPage($default_bank_account, null, null, $page, self::NB_TRANSAC_BY_PAGE);
+        $transactions = $this->transactionRepository->findByBankAccountAndDateAndPage($default_bank_account, null, null, $page, self::NB_TRANSAC_BY_PAGE);
 
         // Get date start and date end
         $date_end = (isset($transactions[0]) && $page > 1) ? $transactions[0]->getDate()->format('Y-m-d') : null;
@@ -293,7 +267,6 @@ class TransactionsController extends AbstractController
             'core_class'        => 'app-core--transactions app-core--merge-body-in-header',
             // 'stylesheets'       => [ 'kb-dashboard.css' ],
             // 'scripts'           => [ 'kb-dashboard.js' ],
-            'user'              => $user,
             'transactions'      => $transactions,
             'date_start'        => $date_start,
             'date_end'          => $date_end,
@@ -304,26 +277,23 @@ class TransactionsController extends AbstractController
             'nb_by_page'        => self::NB_TRANSAC_BY_PAGE,
             'total_incomes'     => $total_incomes,
             'total_expenses'    => $total_expenses,
-            'form_transaction'  => $trans_form->createView(),
-            'form_category'     => $cat_form->createView(),
+            'form_transaction'  => $this->createForm(TransactionType::class)->createView(),
+            'form_category'     => $this->createForm(CategoryType::class)->createView(),
         ]);
     }
 
     /**
-     * @Route("/trans/import-csv", name="transaction_import_csv")
+     * @Route("/transactions/import-csv", name="transaction_import_csv")
      * TODO: only tested with "Caisse d'épargne" CSV files,
      *          need to do more test with other banks files
      *          + custom import ? (TODO auto-detect fields + user validation)
      */
-    public function import_csv(Security $security, Request $request)
-    {
-        /**
-         * @var User $user
-         */
-        $user = $security->getUser();
-
+    public function import_csv(
+      Request $request,
+      CategoryRepository $categoryRepository
+    ) {
         // Force user to create at least ONE bank account !
-        if (count($user->getBankAccounts()) < 1)
+        if (count($this->user->getBankAccounts()) < 1)
             return $this->redirectToRoute('ignition-first-bank-account');
 
         $csv_path = $request->files->get('first-import-file')->getPathName();
@@ -335,14 +305,11 @@ class TransactionsController extends AbstractController
         $bank_code          = false;
 
         if (($handle = fopen($csv_path, "r")) !== false) {
-            $em = $this->getDoctrine()->getManager();
-
             // User has a bank account
-            $default_bank_account = $user->getDefaultBankAccount();
+            $default_bank_account = $this->user->getDefaultBankAccount();
 
             // Retrieve all categories
-            $r_category = $em->getRepository(Category::class);
-            $categories = $r_category->findAll();
+            $categories = $categoryRepository->findAll();
             // Default category
             foreach($categories as $cat) {
                 $regex = $cat->getImportRegex();
@@ -396,7 +363,7 @@ class TransactionsController extends AbstractController
                                     $transaction->setDetails($details);
 
                                 // Save by persisting entity
-                                $em->persist($transaction);
+                                $this->entityManager->persist($transaction);
 
                                 // Increment total
                                 $file_total += $amount;
@@ -426,25 +393,25 @@ class TransactionsController extends AbstractController
             $trans_adjustment
               ->setBankAccount($default_bank_account)
               ->setDate(new \DateTime())
-              ->setLabel("Ajustement suite à importation du fichier .csv")
+              ->setLabel('Ajustement suite à importation du fichier .csv')
               ->setAmount($amount_adjust)
               ->setCategory($default_category);
 
             // Persist adjustment
-            $em->persist($trans_adjustment);
+            $this->entityManager->persist($trans_adjustment);
         }
 
+        /** @var Session $session */
+        $session = $request->getSession();
         // 5) Try or clear the transactions
         try {
             // Flush OK !
-            $em->flush();
-            // Add success message
-            $request->getSession()->getFlashBag()->add('success', 'Importation des transactions effectuée avec succès.');
+            $this->entityManager->flush();
+            $session->getFlashBag()->add('success', 'Importation des transactions effectuée avec succès.');
         } catch (\Exception $e) {
-            dump($e);
-            // Something goes wrong
-            $request->getSession()->getFlashBag()->add('error', 'Une erreur inconnue est survenue, veuillez essayer de nouveau.');
-            $em->clear();
+            // Something goes wrong > clear entity manager & add error message
+            $this->entityManager->clear();
+            $session->getFlashBag()->add('error', 'Une erreur inconnue est survenue, veuillez essayer de nouveau.');
         }
 
         if ($request->isXmlHttpRequest()) {

@@ -65,7 +65,7 @@ page :
       link :
         label : "Log in now !"
     messages :
-      already_registered : "This user already exist, please chose a different mail address."
+      already_registered : "This user already exist, please chose another username or mail address."
       registration_success : "Registration successfully completed, you can now log in."
       unknown_error : "An unknown error has occurred, please try again."
       max_users_reached : "The maximum number of registrations has been reached! Come back later or contact us to make new places available."
@@ -144,6 +144,12 @@ page :
         label : "Amount of users"
       last_user :
         label : "Last registered user"
+    categories :
+      amount :
+        label : "Amount of categories"
+    transactions :
+      amount :
+        label : "Amount of transactions"
 
 ## BLOCKS
 block :
@@ -218,6 +224,7 @@ form_category :
     label       : "Icon"
   color :
     label       : "Color"
+    placeholder : "eg. red, #00FF00, ..."
 # Form transaction
 form_transaction :
   label :

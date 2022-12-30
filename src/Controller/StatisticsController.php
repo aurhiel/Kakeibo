@@ -2,16 +2,11 @@
 
 namespace App\Controller;
 
-// Forms
+use App\Entity\User;
 use App\Form\TransactionType;
 use App\Form\CategoryType;
+use App\Repository\TransactionRepository;
 
-// Entities
-use App\Entity\Transaction;
-use App\Entity\Category;
-
-// Components
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -25,22 +20,33 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
   */
 class StatisticsController extends AbstractController
 {
+    private User $user;
+    private TranslatorInterface $translator;
+    private TransactionRepository $transcationRepository;
+
+    public function __construct(
+        Security $security,
+        TranslatorInterface $translator,
+        TransactionRepository $transcationRepository
+    ) {
+        $this->user = $security->getUser();
+        $this->translator = $translator;
+        $this->transcationRepository = $transcationRepository;
+    }
+
     /**
      * @Route("/statistiques/{date_start}/{date_end}", name="statistics", defaults={"date_start"="current","date_end"="current"})
      */
-    public function index($date_start, $date_end, Security $security, Request $request, TranslatorInterface $translator)
-    {
-        /**
-         * @var User $user
-         */
-        $user = $security->getUser();
-
+    public function index(
+        string $date_start,
+        string $date_end
+    ) {
         // Force user to create at least ONE bank account !
-        if(count($user->getBankAccounts()) < 1)
+        if(count($this->user->getBankAccounts()) < 1)
             return $this->redirectToRoute('ignition-first-bank-account');
 
         // User has a bank account
-        $default_bank_account = $user->getDefaultBankAccount();
+        $default_bank_account = $this->user->getDefaultBankAccount();
         if(count($default_bank_account->getTransactions()) < 1) {
             return $this->redirectToRoute('dashboard');
         }
@@ -49,32 +55,19 @@ class StatisticsController extends AbstractController
         $is_now = ($date_start == 'current' && $date_end == 'current');
         $date_start = ($date_start == 'current') ? date('Y-m-01') : $date_start;
         $date_end = ($date_end == 'current') ? date('Y-m-t') : $date_end;
-        $em = $this->getDoctrine()->getManager();
-        /**
-         * @var TransactionRepository $r_trans
-         */
-        $r_trans = $em->getRepository(Transaction::class);
-
-        // Build the transaction form
-        $trans_entity = new Transaction();
-        $trans_form = $this->createForm(TransactionType::class, $trans_entity);
-
-        // Build the transaction form
-        $cat_entity = new Category();
-        $cat_form = $this->createForm(CategoryType::class, $cat_entity);
 
         // Get totals
-        $total_incomes = (float) $r_trans->findTotal($default_bank_account, $date_start, $date_end, 'incomes');
-        $total_expenses = (float) $r_trans->findTotal($default_bank_account, $date_start, $date_end, 'expenses');
+        $total_incomes = (float) $this->transcationRepository->findTotal($default_bank_account, $date_start, $date_end, 'incomes');
+        $total_expenses = (float) $this->transcationRepository->findTotal($default_bank_account, $date_start, $date_end, 'expenses');
 
         // Get transactions according to current page
-        $transactions = $r_trans->findByBankAccountAndDateAndPage($default_bank_account, $date_start, $date_end);
+        $transactions = $this->transcationRepository->findByBankAccountAndDateAndPage($default_bank_account, $date_start, $date_end);
         $nb_transactions = count($transactions);
 
         // Redirect to a page with transactions based on last one
         //  if current period hasn't any transactions
         if ($is_now === true && $nb_transactions < 1) {
-            $last_transaction = $r_trans->findByBankAccountAndDateAndPage($default_bank_account, null, 'now', 1, 1);
+            $last_transaction = $this->transcationRepository->findByBankAccountAndDateAndPage($default_bank_account, null, 'now', 1, 1);
             if (!empty($last_transaction) && isset($last_transaction[0])) {
                 $last_transaction = $last_transaction[0];
                 return $this->redirectToRoute('statistics', [
@@ -84,8 +77,8 @@ class StatisticsController extends AbstractController
             }
         }
 
-        $total_incomes_by_date = self::reindexByDate($r_trans->findTotalGroupBy($default_bank_account, $date_start, $date_end, 'date', 'incomes'));
-        $total_expenses_by_date = self::reindexByDate($r_trans->findTotalGroupBy($default_bank_account, $date_start, $date_end, 'date', 'expenses'));
+        $total_incomes_by_date = self::reindexByDate($this->transcationRepository->findTotalGroupBy($default_bank_account, $date_start, $date_end, 'date', 'incomes'));
+        $total_expenses_by_date = self::reindexByDate($this->transcationRepository->findTotalGroupBy($default_bank_account, $date_start, $date_end, 'date', 'expenses'));
 
         // Complete date without incomes or expense with empty transactions (= 0)
         //  according to the opposite one (incomes <> expenses)
@@ -93,8 +86,8 @@ class StatisticsController extends AbstractController
         self::completeEmptyDate($total_expenses_by_date, $total_incomes_by_date);
 
         // Retrieve total incomes & expenses grouped by categories
-        $total_incomes_by_cats = $r_trans->findTotalGroupBy($default_bank_account, $date_start, $date_end, 'category', 'incomes');
-        $total_expenses_by_cats = $r_trans->findTotalGroupBy($default_bank_account, $date_start, $date_end, 'category', 'expenses');
+        $total_incomes_by_cats = $this->transcationRepository->findTotalGroupBy($default_bank_account, $date_start, $date_end, 'category', 'incomes');
+        $total_expenses_by_cats = $this->transcationRepository->findTotalGroupBy($default_bank_account, $date_start, $date_end, 'category', 'expenses');
 
         // Get period selected type (monthly, yearly or custom)
         //    & create previous + next links
@@ -121,7 +114,7 @@ class StatisticsController extends AbstractController
                     // Get previous + next "YEAR | MONTH" & check if has transactions
                     //    before creating links & if so create previous link
                     $prev_date_end = date('Y-m-d', strtotime('last day of -1 ' . $search_period, strtotime($date_end)));
-                    $nb_prev_trans = (int)$r_trans->countAllByBankAccountAndByDate($default_bank_account, null, $prev_date_end);
+                    $nb_prev_trans = (int)$this->transcationRepository->countAllByBankAccountAndByDate($default_bank_account, null, $prev_date_end);
                     if ($nb_prev_trans > 0) {
                         $prev_date_start = date('Y-m-d', strtotime('first day of -1 '. $search_period, strtotime($date_start)));
                         $prev_link = $this->generateUrl('statistics', [
@@ -132,7 +125,7 @@ class StatisticsController extends AbstractController
                     }
                     //  & check next transactions and create link
                     $next_date_start = date('Y-m-d', strtotime('first day of +1 '. $search_period, strtotime($date_start)));
-                    $nb_next_trans = (int)$r_trans->countAllByBankAccountAndByDate($default_bank_account, $next_date_start, null);
+                    $nb_next_trans = (int)$this->transcationRepository->countAllByBankAccountAndByDate($default_bank_account, $next_date_start, null);
                     if ($nb_next_trans > 0) {
                         $next_date_end = date('Y-m-d', strtotime('last day of +1 '. $search_period, strtotime($date_end)));
                         $next_link = $this->generateUrl('statistics', [
@@ -147,7 +140,7 @@ class StatisticsController extends AbstractController
 
         return $this->render('statistics/index.html.twig', [
             'core_class'      => 'app-core--statistics app-core--merge-body-in-header',
-            'meta'            => [ 'title' => $translator->trans('page.statistics.meta.title') ],
+            'meta'            => [ 'title' => $this->translator->trans('page.statistics.meta.title') ],
             // 'stylesheets'     => [ 'kb-dashboard.css' ],
             // 'scripts'         => [ 'kb-dashboard.js' ],
             'curr_date_start' => $date_start,
@@ -165,8 +158,8 @@ class StatisticsController extends AbstractController
             'total_incomes_by_cats'   => $total_incomes_by_cats,
             'total_expenses_by_date'  => $total_expenses_by_date,
             'total_expenses_by_cats'  => $total_expenses_by_cats,
-            'form_transaction'        => $trans_form->createView(),
-            'form_category'           => $cat_form->createView(),
+            'form_transaction'        => $this->createForm(TransactionType::class)->createView(),
+            'form_category'           => $this->createForm(CategoryType::class)->createView(),
         ]);
     }
 

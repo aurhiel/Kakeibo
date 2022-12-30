@@ -17,11 +17,7 @@ security:
                 # property: username
 
     password_hashers:
-        # use your user class name here
-        App\Entity\User:
-            # Use native password hasher, which auto-selects the best
-            # possible hashing algorithm (starting from Symfony 5.3 this is "bcrypt")
-            algorithm: auto
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
 
     firewalls:
         dev:

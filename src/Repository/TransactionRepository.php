@@ -33,6 +33,14 @@ class TransactionRepository extends ServiceEntityRepository
         ;
     }
 
+    public function countAll()
+    {
+        return $this->createQueryBuilder('t')
+            ->select('COUNT(t.id) AS amount')
+            ->getQuery()->getSingleScalarResult()
+        ;
+    }
+
     public function countAllByBankAccountAndByDate($bank_account, $date_start = null, $date_end = null)
     {
         $qb = $this->createQueryBuilder('t')

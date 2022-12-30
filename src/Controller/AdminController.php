@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
-// Entities
-use App\Entity\User;
-use App\Entity\Category;
+use App\Repository\CategoryRepository;
+use App\Repository\TransactionRepository;
+use App\Repository\UserRepository;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,68 +18,61 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
   */
 class AdminController extends AbstractController
 {
+    private TranslatorInterface $translator;
+    private UserRepository $userRepository;
+    private CategoryRepository $categoryRepository;
+    private TransactionRepository $transactionRepository;
+    
+    public function __construct(
+        TranslatorInterface $translator,
+        UserRepository $userRepository,
+        CategoryRepository $categoryRepository,
+        TransactionRepository $transactionRepository
+    ) {
+        $this->translator = $translator;
+        $this->userRepository = $userRepository;
+        $this->categoryRepository = $categoryRepository;
+        $this->transactionRepository = $transactionRepository;
+    }
+
     /**
      * @Route("/admin", name="admin")
      */
-    public function index(TranslatorInterface $translator)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        // Retrieve users
-        $r_user = $em->getRepository(User::class);
-        $users  = $r_user->findBy([], ['registerDate' => 'DESC']);
-        $nb_users = count($users);
-
-        // Retrieve nb categories
-        $r_category = $em->getRepository(Category::class);
-
+    public function index() {
         return $this->render('admin/index.html.twig', [
-            'page_title'  => '<span class="icon icon-settings"></span> ' . $translator->trans('page.admin.title'),
-            'core_class'  => 'app-core--admin app-core--merge-body-in-header',
-            'users'       => array_slice($users, 0, min(5, $nb_users)),
-            'nb_users'    => $nb_users,
-            'max_users'   => $this->getParameter('app.max_users'),
-            'nb_categories' => (int)$r_category->countAll()
+            'page_title' => '<span class="icon icon-settings"></span> ' . $this->translator->trans('page.admin.title'),
+            'core_class' => 'app-core--admin app-core--merge-body-in-header',
+            'users' => $this->userRepository->findAllBy(['registerDate' => 'DESC'], 5),
+            'nb_users' => (int)$this->userRepository->countAll(),
+            'max_users' => $this->getParameter('app.max_users'),
+            'nb_categories' => (int)$this->categoryRepository->countAll(),
+            'nb_transactions' => (int)$this->transactionRepository->countAll(),
         ]);
     }
 
     /**
      * @Route("/admin/utilisateurs", name="admin_users")
      */
-    public function users(TranslatorInterface $translator)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        // Retrieve users
-        $r_user = $em->getRepository(User::class);
-        $users  = $r_user->findBy([], ['registerDate' => 'DESC']);
-
+    public function users() {
         // TODO add pagination & re-order
 
         return $this->render('admin/users.html.twig', [
-            'page_title'  => '<span class="icon icon-user"></span> ' . $translator->trans('page.admin.title'),
-            'core_class'  => 'app-core--admin app-core--merge-body-in-header',
-            'users'       => $users,
+            'page_title' => '<span class="icon icon-user"></span> ' . $this->translator->trans('page.admin.title'),
+            'core_class' => 'app-core--admin app-core--merge-body-in-header',
+            'users' => $this->userRepository->findAllBy(['registerDate' => 'DESC']),
         ]);
     }
 
     /**
      * @Route("/admin/categories", name="admin_categories")
      */
-    public function categories(TranslatorInterface $translator)
-    {
-        $em = $this->getDoctrine()->getManager();
-
+    public function categories() {
         // TODO Get categories & create form to add new ones !
 
-        // Retrieve categories
-        $r_category = $em->getRepository(Category::class);
-        $categories = $r_category->findAll();
-
         return $this->render('admin/categories.html.twig', [
-            'page_title' => '<span class="icon icon-pie-chart"></span> ' . $translator->trans('page.admin.title'),
+            'page_title' => '<span class="icon icon-pie-chart"></span> ' . $this->translator->trans('page.admin.title'),
             'core_class' => 'app-core--admin app-core--merge-body-in-header',
-            'categories' => $categories,
+            'categories' => $this->categoryRepository->findAll(),
         ]);
     }
 }

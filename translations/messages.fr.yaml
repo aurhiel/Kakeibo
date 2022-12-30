@@ -64,7 +64,7 @@ page :
       link :
         label : "Connectez-vous"
     messages :
-      already_registered : "Cet utilisateur existe déjà, veuillez utiliser une adresse email différente."
+      already_registered : "Cet utilisateur existe déjà, veuillez utiliser un autre nom d'utilisateur ou adresse email."
       registration_success : "Inscription effectuée avec succès, vous pouvez dès à présent vous connecter."
       unknown_error : "Une erreur inconnue est survenue, veuillez essayer de nouveau."
       max_users_reached : "Le nombre maximum d'inscription a été atteint ! Revenez plus tard ou contactez-nous pour que de nouvelles places soient disponibles."
@@ -207,6 +207,12 @@ page :
         label : "Nombre d'utilisateur&middot;rice&middot;s"
       last_user :
         label : "Dernier&middot;ère utilisateur&middot;rice inscrit&middot;e"
+    categories :
+      amount :
+        label : "Nombre de catégories"
+    transactions :
+      amount :
+        label : "Nombre de transactions"
 
 ## BLOCKS
 block :
@@ -281,6 +287,7 @@ form_category :
     label       : "Icône"
   color :
     label       : "Couleur"
+    placeholder : "ex: red, #00FF00, ..."
 # Form transaction
 form_transaction :
   label :

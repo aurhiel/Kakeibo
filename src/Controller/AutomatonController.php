@@ -2,14 +2,14 @@
 
 namespace App\Controller;
 
-// Forms
-use App\Form\TransactionAutoType;
-
-// Entities
 use App\Entity\TransactionAuto;
+use App\Entity\User;
+use App\Form\TransactionAutoType;
+use App\Repository\TransactionAutoRepository;
 
-// Components
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,47 +23,58 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
   */
 class AutomatonController extends AbstractController
 {
+    private User $user;
+    private TranslatorInterface $translator;
+    private EntityManagerInterface $entityManager;
+    private TransactionAutoRepository $transactionAutoRepository;
+    
+    public function __construct(
+        Security $security,
+        TranslatorInterface $translator,
+        EntityManagerInterface $entityManager,
+        TransactionAutoRepository $transactionAutoRepository
+    ) {
+        $this->user = $security->getUser();
+        $this->translator = $translator;
+        $this->entityManager = $entityManager;
+        $this->transactionAutoRepository = $transactionAutoRepository;
+    }
+
     /**
      * @Route("/automaton/{id}", name="automaton", defaults={"id"=null})
      */
-    public function index($id, Request $request, Security $security, TranslatorInterface $translator)
-    {
-        // Retrieve user object
-        $user = $security->getUser();
-
+    public function index(
+        $id,
+        Request $request
+    ) {
         // Force user to create at least ONE bank account !
-        if (count($user->getBankAccounts()) < 1)
+        if (count($this->user->getBankAccounts()) < 1)
             return $this->redirectToRoute('ignition-first-bank-account');
 
-        // Get some data
-        $em             = $this->getDoctrine()->getManager();
-        $r_trans_auto   = $em->getRepository(TransactionAuto::class);
-        $return_data    = [];
-
-        // Edit transaction auto ?
-        $is_edit = (!empty($id) && ((int) $id) > 0);
+        $is_edit = (!empty($id) && ((int) $id) > 0); // Edit transaction auto ?
+        $return_data = [];
 
         // User has a bank account
-        $default_bank_account = $user->getDefaultBankAccount();
+        $default_bank_account = $this->user->getDefaultBankAccount();
 
         // Force user to create at least ONE bank account !
-        if (count($user->getBankAccounts()) < 1)
+        if (count($this->user->getBankAccounts()) < 1)
             return $this->redirectToRoute('ignition-first-bank-account');
 
         // User has a bank account
-        $default_bank_account = $user->getDefaultBankAccount();
+        $default_bank_account = $this->user->getDefaultBankAccount();
 
         // Initialize default message & change entity if needed
         if($is_edit) {
             // Get transaction auto to edit with id AND user (for security)
-            $trans_auto_entity  = $r_trans_auto->findOneByIdAndUser($id, $user);
-            $message_status_ok  = $translator->trans('form_trans_auto.status.edit_ok');
-            $message_status_nok = $translator->trans('form_trans_auto.status.edit_nok');
+            $trans_auto_entity = $this->transactionAutoRepository->findOneByIdAndUser($id, $this->user);
+            $message_status_ok = $this->translator->trans('form_trans_auto.status.edit_ok');
+            $message_status_nok = $this->translator->trans('form_trans_auto.status.edit_nok');
         } else {
             // New Entity
-            $trans_auto_entity  = new TransactionAuto();
-            $message_status_ok  = $translator->trans('form_trans_auto.status.add_ok');
-            $message_status_nok = $translator->trans('form_trans_auto.status.add_nok');
+            $trans_auto_entity = new TransactionAuto();
+            $message_status_ok = $this->translator->trans('form_trans_auto.status.add_ok');
+            $message_status_nok = $this->translator->trans('form_trans_auto.status.add_nok');
         }
 
         // 1) Build the form
@@ -76,9 +87,9 @@ class AutomatonController extends AbstractController
         if ($trans_auto_form->isSubmitted()) {
             // Data to return/display
             $return_data = [
-                'query_status'      => 0,
-                'slug_status'       => 'error',
-                'message_status'    => $message_status_nok
+                'query_status' => 0,
+                'slug_status' => 'error',
+                'message_status' => $message_status_nok
             ];
 
             if ($trans_auto_form->isValid()) {
@@ -87,52 +98,54 @@ class AutomatonController extends AbstractController
                 $trans_auto_entity->setIsActive(true);
 
                 // 4) Save by persisting entity
-                $em->persist($trans_auto_entity);
+                $this->entityManager->persist($trans_auto_entity);
 
                 // 5) Try or clear
                 try {
                     // Flush OK !
-                    $em->flush();
+                    $this->entityManager->flush();
 
                     $return_data = [
-                        'query_status'    => 1,
-                        'slug_status'     => 'success',
-                        'message_status'  => $message_status_ok,
+                        'query_status' => 1,
+                        'slug_status' => 'success',
+                        'message_status' => $message_status_ok,
                         // Data
-                        // 'entity'                => self::format_json($trans_auto_entity),
-                        // 'default_bank_account'  => self::format_json_bank_account($default_bank_account)
+                        // 'entity' => self::format_json($trans_auto_entity),
+                        // 'default_bank_account' => self::format_json_bank_account($default_bank_account)
                     ];
                 } catch (\Exception $e) {
-                    // Something goes wrong
-                    $em->clear();
-                    // Store exception message
+                    // Something goes wrong > Store exception message
+                    $this->entityManager->clear();
                     $return_data['exception'] = $e->getMessage();
                 }
             }
         }
 
         // Retrieve transactions auto
-        $return_data['trans_auto'] = $r_trans_auto->findAllByBankAccount($default_bank_account);
+        $return_data['trans_auto'] = $this->transactionAutoRepository->findAllByBankAccount($default_bank_account);
 
         // Retrieve total auto expenses & incomes
-        $return_data['total_auto_expenses'] = $r_trans_auto->findTotal($default_bank_account, 'expenses');
-        $return_data['total_auto_incomes'] = $r_trans_auto->findTotal($default_bank_account, 'incomes');
+        $return_data['total_auto_expenses'] = $this->transactionAutoRepository->findTotal($default_bank_account, 'expenses');
+        $return_data['total_auto_incomes'] = $this->transactionAutoRepository->findTotal($default_bank_account, 'incomes');
 
         if ($request->isXmlHttpRequest()) {
             return $this->json($return_data);
         } else {
             // Set message in flashbag on direct access
-            if (isset($return_data['slug_status']) && isset($return_data['message_status']))
-                $request->getSession()->getFlashBag()->add($return_data['slug_status'], $return_data['message_status']);
+            if (isset($return_data['slug_status']) && isset($return_data['message_status'])) {
+                /** @var Session $session */
+                $session = $request->getSession();
+                $session->getFlashBag()->add($return_data['slug_status'], $return_data['message_status']);
+            }
 
             // Redirect to home after form submit to clear it
             if ($trans_auto_form->isSubmitted())
-              return $this->redirectToRoute('automaton');
+                return $this->redirectToRoute('automaton');
 
             return $this->render('automaton/index.html.twig', [
                 'core_class'  => 'app-core--automaton app-core--merge-body-in-header',
-                'meta'        => [ 'title' => $translator->trans('page.trans_auto.meta.title') ],
-                'page_title'  => '<span class="icon icon-command"></span> ' . $translator->trans('page.trans_auto.title'),
+                'meta'        => [ 'title' => $this->translator->trans('page.trans_auto.meta.title') ],
+                'page_title'  => '<span class="icon icon-command"></span> ' . $this->translator->trans('page.trans_auto.title'),
                 'is_trans_auto_edit'    => $is_edit,
                 'form_trans_auto'       => $trans_auto_form->createView(),
                 'trans_auto'            => $return_data['trans_auto'],
@@ -146,56 +159,55 @@ class AutomatonController extends AbstractController
     /**
      * @Route("/trans-auto/delete/{id}", name="automaton_trans_auto_delete")
      */
-    public function trans_auto_delete($id, Request $request, Security $security, TranslatorInterface $translator)
-    {
-        $user         = $security->getUser();
-        $em           = $this->getDoctrine()->getManager();
-        $r_trans_auto = $em->getRepository(TransactionAuto::class);
-        // Retrieve transaction auto with id AND user (for security)
-        $trans_auto   = $r_trans_auto->findOneByIdAndUser($id, $user);
-        $return_data  = [
-            'query_status'    => 0,
-            'slug_status'     => 'error',
-            'message_status'  => $translator->trans('form_trans_auto.status.delete_nok')
+    public function trans_auto_delete(
+        $id,
+        Request $request
+    ) {
+        $trans_auto = $this->transactionAutoRepository->findOneByIdAndUser($id, $this->user);
+        $return_data = [
+            'query_status' => 0,
+            'slug_status' => 'error',
+            'message_status' => $this->translator->trans('form_trans_auto.status.delete_nok')
         ];
 
         if(!is_null($trans_auto)) {
-            $trans_auto_deleted     = $trans_auto;
-            $id_trans_auto_deleted  = $trans_auto_deleted->getId();
+            $trans_auto_deleted = $trans_auto;
+            $id_trans_auto_deleted = $trans_auto_deleted->getId();
 
             // Remove entity
-            $em->remove($trans_auto);
+            $this->entityManager->remove($trans_auto);
 
             // Try to save (flush) or clear entity remove
             try {
                 // Flush OK !
-                $em->flush();
+                $this->entityManager->flush();
                 // Retrieve user's default bank account
-                // $default_bank_account = $user->getDefaultBankAccount();
+                // $default_bank_account = $this->user->getDefaultBankAccount();
 
                 $return_data = [
-                    'query_status'    => 1,
-                    'slug_status'     => 'success',
-                    'message_status'  => $translator->trans('form_trans_auto.status.delete_ok'),
+                    'query_status' => 1,
+                    'slug_status' => 'success',
+                    'message_status' => $this->translator->trans('form_trans_auto.status.delete_ok'),
                     // Data
-                    'entity'                => [ 'id' => $id_trans_auto_deleted ],
-                    // 'default_bank_account'  => self::format_json_bank_account($default_bank_account)
+                    'entity' => [ 'id' => $id_trans_auto_deleted ],
+                    // 'default_bank_account' => self::format_json_bank_account($default_bank_account)
                 ];
             } catch (\Exception $e) {
-                // Something goes wrong
-                $em->clear();
-                // Store exception message
+                // Something goes wrong > Store exception message
+                $this->entityManager->clear();
                 $return_data['exception'] = $e->getMessage();
             }
         } else {
-            $return_data['message_status'] = $translator->trans('form_trans_auto.status.delete_unknown_entity');
+            $return_data['message_status'] = $this->translator->trans('form_trans_auto.status.delete_unknown_entity');
         }
 
         if ($request->isXmlHttpRequest()) {
             return $this->json($return_data);
         } else {
+            /** @var Session $session */
+            $session = $request->getSession();
             // Set message in flashbag on direct access
-            $request->getSession()->getFlashBag()->add($return_data['slug_status'], $return_data['message_status']);
+            $session->getFlashBag()->add($return_data['slug_status'], $return_data['message_status']);
 
             // Redirect to previous page (= referer)
             return $this->redirect($request->headers->get('referer'));

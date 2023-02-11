@@ -1,4 +1,4 @@
-{% set goto = ((goto is defined) ? goto : 'app') %}
+{% set goto = ((goto is defined) ? '#' ~ goto : '') %}
 
 {% set max_pages_diplayed = 7 %}
 
@@ -42,7 +42,7 @@
         </li>
         {% else %}
         <li class="page-item">
-          <a class="page-link" href="{{ path(path_slug, { page: num_page }) }}#{{ goto }}">
+          <a class="page-link" href="{{ path(path_slug, { page: num_page }) }}{{ goto }}">
             {{ num_page }}
           </a>
         </li>
@@ -52,7 +52,7 @@
       {# Next button #}
       {% if current_page < nb_pages %}
       <li class="page-item">
-        <a class="page-link" aria-label="Suivant" href="{{ path(path_slug, { page: (current_page + 1) }) }}#{{ goto }}">
+        <a class="page-link" aria-label="Suivant" href="{{ path(path_slug, { page: (current_page + 1) }) }}{{ goto }}">
           <span aria-hidden="true">&raquo;</span>
           <span class="sr-only">Suivant</span>
         </a>

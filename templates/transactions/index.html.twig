@@ -9,13 +9,12 @@
       {# Transactions pagination #}
       <div class="mt-3">
         {% include 'components/pagination.html.twig' with {
-          path_slug: 'transactions',
-          goto: 'transactions-list'
+          path_slug: 'transactions'
         } %}
       </div>
     </div>
 
-    <div class="col-12 col-md-5 col-xl-4 col-xxl-3 order-first order-md-last">
+    <div class="col-12 col-md-5 col-xl-4 col-xxl-3 order-first order-md-last position-md-sticky top-md-4 align-self-start">
       {% include 'components/incomes-and-expenses.html.twig' with {
         expenses: total_expenses,
         incomes: total_incomes,

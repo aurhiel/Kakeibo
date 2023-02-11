@@ -92,6 +92,27 @@
     {# Custom javascripts from twig templates #}
     {% block javascripts_defines %}{% endblock %}
 
+    {# Display some templates ONLY IF user is connected #}
+    {% if app.user is defined and app.user is not null and categories is defined %}
+      <script type="text/javascript">
+        var categories = {};
+        var default_category = null;
+        
+        {% for category in categories %}
+          categories[{{category.id}}] = {
+            label: '{{ category.label }}',
+            slug: '{{ category.slug }}',
+            color: '{{ category.color }}',
+            icon: '{{ category.icon }}',
+            regex: '{{ category.importRegex }}',
+          };
+          {% if category.slug == 'misc' %}
+            default_category = categories[{{category.id}}];
+          {% endif %}
+        {% endfor %}
+      </script>
+    {% endif %}
+
     {# Javascripts #}
     {{ encore_entry_script_tags('kakeibo') }}
     {% if scripts is defined %}

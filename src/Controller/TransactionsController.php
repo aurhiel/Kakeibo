@@ -30,15 +30,18 @@ class TransactionsController extends AbstractController
     private User $user;
     private EntityManagerInterface $entityManager;
     private TransactionRepository $transactionRepository;
+    private CategoryRepository $categoryRepository;
 
     public function __construct(
         Security $security,
         EntityManagerInterface $entityManager,
-        TransactionRepository $transactionRepository
+        TransactionRepository $transactionRepository,
+        CategoryRepository $categoryRepository
     ) {
         $this->user = $security->getUser();
         $this->entityManager = $entityManager;
         $this->transactionRepository = $transactionRepository;
+        $this->categoryRepository = $categoryRepository;
     }
 
     /**
@@ -261,6 +264,14 @@ class TransactionsController extends AbstractController
         $date_end = (isset($transactions[0]) && $page > 1) ? $transactions[0]->getDate()->format('Y-m-d') : null;
         $date_start = (count($transactions) > 1) ? $transactions[count($transactions)-1]->getDate()->format('Y-m-d') : null;
 
+        $categories = $this->categoryRepository->findAllIndexedByAndForUser('id', $this->user->getId());
+        $default_category = null;
+        foreach($categories as $category) {
+            if (CategoryRepository::SLUG_MISC === $category->getSlug()) {
+                $default_category = $category;
+            }
+        }
+
         return $this->render('transactions/index.html.twig', [
             'page_title'        => '<span class="icon icon-list"></span> ' . $translator->trans('page.transactions.title'),
             'meta'              => [ 'title' => $translator->trans('page.transactions.title') ],
@@ -277,6 +288,8 @@ class TransactionsController extends AbstractController
             'nb_by_page'        => self::NB_TRANSAC_BY_PAGE,
             'total_incomes'     => $total_incomes,
             'total_expenses'    => $total_expenses,
+            'categories'        => $categories,
+            'default_category'  => $default_category,
             'form_transaction'  => $this->createForm(TransactionType::class)->createView(),
             'form_category'     => $this->createForm(CategoryType::class)->createView(),
         ]);
@@ -312,7 +325,6 @@ class TransactionsController extends AbstractController
             $categories = $categoryRepository->findAll();
             // Default category
             foreach($categories as $cat) {
-                $regex = $cat->getImportRegex();
                 // Retrieve default category
                 if ($cat->getSlug() == 'misc')
                     $default_category = $cat;

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\CategoryType;
 use App\Form\TransactionType;
+use App\Repository\CategoryRepository;
 use App\Repository\TransactionRepository;
 
 use Symfony\Component\Routing\Annotation\Route;
@@ -25,15 +26,18 @@ class DashboardController extends AbstractController
     private User $user;
     private TranslatorInterface $translator;
     private TransactionRepository $transcationRepository;
+    private CategoryRepository $categoryRepository;
 
     public function __construct(
         Security $security,
         TranslatorInterface $translator,
-        TransactionRepository $transcationRepository
+        TransactionRepository $transcationRepository,
+        CategoryRepository $categoryRepository
     ) {
         $this->user = $security->getUser();
         $this->translator = $translator;
         $this->transcationRepository = $transcationRepository;
+        $this->categoryRepository = $categoryRepository;
     }
 
     /**
@@ -70,6 +74,14 @@ class DashboardController extends AbstractController
         $total_incomes_by_cats = $this->transcationRepository->findTotalGroupBy($default_bank_account, $date_start, 'now', 'category', 'incomes');
         $total_expenses_by_cats = $this->transcationRepository->findTotalGroupBy($default_bank_account, $date_start, 'now', 'category', 'expenses');
 
+        $categories = $this->categoryRepository->findAllIndexedByAndForUser('id', $this->user->getId());
+        $default_category = null;
+        foreach($categories as $category) {
+            if (CategoryRepository::SLUG_MISC === $category->getSlug()) {
+                $default_category = $category;
+            }
+        }
+
         return $this->render('dashboard/index.html.twig', [
             'page_title'            => $this->translator->trans('page.dashboard.title'),
             'meta'                  => [ 'title' => $this->translator->trans('page.dashboard.title') ],
@@ -84,6 +96,8 @@ class DashboardController extends AbstractController
             'total_expenses'        => $total_expenses,
             'total_incomes_by_cats'   => $total_incomes_by_cats,
             'total_expenses_by_cats'  => $total_expenses_by_cats,
+            'categories'        => $categories,
+            'default_category'  => $default_category,
             'form_transaction'  => $this->createForm(TransactionType::class)->createView(),
             'form_category'     => $this->createForm(CategoryType::class)->createView()
         ]);

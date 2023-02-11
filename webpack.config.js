@@ -73,14 +73,15 @@ Encore
      */
     // Google Fonts
     .addPlugin(new GoogleFontsPlugin({
+      apiUrl: 'https://gwfh.mranftl.com/api/fonts',
       fonts: [
           { family: "Cabin", variants: [ "400", "700" ] },
           { family: "Arvo", variants: [ "400", "700" ] },
           { family: "Roboto Mono", variants: [ "400", "700" ] },
           { family: "Montserrat", variants: [ "300" ] },
       ],
-      "path": "fonts/google/",
-      "filename": "google-fonts.css"
+      path: "fonts/google/",
+      filename: "google-fonts.css"
     }))
 
 

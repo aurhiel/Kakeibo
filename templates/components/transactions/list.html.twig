@@ -49,23 +49,19 @@
           </div>
           {# TRANS:ACTIONS #}
           <div class="col col-more">
-            <span class="kb-more-dots align-middle" data-toggle="dropdown" aria-expanded="false">
-              <span class="dot"></span>
-            </span>
-            <div class="dropdown-menu dropdown-menu-right text-right">
-              {% if form_transaction is defined %}
-                <button class="dropdown-item" type="button" data-id-edit="{{ transac.id }}"
-                  data-toggle="modal" data-target="#modal-manage-transaction">
-                  Modifier <span class="ml-1 icon icon-edit"></span>
-                </button>
-              {% endif %}
-              <button class="dropdown-item" type="button" data-confirm-href="{{ path('transaction_delete', { id: transac.id }) }}"
-                data-entity-name="transaction" data-entity-id="{{ transac.id }}"
-                  data-confirm-body="Êtes-vous sûr de vouloir supprimer la transaction : <br><b>&laquo;&nbsp;{{ transac.label }}&nbsp;&raquo;</b> ?"
-                    data-toggle="modal" data-target="#modal-confirm-delete">
-                Supprimer <span class="ml-1 icon icon-trash"></span>
+            {% if form_transaction is defined %}
+              <button class="btn btn-sm btn-pill btn-outline-secondary mr-1" type="button" data-id-edit="{{ transac.id }}"
+                data-toggle="modal" data-target="#modal-manage-transaction">
+                <span class="icon icon-edit"></span>
               </button>
-            </div>
+            {% endif %}
+
+            <button class="btn btn-sm btn-pill btn-outline-danger" type="button" data-confirm-href="{{ path('transaction_delete', { id: transac.id }) }}"
+              data-entity-name="transaction" data-entity-id="{{ transac.id }}"
+                data-confirm-body="Êtes-vous sûr de vouloir supprimer la transaction : <br><b>&laquo;&nbsp;{{ transac.label }}&nbsp;&raquo;</b> ?"
+                  data-toggle="modal" data-target="#modal-confirm-delete">
+              <span class="icon icon-trash"></span>
+            </button>
           </div>
         </div>
         {% set last_date = transac.date|date('Y-m-d') %}

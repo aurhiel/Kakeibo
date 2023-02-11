@@ -58,25 +58,29 @@ $hr-border-color:           rgba($black, .05) !default;
 
 
 // Header
-$header-bg:                     $dark !default;
-$header-color:                  $white !default;
-$header-title-padding-y:        .8rem;
-$header-title-padding-y-md:     1rem;
-$header-title-padding-y-lg:     1rem;
-$header-title-padding-top:        1rem;
-$header-title-padding-top-md:     1.4rem;
-$header-title-padding-top-lg:     1.6rem;
-$header-title-padding-top-xl:     2rem;
-$header-title-padding-bottom:     .8rem;
-$header-title-padding-bottom-md:  1rem;
-$header-title-padding-bottom-lg:  1rem;
-$header-title-padding-bottom-xl:  1rem;
-$header-title-margin-bottom:    .6rem;
-$header-title-margin-bottom-md: .8rem;
-$header-title-margin-bottom-lg: 1rem;
+$header-bg:                      $dark !default;
+$header-color:                   $white !default;
+$header-title-padding-y:         .8rem;
+$header-title-padding-y-md:      1rem;
+$header-title-padding-y-lg:      1rem;
+$header-title-padding-top:       1rem;
+$header-title-padding-top-md:    1.4rem;
+$header-title-padding-top-lg:    1.6rem;
+$header-title-padding-top-xl:    2rem;
+$header-title-padding-bottom:    .8rem;
+$header-title-padding-bottom-md: 1rem;
+$header-title-padding-bottom-lg: 1rem;
+$header-title-padding-bottom-xl: 1rem;
+$header-title-margin-bottom:     .6rem;
+$header-title-margin-bottom-md:  .8rem;
+$header-title-margin-bottom-lg:  1rem;
 
 
 // Modal
+$modal-sm: 21.5rem;
+$modal-md: 31.25rem;
+$modal-lg: 50rem;
+$modal-xl: 71.25rem;
 $modal-open-blur-size: 5px;
 
 
@@ -85,20 +89,39 @@ $navbar-brand-font-size: 1.6rem !default;
 
 // Navbar Default
 $navbar-default-bg:                     $header-bg !default;
-$navbar-default-color:                  rgba($white, .75) !default;
-$navbar-default-border-color:           rgba($white, .15) !default;
-$navbar-default-hover-color:            rgba($white, .95) !default;
-$navbar-default-active-bg:              rgba($white, .025) !default;
+$navbar-default-color:                  rgba($header-color, .75) !default;
+$navbar-default-border-color:           rgba($header-color, .15) !default;
+$navbar-default-hover-color:            rgba($header-color, .95) !default;
+$navbar-default-active-bg:              rgba($header-color, .025) !default;
 $navbar-default-active-color:           $primary !default;
-$navbar-default-disabled-color:         rgba($white, .25) !default;
-$navbar-default-toggler-border-color:   rgba($white, .1) !default;
+$navbar-default-disabled-color:         rgba($header-color, .25) !default;
+$navbar-default-toggler-border-color:   rgba($header-color, .1) !default;
 $navbar-default-toggler-lines-height:   2px;
 $navbar-default-toggler-lines-spacing:  9px;
+$navbar-height:                         3.825rem;
+$navbar-height-sm:                      $navbar-height;
+$navbar-height-md:                      4.825rem;
+$navbar-height-lg:                      5.625rem;
+$navbar-height-xl:                      7.2rem;
+$navbar-height-xxl:                     $navbar-height-xl;
+$navbar-heights: (
+  xs: $navbar-height,
+  sm: $navbar-height-sm,
+  md: $navbar-height-md,
+  lg: $navbar-height-lg,
+  xl: $navbar-height-xl,
+  xxl: $navbar-height-xxl
+);
 
 
-
-// Buttonns
+// Buttons
 $btn-font-weight:       700 !default;
+
+
+
+// Label
+$label-margin-left: .25rem;
+$label-margin-bottom: .25rem;
 
 
 

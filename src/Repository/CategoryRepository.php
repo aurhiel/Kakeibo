@@ -14,6 +14,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CategoryRepository extends ServiceEntityRepository
 {
+    public const SLUG_MISC = 'misc';
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Category::class);
@@ -25,6 +27,28 @@ class CategoryRepository extends ServiceEntityRepository
             ->orderBy('c.id', 'ASC')
             ->getQuery()
             ->getResult()
+        ;
+    }
+
+    public function findAllIndexedByAndForUser(string $column = 'id', int $userId)
+    {
+        return $this->createQueryBuilder('c', 'c.' . $column)
+            ->where('c.is_default = true')
+            ->orWhere('c.user = :userId')
+            ->setParameter('userId', $userId)
+            ->orderBy('c.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findDefault()
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.slug = :misc_slug')
+            ->setParameter('misc_slug', self::SLUG_MISC)
+            ->getQuery()
+            ->getOneOrNullResult()
         ;
     }
 

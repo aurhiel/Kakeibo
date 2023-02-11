@@ -18,6 +18,9 @@ $cc-drop-shadow-size: 24rem;
         transform: scale(1);
         opacity: 1;
       }
+      .icon {
+        transform: rotate(135deg);
+      }
     }
     .list-actions {
       opacity: 1;
@@ -66,6 +69,8 @@ $cc-drop-shadow-size: 24rem;
     .icon {
       display: inline-block;
       vertical-align: middle;
+      transform: rotate(0);
+      transition: transform $animation-duration ease;
     }
   }
 

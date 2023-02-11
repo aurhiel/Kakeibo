@@ -86,19 +86,14 @@
               </div>
               {# TRANS:ACTIONS #}
               <div class="col col-more">
-                <span class="kb-more-dots align-middle" data-toggle="dropdown" aria-expanded="false">
-                  <span class="dot"></span>
-                </span>
-                <div class="dropdown-menu dropdown-menu-right text-right">
-                  <a class="dropdown-item" href="{{ path('automaton', { id: ta.id }) }}">
-                    Modifier <span class="ml-1 icon icon-edit"></span>
-                  </a>
-                  <button class="dropdown-item" type="button" data-confirm-href="{{ path('automaton_trans_auto_delete', { id: ta.id }) }}"
-                    data-confirm-body="Êtes-vous sûr de vouloir supprimer la transaction récurrente : <br><b>&laquo;&nbsp;{{ ta.label }}&nbsp;&raquo;</b> ?"
-                      data-toggle="modal" data-target="#modal-confirm-delete">
-                    Supprimer <span class="ml-1 icon icon-trash"></span>
-                  </button>
-                </div>
+                <a class="btn btn-sm btn-pill btn-outline-secondary mr-1" href="{{ path('automaton', { id: ta.id }) }}">
+                  <span class="icon icon-edit"></span>
+                </a>
+                <button class="btn btn-sm btn-pill btn-outline-danger" type="button" data-confirm-href="{{ path('automaton_trans_auto_delete', { id: ta.id }) }}"
+                  data-confirm-body="Êtes-vous sûr de vouloir supprimer la transaction récurrente : <br><b>&laquo;&nbsp;{{ ta.label }}&nbsp;&raquo;</b> ?"
+                    data-toggle="modal" data-target="#modal-confirm-delete">
+                  <span class="icon icon-trash"></span>
+                </button>
               </div>
             </div>
           {% endfor %}

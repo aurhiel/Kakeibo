@@ -328,9 +328,9 @@ var kakeibo = {
             if (date_find.matched_date !== null && date_find.matched_date.index != -1) {
               var btn_edit = '';
               if (has_edit == true) {
-                btn_edit = '<button class="dropdown-item" type="button" data-id-edit="' + transaction.id + '"' +
+                btn_edit = '<button class="btn btn-sm btn-pill btn-outline-secondary mr-1" type="button" data-id-edit="' + transaction.id + '"' +
                   'data-toggle="modal" data-target="#modal-manage-transaction">' +
-                  'Modifier <span class="ml-1 icon icon-edit"></span>' +
+                  '<span class="icon icon-edit"></span>' +
                 '</button>';
               }
 
@@ -351,21 +351,16 @@ var kakeibo = {
                     kakeibo.format.price(transaction.amount, currency.slug) +
                   '</span>' +
                 '</div>' +
-                '<div class="col col-more">'+
-                  '<span class="kb-more-dots align-middle" data-toggle="dropdown" aria-expanded="false">' +
-                    '<span class="dot"></span>' +
-                  '</span>' +
-                  '<div class="dropdown-menu dropdown-menu-right text-right">' +
-                    btn_edit +
-                    '<button class="dropdown-item" type="button" data-confirm-href="' + url_delete + transaction.id + '"' +
-                      'data-entity-name="transaction" data-entity-id="' + transaction.id + '"' +
-                        'data-confirm-body="Êtes-vous sûr de vouloir supprimer la transaction : <br><b>&laquo;&nbsp;' + transaction.label + '&nbsp;&raquo;</b> ?"' +
-                          'data-toggle="modal" data-target="#modal-confirm-delete">' +
-                      'Supprimer <span class="ml-1 icon icon-trash"></span>' +
-                    '</button>' +
-                  '</div>' +
+                '<div class="col col-more">' +
+                  btn_edit +
+                  '<button class="btn btn-sm btn-pill btn-outline-danger" type="button" data-confirm-href="' + url_delete + transaction.id + '"' +
+                    'data-entity-name="transaction" data-entity-id="' + transaction.id + '"' +
+                      'data-confirm-body="Êtes-vous sûr de vouloir supprimer la transaction : <br><b>&laquo;&nbsp;' + transaction.label + '&nbsp;&raquo;</b> ?"' +
+                        'data-toggle="modal" data-target="#modal-confirm-delete">' +
+                    '<span class="icon icon-trash"></span>' +
+                  '</button>' +
                 '</div>' +
-                '</div>'));
+              '</div>'));
             }
           }
         });
@@ -616,7 +611,11 @@ var kakeibo = {
 
       // Fill inputs
       for (const property in data) {
-        $form.find('#'+ name +'_' + property).val(data[property]);
+        var value = data[property];
+        if (property == 'amount') {
+          value = (Math.round(value * 100) / 100).toFixed(2);
+        }
+        $form.find('#'+ name +'_' + property).val(value).trigger('change');
       }
     },
     clear: function(name) {
@@ -643,7 +642,7 @@ var kakeibo = {
           select_val = $options.filter('[selected]').val();
         }
 
-        $select.val(select_val);
+        $select.val(select_val).trigger('change');
       });
 
       // Delete hidden input for id
@@ -852,11 +851,38 @@ var kakeibo = {
     }
 
     // ====================================
-    // EVENTS / TRANSACTIONS ==============
+    // EVENTS / TRANSACTIONS IMPORT =======
     this.$trans_form_import = this.forms.$items.filter('.form-trans-import');
     this.$trans_form_import.on('change', '.first-import-file', function() {
       self.$trans_form_import.submit();
     });
+
+    // EVENTS / TRANSACTION FORM ==========
+    this.$custom_select_icons = this.$body.find('.custom-select-icons');
+    this.$custom_select_icons.on('change', 'select', function() {
+      var $select = $(this);
+      var $container = $select.parents('.custom-select-icons');
+      var selected_category = categories[$select.find('option:selected').val()];
+      var $icon = $container.find('.-icon');
+      var $form_trans = $select.parents('.app-form-transaction');
+      
+      if (typeof selected_category != 'undefined') {
+        $container.css('color', selected_category.color);
+        $icon.attr('class', '-icon icon-' + selected_category.icon);
+  
+        if ($form_trans.length > 0) {
+          $form_trans.find('.modal-header').css('background-color', selected_category.color);
+        }
+      } else {
+        $container.removeAttr('style');
+        $icon.attr('class', '-icon icon-' + default_category.icon);
+  
+        if ($form_trans.length > 0) {
+          $form_trans.find('.modal-header').removeAttr('style');
+        }
+      }
+    });
+
 
     // ====================================
     // EVENTS / TOGGLER ===================
@@ -878,6 +904,7 @@ var kakeibo = {
       return false;
     });
 
+
     // ====================================
     // EVENTS / GLOBAL CLICK ==============
     this.$window.on('click', function(e) {
@@ -885,10 +912,12 @@ var kakeibo = {
       self.creation_center.auto_close(e.target);
     });
 
+
     // ====================================
     // EVENTS / RESIZE ====================
     // this.$window.on('resize', function(e) {
     // });
+
 
     // ====================================
     // UNLOAD (delay before hide "loading")

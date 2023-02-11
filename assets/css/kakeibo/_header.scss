@@ -5,6 +5,7 @@
   background-color: $header-bg;
   color: $header-color;
   margin-bottom: 1.6rem;
+  padding-top: $navbar-height;
   // loading animation
   position: relative;
   top: 0;
@@ -38,7 +39,10 @@
 
 
 @include media-breakpoint-up(md) {
-  // Header title part
+  .app-header {
+    padding-top: $navbar-height-md;
+  }
+
   .header-title {
     padding-top: $header-title-padding-top-md;
     padding-bottom: $header-title-padding-bottom-md;
@@ -51,7 +55,10 @@
 
 
 @include media-breakpoint-up(lg) {
-  // Header title part
+  .app-header {
+    padding-top: $navbar-height-lg;
+  }
+
   .header-title {
     padding-top: $header-title-padding-top-lg;
     padding-bottom: $header-title-padding-bottom-lg;
@@ -65,6 +72,10 @@
 
 
 @include media-breakpoint-up(xl) {
+  .app-header {
+    padding-top: $navbar-height-xl;
+  }
+
   .header-title {
     padding-top: $header-title-padding-top-xl;
     padding-bottom: $header-title-padding-bottom-xl;

@@ -293,6 +293,9 @@ form_transaction :
   label :
     label       : "Intitulé de la transaction"
     placeholder : "ex: Courses au marché"
+  details :
+    label       : "Détails supplémentaires"
+    placeholder : "ex: Référence, lieu d'achat, ..."
   amount :
     label       : "Montant"
     placeholder : "ex: 256,52"

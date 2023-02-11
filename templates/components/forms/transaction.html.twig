@@ -1,10 +1,5 @@
 {% set default_bank_account = app.user.getDefaultBankAccount() %}
 
-{# Set default values if in DEV environment #}
-{% set default_amount_value = (app.environment == 'dev') ? (random(25, 400) * ((random()%2) ? 1 : -1)) : '' %}
-{% set default_label_value = (app.environment == 'dev') ? ('Test #' ~ ('now'|date('u'))) : '' %}
-{% set default_category_id = (app.environment == 'dev') ? 325 : 145 %}
-
 {# Delete errors form label ! #}
 {% form_theme form_transaction _self %}
 {% block form_label_errors %}{% endblock %}
@@ -19,7 +14,7 @@
   <div class="col-sm-6 mb-3">
     {{ form_label(form_transaction.amount) }}
     <div class="input-group">
-      {{ form_widget(form_transaction.amount, { attr: { 'data-form-default-value': default_amount_value } }) }}
+      {{ form_widget(form_transaction.amount) }}
       <div class="input-group-append">
         <span class="input-group-text">{{ default_bank_account.currency.label }}</span>
       </div>
@@ -31,13 +26,19 @@
 <div class="form-row">
   <div class="col-sm-6 mb-3">
     {{ form_label(form_transaction.label) }}
-    {{ form_widget(form_transaction.label, { attr: { 'data-form-default-value': default_label_value } }) }}
+    {{ form_widget(form_transaction.label) }}
     {{ form_errors(form_transaction.label) }}
   </div>
 
   <div class="col-sm-6 mb-3">
     {{ form_label(form_transaction.category) }}
-    {{ form_widget(form_transaction.category, { attr: { 'data-form-default-value': default_category_id } }) }}
+    {{ form_widget(form_transaction.category) }}
     {{ form_errors(form_transaction.category) }}
   </div>
+</div>
+
+<div class="mb-3">
+  {{ form_label(form_transaction.details) }}
+  {{ form_widget(form_transaction.details) }}
+  {{ form_errors(form_transaction.details) }}
 </div>

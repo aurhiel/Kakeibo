@@ -6,7 +6,7 @@
 {% block block_page_title %}
   {% if page_title is defined and page_title is not empty %}
     <div class="header-title container">
-      <h1 class="page-header">{{ page_title|raw }}</h1>
+      <h1 class="page-header" id="page-header">{{ page_title|raw }}</h1>
     </div>
   {% endif %}
 {% endblock %}

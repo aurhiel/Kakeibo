@@ -39,13 +39,13 @@
               {% endif %}
             </div>
             <div class="col-12 col-md-8 mt-3 px-md-0">
-              <h1 class="page-header text-md-center">{{ page_title|raw }}</h1>
+              <h1 class="page-header text-center" id="page-header">{{ page_title|raw }}</h1>
             </div>
           </div>
         </div>
         {% else %}
           <div class="header-title container">
-            <h1 class="page-header">{{ page_title|raw }}</h1>
+            <h1 class="page-header" id="page-header">{{ page_title|raw }}</h1>
           </div>
         {% endif %}
       {% endblock %}
@@ -55,30 +55,6 @@
 
     <div class="bg-dark text-white mt-">
       <div class="container">
-        {# Statistics navigation buttons
-        {% if trans_prev_link is not null or trans_next_link is not null %}
-          <div class="row mb-4">
-            <div class="col-6">
-              {% if trans_prev_link is not null %}
-                <a class="btn btn-sm btn-pill btn-outline-light" href="{{ trans_prev_link }}">
-                  {% if trans_period_type == 'monthly' %}&laquo;&nbsp;{{ trans_prev_date|format_date(pattern='MMMM')|capitalize }} {{ trans_prev_date|split('-')[0] }}
-                  {% elseif trans_period_type == 'yearly' %}&laquo;&nbsp;{{ trans_prev_date|split('-')[0] }}
-                  {% else %}&laquo;&nbsp;Précédent{% endif %}
-                </a>
-              {% endif %}
-            </div>
-            <div class="col-6 text-right">
-              {% if trans_next_link is not null %}
-                <a class="btn btn-sm btn-pill btn-outline-light" href="{{ trans_next_link }}">
-                  {% if trans_period_type == 'monthly' %}{{ trans_next_date|format_date(pattern='MMMM')|capitalize }} {{ trans_next_date|split('-')[0] }}&nbsp;&raquo;
-                  {% elseif trans_period_type == 'yearly' %}{{ trans_next_date|split('-')[0] }}&nbsp;&raquo;
-                  {% else %}Suivant&nbsp;&raquo;{% endif %}
-                </a>
-              {% endif %}
-            </div>
-          </div>
-        {% endif %}
-        #}
         <div class="row">
           <div class="col-12{% if trans_period_type != 'yearly' %} col-md-8 col-xl-9{% endif %} mb-4">
             <div class="chart-js" data-chartjs-type="line" data-chartjs-data-name="transactions_by_days"
@@ -139,12 +115,9 @@
 {% block body %}
   <div class="container">
     <div class="row">
-      <div class="col-12 {% if total_expenses_by_cats is not empty or total_incomes_by_cats is not empty %}col-md-7{% endif %}">
-        {% include 'components/transactions/list.html.twig' with { no_scroll: true } %}
-      </div>
       {% if total_expenses_by_cats is not empty or total_incomes_by_cats is not empty %}
-        <div class="col-12 col-md-5 align-self-start position-md-sticky top-md-3">
-          <div class="card d-none d-md-block charts-trans-by-cats">
+        <div class="col-12 col-md-5 mb-4 mb-md-0 order-md-last align-self-start position-md-sticky top-md-3">
+          <div class="card charts-trans-by-cats">
             <div class="card-header d-flex align-items-center">
               <h3 class="h5 mb-0">{{ 'page.statistics.chart_exp_inc.title'|trans }}</h3>
             </div>
@@ -223,6 +196,9 @@
           </div>
         </div>
       {% endif %}
+      <div class="col-12 {% if total_expenses_by_cats is not empty or total_incomes_by_cats is not empty %}col-md-7{% endif %}">
+        {% include 'components/transactions/list.html.twig' with { no_scroll: true } %}
+      </div>
     </div>
   </div>
 {% endblock %}

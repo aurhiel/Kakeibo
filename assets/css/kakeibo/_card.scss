@@ -7,14 +7,6 @@
 //
 
 .card {
-  .list-transactions {
-    overflow: auto;
-    &.-no-scroll {
-      overflow: initial !important;
-      max-height: 100% !important;
-    }
-  }
-
   &--first-transactions {
     color: $gray-500;
     text-align: center;
@@ -45,43 +37,6 @@
       .-choice-import {
         display: block;
       }
-    }
-  }
-}
-
-
-//
-// Responsive
-//
-
-@include media-breakpoint-up(sm) {
-  .card {
-    .list-transactions {
-      max-height: 29.3rem;
-    }
-  }
-}
-
-@include media-breakpoint-up(md) {
-  .card {
-    .list-transactions {
-      max-height: 32.8rem;
-    }
-  }
-}
-
-@include media-breakpoint-up(xl) {
-  .card {
-    .list-transactions {
-      max-height: 28.8rem;
-    }
-  }
-}
-
-@include media-breakpoint-up(xxl) {
-  .card {
-    .list-transactions {
-      max-height: 32rem;
     }
   }
 }

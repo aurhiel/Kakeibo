@@ -230,6 +230,9 @@ form_transaction :
   label :
     label       : "Title of the transaction"
     placeholder : "eg. Market shopping"
+  details :
+    label       : "Additional details"
+    placeholder : "ex: Invoice reference, place of purchase, ..."
   amount :
     label       : "Amount"
     placeholder : "eg. 256,52"

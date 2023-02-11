@@ -8,20 +8,48 @@
   }
 }
 
+@each $breakpoint in map-keys($grid-breakpoints) {
+    @include media-breakpoint-up($breakpoint) {
+      .position-sticky {
+        $offset: map-get($navbar-heights, $breakpoint);
+  
+        margin-top: -$offset !important;
+        padding-top: $offset !important;
+      }
+    }
+}
 
 //
 // Responsive
 //
 
-@each $breakpoint in map-keys($grid-breakpoints) {
+@each $breakpoint, $screen-width in $grid-breakpoints {
   @include media-breakpoint-up($breakpoint) {
     .position-#{$breakpoint}-sticky {
       position: sticky !important;
+      // Trick to fix cursor because of navbar offset 
+      pointer-events: none;
+      > * {
+        pointer-events: auto;
+      }
     }
 
     @each $size, $length in $spacers {
       .top-#{$breakpoint}-#{$size} {
         top: $length !important;
+      }
+    }
+  }
+
+  @each $sub-breakpoint, $sub-screen-width in $grid-breakpoints {
+    @if (subtract($sub-screen-width, $screen-width) >= 0) {
+      @include media-breakpoint-up($sub-breakpoint) {
+        .position-#{$breakpoint}-sticky {
+          $offset: map-get($navbar-heights, $sub-breakpoint);
+    
+          margin-top: -$offset !important;
+          padding-top: $offset !important;
+        }
       }
     }
   }

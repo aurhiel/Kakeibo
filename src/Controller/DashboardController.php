@@ -23,7 +23,7 @@ class DashboardController extends AbstractController
 {
     const NB_LAST_TRANS = 20;
 
-    private User $user;
+    private ?User $user;
     private TranslatorInterface $translator;
     private TransactionRepository $transcationRepository;
     private CategoryRepository $categoryRepository;

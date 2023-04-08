@@ -22,29 +22,19 @@
 // Navbar
 
 .navbar-default {
+  background-color: transparentize($navbar-default-bg, .05);
+  backdrop-filter: blur(5px);
   color: $navbar-default-color;
   min-width: 320px;
   opacity: 1;
   position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 15;
   transition:
     opacity $animation-duration*1.5 ease $animation-duration/2,
     top $animation-duration*1.5 ease;
-
-  &, &:before {
-    background-color: transparentize($navbar-default-bg, .05);
-    backdrop-filter: blur(5px);
-    left: 0;
-    right: 0;
-  }
-
-  &:before {
-    content: '';
-    position: absolute;
-    height: 200%;
-    bottom: 99%;
-  }
 
   .navbar-brand {
     color: $navbar-default-active-color;
@@ -236,8 +226,8 @@
   .navbar {
     flex-flow: row nowrap;
     justify-content: flex-start;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+    padding-top: $navbar-padding-y-md;
+    padding-bottom: $navbar-padding-y-md;
 
     .navbar-nav {
       font-size: 1rem;
@@ -250,7 +240,7 @@
 
     // For nesting containers, have to redeclare for alignment purposes
     > .container,
-    > .container-fluid {
+    > .container-fluid { 
       flex-wrap: nowrap;
     }
 
@@ -303,8 +293,8 @@
 
   // Navbar
   .navbar {
-    padding-top: 1.4rem;
-    padding-bottom: 1.4rem;
+    padding-top: $navbar-padding-y-lg;
+    padding-bottom: $navbar-padding-y-lg;
 
     .navbar-nav {
       .nav-link {
@@ -336,8 +326,8 @@
 
   // Navbar
   .navbar {
-    padding-top: 2rem;
-    padding-bottom: 2rem;
+    padding-top: $navbar-padding-y-xl;
+    padding-bottom: $navbar-padding-y-xl;
   }
 
   .nav-item {

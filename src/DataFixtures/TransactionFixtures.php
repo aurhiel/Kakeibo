@@ -88,7 +88,7 @@ class TransactionFixtures extends Fixture implements DependentFixtureInterface
                   'category'  => 'travel',                  'max' => -250 ],
 
                 [ 'label'     => 'Costumes & chaussures',   'min' => -2600,
-                  'category'  => 'travel',                  'max' => -300 ],
+                  'category'  => 'clothes',                 'max' => -300 ],
             ],
             'monthly' => [
                 [ 'label'     => 'Virement - Salaire',  'min' => 128000,

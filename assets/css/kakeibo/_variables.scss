@@ -82,6 +82,8 @@ $modal-md: 31.25rem;
 $modal-lg: 50rem;
 $modal-xl: 71.25rem;
 $modal-open-blur-size: 5px;
+$modal-backdrop-opacity: 1;
+$modal-backdrop-bg: rgba(0, 0, 0, .65);
 
 
 // Navbar
@@ -218,7 +220,7 @@ $price-font-family: "Roboto Mono", monospace !default;
 //
 
 $brand-color:       $primary !default;
-$brand-font-family: "Montserrat", cursive !default;
+$brand-font-family: $page-header-font-family; // "Montserrat", cursive !default;
 
 
 

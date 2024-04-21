@@ -25,8 +25,8 @@ class KkbAutomatonExecuteCommand extends Command
     {
         parent::__construct($name);
 
-        $this->container  = $container;
-        $this->doctrine   = $this->container->get('doctrine');
+        $this->container = $container;
+        $this->doctrine = $this->container->get('doctrine');
     }
 
     protected function configure(): void
@@ -78,7 +78,7 @@ class KkbAutomatonExecuteCommand extends Command
                 $em->persist($trans_auto);
 
                 // Sleep 1 second to get a fake loading TODO remove ?
-                sleep(1);
+                // sleep(1);
 
                 // Update progressbar
                 $io->progressAdvance();

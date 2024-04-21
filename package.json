@@ -12,6 +12,7 @@
         "html-webpack-plugin": "^5.3.2",
         "jquery": "^3.6.0",
         "popper.js": "^1.16.1",
+        "postcss-loader": "^5.0.0",
         "regenerator-runtime": "^0.13.2",
         "sass": "^1.35.1",
         "sass-loader": "^12.1.0",
@@ -25,5 +26,8 @@
         "dev": "encore dev",
         "watch": "encore dev --watch",
         "build": "encore production --progress"
+    },
+    "dependencies": {
+        "autoprefixer": "^10.4.19"
     }
 }

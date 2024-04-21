@@ -78,7 +78,7 @@ Encore
           { family: "Cabin", variants: [ "400", "700" ] },
           { family: "Arvo", variants: [ "400", "700" ] },
           { family: "Roboto Mono", variants: [ "400", "700" ] },
-          { family: "Montserrat", variants: [ "300" ] },
+          // { family: "Montserrat", variants: [ "300" ] },
       ],
       path: "fonts/google/",
       filename: "google-fonts.css"
@@ -88,7 +88,14 @@ Encore
     // Favicons
     .addPlugin(new HtmlWebpackPlugin({
       filename: '../../templates/components/head-favicons.html.twig',
-      templateContent: ({htmlWebpackPlugin}) => `${htmlWebpackPlugin.tags.headTags.filter((tag => (tag.attributes['rel'] !== 'stylesheet' && tag.tagName !== 'script')))}`,
+      templateContent: ({htmlWebpackPlugin}) => `${htmlWebpackPlugin.tags.headTags.filter((tag =>
+        (
+          tag.attributes['rel'] !== 'stylesheet'
+          && tag.attributes['name'] !== 'theme-color'
+          && tag.attributes['name'] !== 'apple-mobile-web-app-status-bar-style'
+          && tag.tagName !== 'script'
+        )
+      ))}`,
       inject: false,
     }))
     .addPlugin(new FaviconsPlugin({
@@ -105,10 +112,12 @@ Encore
       favicons: {
         appName: 'Kakeibo',
         // appDescription: 'My awesome App',
-        developerName: 'Khiel',
+        developerName: 'aurhiel',
         developerURL: null, // prevent retrieving from the nearest package.json
-        background: '#212529',
-        theme_color: '#212529',
+        start_url: '/dashboard',
+        lang: "fr-FR",
+        background: null,
+        theme_color: null,
         icons: {
           android: true,
           appleIcon: true,
@@ -168,6 +177,9 @@ Encore
 
     // uncomment if you're having problems with a jQuery plugin
     .autoProvidejQuery()
+
+    // Post CSS to autoprefix CSS properties for example
+    .enablePostCssLoader()
 ;
 
 module.exports = Encore.getWebpackConfig();

@@ -24,6 +24,8 @@
 
     {# meta.favicons #}
     {% include 'components/head-favicons.html.twig' %}
+    <meta name="theme-color" content="{{ theme_color is defined ? theme_color : '#343d40' }}">
+    <meta name="apple-touch-fullscreen" content="yes">
 
     {# meta.robots #}
     {% if meta.robots is defined and meta.robots is not empty %}
@@ -97,7 +99,7 @@
       <script type="text/javascript">
         var categories = {};
         var default_category = null;
-        
+
         {% for category in categories %}
           categories[{{category.id}}] = {
             label: '{{ category.label }}',

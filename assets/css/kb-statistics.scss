@@ -6,7 +6,53 @@
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
 
+@import "icomoon/variables";
+
 
 //
 // Statistics Page
-//
+.app-core--statistics {
+  .page-header {
+    position: relative;
+    z-index: 5;
+  }
+
+  .stats-period {
+    background-color: rgba(0, 0, 0, .075);
+    display: inline-block;
+    border-radius: .25rem;
+    padding: 0 .35rem;
+    cursor: pointer;
+    user-select: none;
+    transition: all 400ms ease;
+
+    &:hover, &:focus {
+      background-color: rgba(0, 0, 0, .15);
+      box-shadow: 0 0 0 .15rem rgba(255, 255, 255, .05);
+    }
+
+    &:active {
+      box-shadow: none;
+    }
+  }
+
+  .stats-change-period {
+    font-family: $font-family-base;
+    width: 100%;
+    max-width: 24rem;
+    position: absolute;
+    z-index: 50;
+    bottom: -3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+    opacity: 0;
+    transition: all 400ms ease;
+
+    &.scp-is-visible {
+      pointer-events: all;
+      bottom: -2rem;
+      opacity: 1;
+    }
+  }
+}

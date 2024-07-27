@@ -164,7 +164,7 @@ var kakeibo = {
       window.addEventListener("beforeprint", beforePrintHandler);
     }
   },
-  // Creation center 
+  // Creation center
   creation_center: {
     $creation_center: null,
     toggle: function(forced_state) {
@@ -596,11 +596,11 @@ var kakeibo = {
           if ('abort' !== xhr.statusText) {
             alert('Un problème est survenu, vous pouvez ré-essayer ou bien actualiser la page.');
           }
-          
+
           self.unlock($form);
         }
       });
-      
+
       self.timeout_too_long($form);
     },
     fill: function(name, data) {
@@ -777,7 +777,7 @@ var kakeibo = {
         $btn_clicked = $(e.relatedTarget);
 
         // Check if the confirm[data-href] is defined
-        if (typeof $btn_clicked.data('confirm-href') != 'undefined' 
+        if (typeof $btn_clicked.data('confirm-href') != 'undefined'
           || (typeof $btn_clicked.data('entity-name') != 'undefined' && typeof $btn_clicked.data('entity-id') != 'undefined')
         ) {
           // Reset modal body and set body if defined
@@ -830,13 +830,13 @@ var kakeibo = {
         // Clear shitty forcing backdrop z-index (can't use confirm backdrop upon overs modal)
         self.$body.find('.modal-backdrop').removeAttr('style');
       });
-    
+
       this.$modal_confirm_delete.on('click', '.btn-submit-delete', function(e) {
         var $btn = $(this);
         var entity_name = $btn.attr('data-entity-name');
         var entity_id = $btn.attr('data-entity-id');
 
-        if (typeof entity_name !== 'undefined' && typeof entity_id !== 'undefined' 
+        if (typeof entity_name !== 'undefined' && typeof entity_id !== 'undefined'
           && typeof kakeibo[entity_name]['load'] != 'undefined'
         ) {
           kakeibo[entity_name]['delete'](entity_id, function(r) {
@@ -865,18 +865,18 @@ var kakeibo = {
       var selected_category = categories[$select.find('option:selected').val()];
       var $icon = $container.find('.-icon');
       var $form_trans = $select.parents('.app-form-transaction');
-      
+
       if (typeof selected_category != 'undefined') {
         $container.css('color', selected_category.color);
         $icon.attr('class', '-icon icon-' + selected_category.icon);
-  
+
         if ($form_trans.length > 0) {
           $form_trans.find('.modal-header').css('background-color', selected_category.color);
         }
       } else {
         $container.removeAttr('style');
         $icon.attr('class', '-icon icon-' + default_category.icon);
-  
+
         if ($form_trans.length > 0) {
           $form_trans.find('.modal-header').removeAttr('style');
         }

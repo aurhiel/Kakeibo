@@ -1,11 +1,10 @@
 ###############################################################################
 #                          Generated on phpdocker.io                          #
 ###############################################################################
-version: "3.1"
 services:
 
     mysql:
-      image: mysql:5.7
+      image: mysql:8.0.34
       container_name: kakeibo-mysql
       working_dir: /application
       volumes:

@@ -1,6 +1,6 @@
 {# Set period text according to dates start & end values #}
 {% if (date_start is defined and date_start is not null) and (date_end is defined and date_end is not null) %}
-  {% if date_start|date('m') == date_end|date('m') %}
+  {% if date_start|date('m') == date_end|date('m') and date_start|date('d') == 1 and date_end|date('d') == date_end|date('t') %}
     {% set month_literal = date_start|format_date(pattern='MMMM') %}
     {% set for_literal = month_literal|lower|first in ['a', 'e', 'i', 'o', 'u'] ? "d'": "de " %}
     {% set period_text = 'block.inc_exp.period'|trans({ '%date%': (month_literal|capitalize ~ ' ' ~ date_start|date('Y')), '%for_literal%': for_literal }) %}

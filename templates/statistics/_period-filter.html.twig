@@ -1,0 +1,15 @@
+<div class="stats-change-period">
+  <div class="input-group">
+    <div class="input-group-prepend"><label class="input-group-text">{{ 'global.from'|trans }}</label></div>
+    <input class="form-control text-nowrap" type="date" name="stats-from" id="stats-from" value="{{ curr_date_start }}" aria-label="{{ 'global.from'|trans }}">
+
+    <div class="input-group-prepend"><span class="input-group-text">{{ 'global.to'|trans }}</span></div>
+    <input class="form-control text-nowrap" type="date" name="stats-to" id="stats-to" value="{{ curr_date_end }}" aria-label="{{ 'global.to'|trans }}">
+
+    <div class="input-group-append">
+      <button class="btn btn-primary" type="button">
+        <span class="icon-chevron-right"></span>
+      </button>
+    </div>
+  </div>
+</div>

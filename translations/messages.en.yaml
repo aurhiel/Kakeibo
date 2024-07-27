@@ -7,6 +7,8 @@ global :
     MONTHLY : "Monthly"
     WEEKLY : "Weekly"
     DAILY : "Daily"
+  from: "from"
+  to: "to"
 
 ## MENU
 menu :
@@ -83,6 +85,8 @@ page :
         label : "See more"
       no_expenses : "No expenses for <b>%date%</b>"
       no_incomes : "No incomes for <b>%date%</b>"
+      no_expenses_period : "No expenses for this period"
+      no_incomes_period : "No incomes for this period"
       nav_tab :
         expenses : "expenses"
         incomes : "incomes"

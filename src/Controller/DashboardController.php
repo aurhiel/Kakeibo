@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
   * Require ROLE_USER for *every* controller method in this class.
@@ -43,7 +44,8 @@ class DashboardController extends AbstractController
     /**
      * @Route("/dashboard", name="dashboard")
      */
-    public function index() {
+    public function index(): Response
+    {
         // Force user to create at least ONE bank account !
         if (count($this->user->getBankAccounts()) < 1)
             return $this->redirectToRoute('ignition-first-bank-account');
@@ -59,28 +61,20 @@ class DashboardController extends AbstractController
         $date_start = date('Y-m-01');
         $date_end = date('Y-m-d');
         // Retrieve totals for incomes & expenses
-        $total_incomes = (float) $this->transcationRepository->findTotal($default_bank_account, $date_start, 'now', 'incomes');
-        $total_expenses = (float) $this->transcationRepository->findTotal($default_bank_account, $date_start, 'now', 'expenses');
+        $total_incomes = $this->transcationRepository->findTotal($default_bank_account, $date_start, 'now', 'incomes');
+        $total_expenses = $this->transcationRepository->findTotal($default_bank_account, $date_start, 'now', 'expenses');
 
         // NOTE If there is no expenses and incomes in the current month, try
         //  to get last month expenses and incomes.
         // if ($total_incomes == 0 && $total_expenses == 0) {
         //     $curr_month = (($curr_month - 1) < 0) ? 12 : ($curr_month - 1);
-        //     $total_incomes  = (float) $this->transcationRepository->findTotal($default_bank_account, $date_start, 'now', 'incomes');
-        //     $total_expenses = (float) $this->transcationRepository->findTotal($default_bank_account, $date_start, 'now', 'expenses');
+        //     $total_incomes  = $this->transcationRepository->findTotal($default_bank_account, $date_start, 'now', 'incomes');
+        //     $total_expenses = $this->transcationRepository->findTotal($default_bank_account, $date_start, 'now', 'expenses');
         // }
 
         // Retrieve totals grouped by categories for incomes & expenses
         $total_incomes_by_cats = $this->transcationRepository->findTotalGroupBy($default_bank_account, $date_start, 'now', 'category', 'incomes');
         $total_expenses_by_cats = $this->transcationRepository->findTotalGroupBy($default_bank_account, $date_start, 'now', 'category', 'expenses');
-
-        $categories = $this->categoryRepository->findAllIndexedByAndForUser('id', $this->user->getId());
-        $default_category = null;
-        foreach($categories as $category) {
-            if (CategoryRepository::SLUG_MISC === $category->getSlug()) {
-                $default_category = $category;
-            }
-        }
 
         return $this->render('dashboard/index.html.twig', [
             'page_title'            => $this->translator->trans('page.dashboard.title'),
@@ -96,8 +90,8 @@ class DashboardController extends AbstractController
             'total_expenses'        => $total_expenses,
             'total_incomes_by_cats'   => $total_incomes_by_cats,
             'total_expenses_by_cats'  => $total_expenses_by_cats,
-            'categories'        => $categories,
-            'default_category'  => $default_category,
+            'categories'        => $this->categoryRepository->findAllByUserId($this->user->getId()),
+            'default_category'  => $this->categoryRepository->findDefault(),
             'form_transaction'  => $this->createForm(TransactionType::class)->createView(),
             'form_category'     => $this->createForm(CategoryType::class)->createView()
         ]);

@@ -21,7 +21,7 @@ class CategoryRepository extends ServiceEntityRepository
         parent::__construct($registry, Category::class);
     }
 
-    public function findAllIndexedBy($column = 'id')
+    public function findAllIndexedBy(string $column = 'id'): array
     {
         return $this->createQueryBuilder('c', 'c.' . $column)
             ->orderBy('c.id', 'ASC')
@@ -30,9 +30,9 @@ class CategoryRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findAllIndexedByAndForUser(string $column = 'id', int $userId)
+    public function findAllByUserId(int $userId): array
     {
-        return $this->createQueryBuilder('c', 'c.' . $column)
+        return $this->createQueryBuilder('c')
             ->where('c.is_default = true')
             ->orWhere('c.user = :userId')
             ->setParameter('userId', $userId)
@@ -42,50 +42,21 @@ class CategoryRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findDefault()
+    public function findDefault(): ?Category
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.slug = :misc_slug')
+            ->where('c.slug = :misc_slug')
             ->setParameter('misc_slug', self::SLUG_MISC)
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
 
-    public function countAll()
+    public function countAll(): int
     {
-        return $this->createQueryBuilder('c')
+        return (int) $this->createQueryBuilder('c')
             ->select('COUNT(c.id) AS amount')
             ->getQuery()->getSingleScalarResult()
         ;
     }
-
-//    /**
-//     * @return Category[] Returns an array of Category objects
-//     */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Category
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

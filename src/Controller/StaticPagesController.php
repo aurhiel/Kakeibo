@@ -4,88 +4,47 @@ namespace App\Controller;
 
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class StaticPagesController extends AbstractController
 {
 
-    private $page_config = array();
-
-    private $pages = array();
-
-    public function __construct()
-    {
-        // Raw pages data
-        // $company = array(
-        //     'name'        => 'Ingeneria',
-        //     'address'     => '4 rue Gerin Ricard 13003 Marseille - France (métropolitaine)',
-        //     'capital'     => '1 500€',
-        //     'social_form' => 'SAS (Société par actions simplifiée)',
-        //     'url'         => 'Ateliers-ingeneria.fr',
-        //     'vta_number'  => '',
-        //     'siren' => array(
-        //         'number' => '752 183 988',
-        //         'address' => 'Marseille B'
-        //     )
-        // );
-
-        $owner = array(
-            'firstname' => 'Aurélien',
-            'lastname'  => 'Litti',
-            'phone'     => '+33 6 95 06 40 91',
-            'email'     => 'litti.aurelien@gmail.com'
-        );
-
-        $developer = array(
-            'firstname' => 'Aurélien',
-            'lastname'  => 'Litti',
-            'phone'     => '+33 6 95 06 40 91',
-            'email'     => 'litti.aurelien@gmail.com'
-        );
-
-        $web_host = array(
-            'name'        => 'OVH',
-            'address'     => '2 rue Kellerman – BP 80157 – 59100 Roubaix – France',
-            'social_form' => 'SAS (Société par actions simplifiée)',
-            'phone'       => '+33 820 698 765'
-        );
-
-        // Pages list
-    }
+    private $page_config = [];
 
     // ML: @Route("/{_locale}/{slug}.html", name="static_pages")
     /**
      * @Route("/{slug}.html", name="static_pages")
      */
-    public function index($slug, TranslatorInterface $translator)
+    public function index(string $slug, TranslatorInterface $translator): Response
     {
         // Get page config according to given slug
         switch ($slug) {
             // DATA: About page
             case 'a-propos':
             case 'about':
-                $this->page_config = array(
+                $this->page_config = [
                     'template' => 'static-pages/about.html.twig',
-                    'data' => array(
+                    'data' => [
                         'meta' => [
                             'title'   => $translator->trans('page.about.title'),
                             'robots'  => 'noindex, nofollow'
                         ]
-                    )
-                );
+                    ]
+                ];
               break;
             // DATA: Release notes page
             case 'notes-de-version':
             case 'release-notes':
-                $this->page_config = array(
+                $this->page_config = [
                     'template' => 'static-pages/release_notes.html.twig',
-                    'data' => array(
+                    'data' => [
                         'meta' => [
                             'title'   => $translator->trans('page.release_notes.title'),
                             'robots'  => 'noindex, nofollow'
                         ]
-                    )
-                );
+                    ]
+                ];
               break;
             // NOTE Add default data ? 404 ?
             default:
@@ -110,10 +69,11 @@ class StaticPagesController extends AbstractController
         }
     }
 
-    private function is_config_valid() {
-        return (!empty($this->page_config)
+    private function is_config_valid(): bool
+    {
+        return !empty($this->page_config)
             && isset($this->page_config['data'])
-                && isset($this->page_config['template'])
-        );
+            && isset($this->page_config['template'])
+        ;
     }
 }

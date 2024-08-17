@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
   * Require ROLE_USER for *every* controller method in this class.
@@ -41,7 +42,8 @@ class StatisticsController extends AbstractController
     /**
      * @Route("/statistiques/{date_start}/{date_end}", name="statistics", defaults={"date_start"="current","date_end"="current"})
      */
-    public function index(string $date_start, string $date_end) {
+    public function index(string $date_start, string $date_end): Response
+    {
         // Force user to create at least ONE bank account !
         if(count($this->user->getBankAccounts()) < 1)
             return $this->redirectToRoute('ignition-first-bank-account');
@@ -58,8 +60,8 @@ class StatisticsController extends AbstractController
         $date_end = ($date_end == 'current') ? date('Y-m-t') : $date_end;
 
         // Get totals
-        $total_incomes = (float) $this->transcationRepository->findTotal($default_bank_account, $date_start, $date_end, 'incomes');
-        $total_expenses = (float) $this->transcationRepository->findTotal($default_bank_account, $date_start, $date_end, 'expenses');
+        $total_incomes = $this->transcationRepository->findTotal($default_bank_account, $date_start, $date_end, 'incomes');
+        $total_expenses = $this->transcationRepository->findTotal($default_bank_account, $date_start, $date_end, 'expenses');
 
         // Get transactions according to current page
         $transactions = $this->transcationRepository->findByBankAccountAndDateAndPage($default_bank_account, $date_start, $date_end);
@@ -105,7 +107,7 @@ class StatisticsController extends AbstractController
                 ->modify(($period_type !== 'weekly' ? 'last day of ' : '') . '-1 ' . $search_period)
                 ->format('Y-m-d')
             ;
-            $nb_prev_trans = (int) $this->transcationRepository->countAllByBankAccountAndByDate($default_bank_account, null, $prev_date_end);
+            $nb_prev_trans = $this->transcationRepository->countAllByBankAccountAndByDate($default_bank_account, null, $prev_date_end);
             if ($nb_prev_trans > 0) {
                 $prev_date_start = (new \DateTime($date_start))
                     ->modify(($period_type !== 'weekly' ? 'first day of ' : '') . '-1 ' . $search_period)
@@ -122,7 +124,7 @@ class StatisticsController extends AbstractController
                 ->modify(($period_type !== 'weekly' ? 'first day of ' : '') . '+1 ' . $search_period)
                 ->format('Y-m-d')
             ;
-            $nb_next_trans = (int) $this->transcationRepository->countAllByBankAccountAndByDate($default_bank_account, $next_date_start, null);
+            $nb_next_trans = $this->transcationRepository->countAllByBankAccountAndByDate($default_bank_account, $next_date_start, null);
             if ($nb_next_trans > 0) {
                 $next_date_end = (new \DateTime($date_end))
                     ->modify(($period_type !== 'weekly' ? 'last day of ' : '') . '+1 ' . $search_period)
@@ -133,14 +135,6 @@ class StatisticsController extends AbstractController
                     'date_end' => $next_date_end
                 ]);
                 $next_date = $next_date_start;
-            }
-        }
-
-        $categories = $this->categoryRepository->findAllIndexedByAndForUser('id', $this->user->getId());
-        $default_category = null;
-        foreach($categories as $category) {
-            if (CategoryRepository::SLUG_MISC === $category->getSlug()) {
-                $default_category = $category;
             }
         }
 
@@ -164,8 +158,8 @@ class StatisticsController extends AbstractController
             'total_incomes_by_cats'   => $total_incomes_by_cats,
             'total_expenses_by_date'  => $total_expenses_by_date,
             'total_expenses_by_cats'  => $total_expenses_by_cats,
-            'categories'              => $categories,
-            'default_category'        => $default_category,
+            'categories'              => $this->categoryRepository->findAllByUserId($this->user->getId()),
+            'default_category'        => $this->categoryRepository->findDefault(),
             'form_transaction'        => $this->createForm(TransactionType::class)->createView(),
             'form_category'           => $this->createForm(CategoryType::class)->createView(),
         ]);

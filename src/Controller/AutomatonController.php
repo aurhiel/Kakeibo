@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\TransactionAuto;
 use App\Entity\User;
 use App\Form\TransactionAutoType;
+use App\Repository\CategoryRepository;
 use App\Repository\TransactionAutoRepository;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,6 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
   * Require ROLE_USER for *every* controller method in this class.
@@ -26,27 +28,28 @@ class AutomatonController extends AbstractController
     private User $user;
     private TranslatorInterface $translator;
     private EntityManagerInterface $entityManager;
+    private CategoryRepository $categoryRepository;
     private TransactionAutoRepository $transactionAutoRepository;
-    
+
     public function __construct(
         Security $security,
         TranslatorInterface $translator,
         EntityManagerInterface $entityManager,
+        CategoryRepository $categoryRepository,
         TransactionAutoRepository $transactionAutoRepository
     ) {
         $this->user = $security->getUser();
         $this->translator = $translator;
         $this->entityManager = $entityManager;
+        $this->categoryRepository = $categoryRepository;
         $this->transactionAutoRepository = $transactionAutoRepository;
     }
 
     /**
      * @Route("/automaton/{id}", name="automaton", defaults={"id"=null})
      */
-    public function index(
-        $id,
-        Request $request
-    ) {
+    public function index(?int $id, Request $request): Response
+    {
         // Force user to create at least ONE bank account !
         if (count($this->user->getBankAccounts()) < 1)
             return $this->redirectToRoute('ignition-first-bank-account');
@@ -148,6 +151,7 @@ class AutomatonController extends AbstractController
                 'page_title'  => '<span class="icon icon-command"></span> ' . $this->translator->trans('page.trans_auto.title'),
                 'is_trans_auto_edit'    => $is_edit,
                 'form_trans_auto'       => $trans_auto_form->createView(),
+                'default_category'      => $this->categoryRepository->findDefault(),
                 'trans_auto'            => $return_data['trans_auto'],
                 'total_auto_expenses'   => $return_data['total_auto_expenses'],
                 'total_auto_incomes'    => $return_data['total_auto_incomes'],
@@ -159,10 +163,8 @@ class AutomatonController extends AbstractController
     /**
      * @Route("/trans-auto/delete/{id}", name="automaton_trans_auto_delete")
      */
-    public function trans_auto_delete(
-        $id,
-        Request $request
-    ) {
+    public function trans_auto_delete(int $id, Request $request): Response
+    {
         $trans_auto = $this->transactionAutoRepository->findOneByIdAndUser($id, $this->user);
         $return_data = [
             'query_status' => 0,

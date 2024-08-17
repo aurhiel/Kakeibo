@@ -13,6 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
   * Require ROLE_USER for *every* controller method in this class.
@@ -38,7 +39,7 @@ class ProfileController extends AbstractController
     public function profile(
         Request $request,
         UserPasswordHasherInterface $passwordHasher
-    ) {
+    ): Response {
         /** @var Session $session */
         $session = $request->getSession();
 
@@ -63,12 +64,12 @@ class ProfileController extends AbstractController
 
         return $this->render(
             'profile/index.html.twig',
-            array(
+            [
                 'page_title'  => '<span class="icon icon-user"></span> Profil',
                 'core_class'  => 'app-core--merge-body-in-header',
                 'meta'        => array('title' => 'Profil'),
                 'form'        => $form->createView()
-            )
+            ]
         );
     }
 }

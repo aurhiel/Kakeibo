@@ -14,21 +14,21 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
         parent::__construct($registry, User::class);
     }
 
-    public function findAll()
+    public function findAll(): array
     {
         return $this->findBy([], [
             'username' => 'ASC'
         ]);
     }
 
-    public function findAllBy(array $orderBy, $limit = null)
+    public function findAllBy(array $orderBy, $limit = null): array
     {
         return $this->findBy([], $orderBy, $limit);
     }
 
-    public function countAll()
+    public function countAll(): int
     {
-        return $this->createQueryBuilder('u')
+        return (int) $this->createQueryBuilder('u')
             ->select('COUNT(u.id) AS amount')
             ->getQuery()->getSingleScalarResult()
         ;
@@ -44,7 +44,7 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
             ->getOneOrNullResult();
     }
 
-    public function loadUserByIdentifier(string $username): ?User 
+    public function loadUserByIdentifier(string $username): ?User
     {
         return $this->loadUserByUsername($username);
     }

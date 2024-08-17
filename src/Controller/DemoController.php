@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
   * Require ROLE_USER for *every* controller method in this class.
@@ -19,7 +20,7 @@ class DemoController extends AbstractController
     /**
      * @Route("/demo", name="demo")
      */
-    public function index(Security $security)
+    public function index(Security $security): Response
     {
         /** @var User $user */
         $user = $security->getUser();

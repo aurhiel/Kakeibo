@@ -41,10 +41,8 @@ class CategoriesController extends AbstractController
     /**
      * @Route("/categories/manage", name="category_manage")
      */
-    public function index(
-        Request $request,
-        Slugger $slugger
-    ): Response {
+    public function index(Request $request, Slugger $slugger): Response
+    {
         $id_cat = (int) $request->request->get('id');
         $is_edit = (!empty($id_cat) && $id_cat > 0);
 

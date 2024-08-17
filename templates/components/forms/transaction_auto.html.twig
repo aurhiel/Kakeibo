@@ -1,10 +1,5 @@
 {% set default_bank_account = app.user.getDefaultBankAccount() %}
-
-{# Set default values if in DEV environment #}
-{% set category_attrs = {} %}
-{% if is_edit is not defined or (is_edit is defined and is_edit == false) %}
-  {% set category_attrs = { 'data-form-default-value' : (app.environment == 'dev') ? 325 : 145 } %}
-{% endif %}
+{% set default_category = default_category is defined ? default_category : null %}
 
 {# Delete errors form label ! #}
 {% form_theme form_trans_auto _self %}
@@ -46,7 +41,7 @@
 <div class="form-row">
   <div class="col-sm-12 mb-3">
     {{ form_label(form_trans_auto.category) }}
-    {{ form_widget(form_trans_auto.category, { attr: category_attrs }) }}
+    {{ form_widget(form_trans_auto.category, { attr: { 'data-form-default-value': default_category is not empty ? default_category.id : '' } }) }}
     {{ form_errors(form_trans_auto.category) }}
   </div>
 </div>

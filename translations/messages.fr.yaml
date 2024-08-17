@@ -7,6 +7,8 @@ global :
     MONTHLY : "Mensuelle"
     WEEKLY : "Hebdomadaire"
     DAILY : "Journalière"
+  from: "du"
+  to: "au"
 
 ## MENU
 menu :
@@ -82,6 +84,8 @@ page :
         label : "Voir plus"
       no_expenses : "Aucune dépense pour le mois %for_literal%<b>%date%</b>"
       no_incomes : "Aucun revenu pour le mois %for_literal%<b>%date%</b>"
+      no_expenses_period : "Aucune dépense pour cette période"
+      no_incomes_period : "Aucun revenu pour cette période"
       nav_tab :
         expenses : "dépenses"
         incomes : "revenus"
@@ -89,9 +93,10 @@ page :
   statistics:
     meta :
       title             : "Statistiques"
-    title               : "Statistiques %for_literal%%date%"
-    title_period_yearly : "Statistiques de l'année %year%"
-    title_period_custom : "Statistiques du %date_start% au %date_end%"
+    title               : "Statistiques %for_literal%<span class=\"stats-period\" data-toggler-class=\"scp-is-visible\" data-toggler-target=\".stats-change-period\">%date%</span>"
+    title_period_yearly : "Statistiques de l'année <span class=\"stats-period\" data-toggler-class=\"scp-is-visible\" data-toggler-target=\".stats-change-period\">%year%</span>"
+    title_period_weekly : "Statistiques de la semaine %date_week%, du <span class=\"stats-period\" data-toggler-class=\"scp-is-visible\" data-toggler-target=\".stats-change-period\">%date_start% au %date_end%</span>"
+    title_period_custom : "Statistiques du <span class=\"stats-period\" data-toggler-class=\"scp-is-visible\" data-toggler-target=\".stats-change-period\">%date_start% au %date_end%</span>"
     chart_exp_inc :
       title             : "Transactions par catégorie"
   # PAGE:TRANSACTIONS
@@ -139,10 +144,64 @@ page :
     title_update    : "Mise%plural% à jour"
     title_fix       : "Correction%plural% diverse%plural%"
     # VERSIONS
+    alpha_0_4_0 :
+      title : "Version Alpha 0.4.0"
+      date  : "2023-02-11"
+      list_new:
+        item_1: "Mise en place du nouveau formulaire pour gérer les transactions !"
+        item_2: "Nouvel en-tête \"sticky\"."
+    alpha_0_3_1 :
+      title : "Version Alpha 0.3.1"
+      date  : "2022-12-30"
+      list_new :
+        item_1 : "Ajout de quelques données sur page d'admin."
+      list_update:
+        item_1 : "Mise à jour de Symfony (5.3 > 5.4)"
+      list_fix :
+        item_1 : "Corrections diverses (retrait scroll, mise à jour code déprécié et nettoyage divers)."
+    alpha_0_3_0 :
+      title : "Version Alpha 0.3.0"
+      date  : "2022-09-18"
+      list_new :
+        item_1 : "Gestion dynamique de la suppresion d'une transaction et ajout d'un mode \"chargement\" pour le formulaire."
+        item_2 : "Ajout d'un effet flou quand une modale Bootstrap est ouverte."
+        item_3 : "Ajout d'un loader à l'ajout ou la modification d'une transaction."
+        item_4 : "Affichage d'un message quand le chargement d'un formulaire est trop long."
+      list_fix:
+        item_1 : "Affichage correct du lien vers l'admin."
+    alpha_0_2_2 :
+      title : "Version Alpha 0.2.2"
+      date  : "2022-09-10"
+      list_new :
+        item_1 : "Ajout d'une ombre portée au clic sur le bouton du \"centre de création\"."
+      list_fix :
+        item_1 : "Correction fermeture automatiquement de la modale d'ajout d'une transaction que clic sur \"Ajouter & continuer\"."
+        item_2 : "Corrections diverses."
+    alpha_0_2_1 :
+      title : "Version Alpha 0.2.1"
+      date  : "2022-08-03"
+      list_update :
+        item_1: "Mise en place de quelques contenus \"sticky\"."
+    alpha_0_2_0 :
+      title : "Version Alpha 0.2.0"
+      date  : "2022-07-30"
+      list_update :
+        item_1: "Mise en place du formulaire pour <b>ajouter ses propres catégories</b>."
+        item_2: "Ajout possibilité de double-clic sur le \"centre de création\" pour rapidement ajouter une nouvelle transaction."
+    alpha_0_1_6 :
+      title : "Version Alpha 0.1.6"
+      date  : "2022-07-29"
+      list_update :
+        item_1 : "Ajout d'un \"centre de création\" pour facilement ajouter des transactions et catégories à venir"
+        item_2 : "Remplacement du panel fait-maison pour gérer les transactions par la modale Bootstrap classique, en prévision de la gestion d'autres entités (ex: catégories)."
+      list_fix :
+        item_1 : "Pied de page \"sticky\" sur les templates verticaux (pages statiques)."
+        item_2 : "Ajout de nouvelles icônes pour les catégories."
+        item_3 : "Corrections diverses."
     alpha_0_1_3 :
       title : "Version Alpha 0.1.3"
       date  : "2021-08-10"
-      list_func_add :
+      list_new :
         item_1 : "Affichage des revenus par catégorie dans le <b>Dashboard</b> et la page des <b>Statistiques</b>."
         item_2 : "Page des <b>Statistiques</b>, ajout des boutons de navigation par mois."
         item_3 : "Ajout d'une icône du site pour l'ensemble des types de navigateurs."
@@ -154,7 +213,7 @@ page :
     alpha_0_1_2 :
       title : "Version Alpha 0.1.2"
       date  : "2020-05-19"
-      list_func_add :
+      list_new :
         item_1 : "Ajout de la page d'accueil, avec quelques informations clés."
       list_fix :
         item_1 : "Correction de la modification des transactions et mise à jour des différents montants (revenus, dépenses et solde du compte) via JS / Ajax."
@@ -162,7 +221,7 @@ page :
     alpha_0_1_0 :
       title : "Version Alpha 0.1.0"
       date  : "2020-04-25"
-      list_func_add :
+      list_new :
         item_1 : "
           <p class=\"mb-2\">
             <b>Inscription</b> &amp; <b>importation d'un fichier de banque</b>
@@ -198,7 +257,7 @@ page :
         item_4 :
           label : "Navigation dans les statistiques"
           desc  : "Finaliser la page des statistiques afin de <b>naviguer par mois ou via une période</b> choisi par l'utilisateur."
-          percent_status : 70
+          percent_status : 80
   # PAGE:ADMIN
   admin :
     title : "Administration du site"

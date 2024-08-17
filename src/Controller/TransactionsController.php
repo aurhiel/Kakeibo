@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Entity\Transaction;
 use App\Entity\User;
 use App\Form\TransactionType;
@@ -17,6 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
   * Require ROLE_USER for *every* controller method in this class.
@@ -47,9 +49,8 @@ class TransactionsController extends AbstractController
     /**
      * @Route("/transactions/manage", name="transaction_manage")
      */
-    public function manage(
-        Request $request
-    ) {
+    public function manage(Request $request): Response
+    {
         $id_trans = (int) $request->request->get('id');
         $is_edit = (!empty($id_trans) && $id_trans > 0); // Edit transaction ?
 
@@ -131,10 +132,8 @@ class TransactionsController extends AbstractController
     /**
      * @Route("/transactions/get/{id}", name="transaction_get")
      */
-    public function retrieve(
-        $id,
-        Request $request
-    ) {
+    public function retrieve(int $id, Request $request): Response
+    {
         $data = [ 'query_status' => 0, 'slug_status' => 'error', 'message_status' => 'Error...' ];
         // Retrieve transaction with id AND user (for security)
         $trans = $this->transactionRepository->findOneByIdAndUser($id, $this->user);
@@ -159,10 +158,8 @@ class TransactionsController extends AbstractController
     /**
      * @Route("/transactions/delete/{id}", name="transaction_delete")
      */
-    public function delete(
-        $id,
-        Request $request
-    ) {
+    public function delete(int $id, Request $request): Response
+    {
         // Retrieve transaction with id AND user (for security)
         $trans = $this->transactionRepository->findOneByIdAndUser($id, $this->user);
         $return_data = [
@@ -219,10 +216,8 @@ class TransactionsController extends AbstractController
     /**
      * @Route("/transactions/{page}", name="transactions", defaults={"page"=1})
      */
-    public function index(
-      $page,
-      TranslatorInterface $translator
-    ) {
+    public function index(int $page, TranslatorInterface $translator): Response
+    {
         // Force user to create at least ONE bank account !
         if (count($this->user->getBankAccounts()) < 1)
             return $this->redirectToRoute('ignition-first-bank-account');
@@ -254,8 +249,8 @@ class TransactionsController extends AbstractController
         }
 
         // Get incomes & expenses totals
-        $total_incomes = (float) $this->transactionRepository->findTotal($default_bank_account, null, null, 'incomes');
-        $total_expenses = (float) $this->transactionRepository->findTotal($default_bank_account, null, null, 'expenses');
+        $total_incomes = $this->transactionRepository->findTotal($default_bank_account, null, null, 'incomes');
+        $total_expenses = $this->transactionRepository->findTotal($default_bank_account, null, null, 'expenses');
 
         // Get transactions according to current page
         $transactions = $this->transactionRepository->findByBankAccountAndDateAndPage($default_bank_account, null, null, $page, self::NB_TRANSAC_BY_PAGE);
@@ -263,14 +258,6 @@ class TransactionsController extends AbstractController
         // Get date start and date end
         $date_end = (isset($transactions[0]) && $page > 1) ? $transactions[0]->getDate()->format('Y-m-d') : null;
         $date_start = (count($transactions) > 1) ? $transactions[count($transactions)-1]->getDate()->format('Y-m-d') : null;
-
-        $categories = $this->categoryRepository->findAllIndexedByAndForUser('id', $this->user->getId());
-        $default_category = null;
-        foreach($categories as $category) {
-            if (CategoryRepository::SLUG_MISC === $category->getSlug()) {
-                $default_category = $category;
-            }
-        }
 
         return $this->render('transactions/index.html.twig', [
             'page_title'        => '<span class="icon icon-list"></span> ' . $translator->trans('page.transactions.title'),
@@ -288,8 +275,8 @@ class TransactionsController extends AbstractController
             'nb_by_page'        => self::NB_TRANSAC_BY_PAGE,
             'total_incomes'     => $total_incomes,
             'total_expenses'    => $total_expenses,
-            'categories'        => $categories,
-            'default_category'  => $default_category,
+            'categories'        => $this->categoryRepository->findAllByUserId($this->user->getId()),
+            'default_category'  => $this->categoryRepository->findDefault(),
             'form_transaction'  => $this->createForm(TransactionType::class)->createView(),
             'form_category'     => $this->createForm(CategoryType::class)->createView(),
         ]);
@@ -301,10 +288,8 @@ class TransactionsController extends AbstractController
      *          need to do more test with other banks files
      *          + custom import ? (TODO auto-detect fields + user validation)
      */
-    public function import_csv(
-      Request $request,
-      CategoryRepository $categoryRepository
-    ) {
+    public function import_csv(Request $request): Response
+    {
         // Force user to create at least ONE bank account !
         if (count($this->user->getBankAccounts()) < 1)
             return $this->redirectToRoute('ignition-first-bank-account');
@@ -322,7 +307,7 @@ class TransactionsController extends AbstractController
             $default_bank_account = $this->user->getDefaultBankAccount();
 
             // Retrieve all categories
-            $categories = $categoryRepository->findAll();
+            $categories = $this->categoryRepository->findAll();
             // Default category
             foreach($categories as $cat) {
                 // Retrieve default category
@@ -352,7 +337,7 @@ class TransactionsController extends AbstractController
                             $amount   = ($credit > 0) ? $credit : (($debit < 0) ? $debit : false);
                             $label    = trim($data[2]);
                             $details  = trim($data[5]);
-                            $category = self::findCategoryAccordingToLabel($categories, $label);
+                            $category = $this->findCategoryAccordingToLabel($categories, $label);
 
                             // Check amount before creating the new transaction
                             if ($amount !== false) {
@@ -436,9 +421,10 @@ class TransactionsController extends AbstractController
         }
     }
 
-    private static function findCategoryAccordingToLabel($categories, $label)
+    private function findCategoryAccordingToLabel(array $categories, string $label): ?Category
     {
         $category = null;
+        /** @var Category $cat */
         foreach($categories as $cat) {
             $regex = $cat->getImportRegex();
             // Retrieve category according to her regex on "label"
@@ -453,7 +439,7 @@ class TransactionsController extends AbstractController
         return $category;
     }
 
-    private static function format_json($transaction)
+    private static function format_json($transaction): array
     {
         $category = $transaction->getCategory();
 
@@ -473,7 +459,7 @@ class TransactionsController extends AbstractController
         ];
     }
 
-    private static function format_json_bank_account($bank_account)
+    private static function format_json_bank_account($bank_account): array
     {
         $currency = $bank_account->getCurrency();
         return [

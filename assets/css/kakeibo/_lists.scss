@@ -63,10 +63,7 @@
 
     &-text {
       line-height: 1.2em;
-      .-more-info {
-        display: none;
-        line-height: 1.1em;
-      }
+      .-more-info { line-height: 1.1em; }
     }
 
     &-repeat-type {
@@ -163,18 +160,6 @@
     .col {
       &-icon {
         font-size: $list-trans--col-icon-size-md;
-      }
-    }
-  }
-}
-
-@include media-breakpoint-up(lg) {
-  .-item-transac {
-    .col {
-      &-text {
-        .-more-info {
-          display: block;
-        }
       }
     }
   }

@@ -28,22 +28,22 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
 
-     // Vendors
-     // .createSharedEntry('entries', './shared_entries.js') // new way to add vendor on Encore^0.24.0
-     // .createSharedEntry('vendors', ['jquery', 'bootstrap']) // old way (Encore^0.20.0)
+    // Vendors
+    // .createSharedEntry('entries', './shared_entries.js') // new way to add vendor on Encore^0.24.0
+    // .createSharedEntry('vendors', ['jquery', 'bootstrap']) // old way (Encore^0.20.0)
 
-     // will create public/build/kakeibo.js and public/build/kakeibo.css
-     // .addEntry('kakeibo-app', './assets/vue/kakeibo.js')
-     .addEntry('kakeibo',       './assets/js/kakeibo.js')
-     .addEntry('kb-home',       './assets/js/kb-home.js')
-     .addEntry('kb-admin',      './assets/js/kb-admin.js')
-     // .addEntry('kb-dashboard', './assets/js/kb-dashboard.js')
-     // .addEntry('kb-statistic', './assets/js/kb-statistic.js')
+    // will create public/build/kakeibo.js and public/build/kakeibo.css
+    // .addEntry('kakeibo-app', './assets/vue/kakeibo.js')
+    .addEntry('kakeibo', './assets/js/kakeibo.js')
+    .addEntry('kb-home', './assets/js/kb-home.js')
+    .addEntry('kb-admin', './assets/js/kb-admin.js')
+    //.addEntry('kb-dashboard', './assets/js/kb-dashboard.js')
+    .addEntry('kb-statistics', './assets/js/kb-statistics.js')
 
-     // CSS only
-     .addStyleEntry('kakeibo-dark',         './assets/css/kakeibo-dark.scss')
-     .addStyleEntry('kakeibo--blue',        './assets/css/kakeibo--blue.scss')
-     .addStyleEntry('kakeibo--blue-dark',   './assets/css/kakeibo--blue-dark.scss')
+    // CSS only
+    //.addStyleEntry('kakeibo-dark', './assets/css/kakeibo-dark.scss')
+    //.addStyleEntry('kakeibo--blue', './assets/css/kakeibo--blue.scss')
+    //.addStyleEntry('kakeibo--blue-dark', './assets/css/kakeibo--blue-dark.scss')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     // .enableStimulusBridge('./assets/controllers.json')

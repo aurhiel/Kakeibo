@@ -1,13 +1,25 @@
 {% extends 'base.html.twig' %}
 
-{% if trans_period_type == 'monthly' %}
+{% if trans_period_type == 'weekly' %}
+  {% set page_title = 'page.statistics.title_period_weekly'|trans({
+    '%date_start%': curr_date_start|format_datetime(pattern='d' ~ (curr_date_start|date('m') != curr_date_end|date('m') ? ' MMMM' : '') ~ (curr_date_start|date('Y') != curr_date_end|date('Y') ? ' YYYY' : '')),
+    '%date_end%': curr_date_end|format_datetime(pattern='d MMMM YYYY'),
+    '%date_week%': curr_date_start|date('W')
+  }) %}
+{% elseif trans_period_type == 'monthly' %}
   {% set month_literal = curr_date_start|format_date(pattern='MMMM') %}
   {% set for_literal = month_literal|lower|first in ['a', 'e', 'i', 'o', 'u'] ? "d'": "de " %}
-  {% set page_title = '<span class="icon icon-bar-chart"></span> ' ~ ('page.statistics.title')|trans({ '%date%': (month_literal|capitalize ~ '&nbsp;' ~ curr_date_start|date('Y')), '%for_literal%': for_literal }) %}
+  {% set page_title = 'page.statistics.title'|trans({
+    '%date%': (month_literal|capitalize ~ '&nbsp;' ~ curr_date_start|date('Y')),
+    '%for_literal%': for_literal
+  }) %}
 {% elseif trans_period_type == 'yearly' %}
-  {% set page_title = '<span class="icon icon-bar-chart"></span> ' ~ ('page.statistics.title_period_yearly')|trans({ '%year%': curr_date_start|date('Y') }) %}
+  {% set page_title = 'page.statistics.title_period_yearly'|trans({ '%year%': curr_date_start|date('Y') }) %}
 {% else %}
-  {% set page_title = '<span class="icon icon-bar-chart"></span> ' ~ ('page.statistics.title_period_custom')|trans({ '%date_start%': curr_date_start|format_datetime('long', 'none'), '%date_end%': curr_date_end|format_datetime('long', 'none') }) %}
+  {% set page_title = 'page.statistics.title_period_custom'|trans({
+    '%date_start%': curr_date_start|format_datetime(pattern='d' ~ (curr_date_start|date('m') != curr_date_end|date('m') ? ' MMMM' : '') ~ (curr_date_start|date('Y') != curr_date_end|date('Y') ? ' YYYY' : '')),
+    '%date_end%': curr_date_end|format_datetime(pattern='d MMMM YYYY')
+  }) %}
 {% endif %}
 
 
@@ -23,29 +35,39 @@
             <div class="col-6 col-md-2 px-md-0 order-md-first">
               {% if trans_prev_link is not null %}
                 <a class="btn btn-sm btn-pill btn-outline-light" href="{{ trans_prev_link }}">
-                  {% if trans_period_type == 'monthly' %}&laquo;&nbsp;{{ trans_prev_date|format_date(pattern='MMMM')|capitalize }}&nbsp;{{ trans_prev_date|split('-')[0] }}
-                  {% elseif trans_period_type == 'yearly' %}&laquo;&nbsp;{{ trans_prev_date|split('-')[0] }}
-                  {% else %}&laquo;&nbsp;Précédent{% endif %}
+                  {% if trans_period_type == 'weekly' %}&laquo;&nbsp;Semaine&nbsp;{{ trans_prev_date|date('W') }}
+                  {% elseif trans_period_type == 'monthly' %}&laquo;&nbsp;{{ trans_prev_date|format_date(pattern='MMMM' ~ (trans_prev_date|date('Y') != curr_date_start|date('Y') ? ' YYYY' : ''))|capitalize }}
+                  {% elseif trans_period_type == 'yearly' %}&laquo;&nbsp;{{ trans_prev_date|date('Y') }}
+                  {% else %}&laquo;&nbsp;Précédente{% endif %}
                 </a>
               {% endif %}
             </div>
             <div class="col-6 col-md-2 px-md-0 order-md-last text-right">
               {% if trans_next_link is not null %}
                 <a class="btn btn-sm btn-pill btn-outline-light" href="{{ trans_next_link }}">
-                  {% if trans_period_type == 'monthly' %}{{ trans_next_date|format_date(pattern='MMMM')|capitalize }}&nbsp;{{ trans_next_date|split('-')[0] }}&nbsp;&raquo;
-                  {% elseif trans_period_type == 'yearly' %}{{ trans_next_date|split('-')[0] }}&nbsp;&raquo;
-                  {% else %}Suivant&nbsp;&raquo;{% endif %}
+                  {% if trans_period_type == 'weekly' %}Semaine&nbsp;{{ trans_next_date|date('W') }}&nbsp;&raquo;
+                  {% elseif trans_period_type == 'monthly' %}{{ trans_next_date|format_date(pattern='MMMM' ~ (trans_next_date|date('Y') != curr_date_end|date('Y') ? ' YYYY' : ''))|capitalize }}&nbsp;&raquo;
+                  {% elseif trans_period_type == 'yearly' %}{{ trans_next_date|date('Y') }}&nbsp;&raquo;
+                  {% else %}Suivante&nbsp;&raquo;{% endif %}
                 </a>
               {% endif %}
             </div>
             <div class="col-12 col-md-8 mt-3 px-md-0">
-              <h1 class="page-header text-center" id="page-header">{{ page_title|raw }}</h1>
+              <h1 class="page-header text-center" id="page-header">
+                <span class="icon icon-bar-chart"></span>
+                {{ page_title|raw }}
+                {% include 'statistics/_period-filter.html.twig' %}
+              </h1>
             </div>
           </div>
         </div>
         {% else %}
           <div class="header-title container">
-            <h1 class="page-header" id="page-header">{{ page_title|raw }}</h1>
+            <h1 class="page-header text-center" id="page-header">
+              <span class="icon icon-bar-chart"></span>
+              {{ page_title|raw }}
+              {% include 'statistics/_period-filter.html.twig' %}
+            </h1>
           </div>
         {% endif %}
       {% endblock %}
@@ -103,7 +125,8 @@
               date_start: curr_date_start,
               date_end: curr_date_end,
               bank_account: app.user.getDefaultBankAccount(),
-              full_width: (trans_period_type != 'yearly')
+              full_width: (trans_period_type != 'yearly'),
+              half_width: (trans_period_type == 'yearly'),
             } %}
           </div>
         </div>
@@ -158,7 +181,11 @@
                     </script>
                   {% else %}
                     <div class="alert alert-secondary my-5">
+                    {% if month_literal is defined %}
                       {{ 'page.dashboard.chart_exp_inc.no_expenses'|trans({ '%date%': (month_literal|capitalize), '%for_literal%': for_literal })|raw }}
+                    {% else %}
+                      {{ 'page.dashboard.chart_exp_inc.no_expenses_period'|trans }}
+                    {% endif %}
                     </div>
                   {% endif %}
                 </div>
@@ -187,7 +214,11 @@
                     </script>
                   {% else %}
                     <div class="alert alert-secondary my-5">
-                      {{ 'page.dashboard.chart_exp_inc.no_incomes'|trans({ '%date%': (month_literal|capitalize), '%for_literal%': for_literal })|raw }}
+                      {% if month_literal is defined %}
+                        {{ 'page.dashboard.chart_exp_inc.no_incomes'|trans({ '%date%': (month_literal|capitalize), '%for_literal%': for_literal })|raw }}
+                      {% else %}
+                        {{ 'page.dashboard.chart_exp_inc.no_incomes_period'|trans }}
+                      {% endif %}
                     </div>
                   {% endif %}
                 </div>

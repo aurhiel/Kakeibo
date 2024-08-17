@@ -1,4 +1,5 @@
 {% set default_bank_account = app.user.getDefaultBankAccount() %}
+{% set default_category = default_category is defined ? default_category : null %}
 
 {# Delete errors form label ! #}
 {% form_theme form_transaction _self %}
@@ -8,7 +9,7 @@
   <div class="modal-dialog modal-dialog-maximized modal-sm">
     <div class="modal-content">
     {{ form_start(form_transaction, { 'action': path('transaction_manage'), 'attr' : { 'class': 'app-form-transaction -use-ajax-submit' } }) }}
-      <div class="modal-header px-4 py-5 d-block border-0" style="background-color: {{ default_category.color }};">
+      <div class="modal-header px-4 py-5 d-block border-0" style="background-color: {{ default_category is not empty ? default_category.color : '' }};">
         <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -22,12 +23,12 @@
           {{ form_widget(form_transaction.amount) }}
         </div>
 
-        <div class="custom-select-icons" style="color: {{ default_category.color }};">
-          <span class="-icon icon-{{ default_category.icon }}"></span>
-          {{ form_widget(form_transaction.category, { attr: { 'data-form-default-value': default_category is defined ? default_category.id : '' } }) }}
+        <div class="custom-select-icons" style="color: {{ default_category is not empty ? default_category.color : '' }};">
+          <span class="-icon icon-{{ default_category is not empty ? default_category.icon : '' }}"></span>
+          {{ form_widget(form_transaction.category, { attr: { 'data-form-default-value': default_category is not empty ? default_category.id : '' } }) }}
         </div>
       </div>
-      
+
       <div class="modal-body px-4 pt-4 pb-3">
         <div class="mb-3">
           {{ form_label(form_transaction.date) }}

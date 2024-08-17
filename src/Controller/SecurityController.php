@@ -9,6 +9,7 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
@@ -42,15 +43,14 @@ class SecurityController extends AbstractController
       UserPasswordHasherInterface $passwordHasher,
       MailerInterface $mailer,
       UserRepository $userRepository
-    ) {
+    ): Response {
         if (true === $authChecker->isGranted('IS_AUTHENTICATED_FULLY'))
             return $this->redirectToRoute('dashboard');
 
         /** @var Session $session */
         $session = $request->getSession();
         $max_users = $this->getParameter('app.max_users');
-        $nb_registered = (int) $userRepository->countAll();
-        $max_reached = ($max_users != null && $nb_registered >= $max_users);
+        $max_reached = ($max_users != null && $userRepository->countAll() >= $max_users);
 
         // 1) Build the form
         $user = new User();
@@ -118,11 +118,11 @@ class SecurityController extends AbstractController
 
         return $this->render(
             'security/register.html.twig',
-            array(
-              'meta'              => [ 'title' => $this->translator->trans('page.register.title') ],
-              'form'              => $form->createView(),
-              'max_users_reached' => $max_reached,
-            )
+            [
+                'meta' => [ 'title' => $this->translator->trans('page.register.title') ],
+                'form' => $form->createView(),
+                'max_users_reached' => $max_reached,
+            ]
         );
     }
 
@@ -133,7 +133,7 @@ class SecurityController extends AbstractController
     public function login(
         AuthenticationUtils $authenticationUtils,
         AuthorizationCheckerInterface $authChecker
-    ) {
+    ): Response {
         if (true === $authChecker->isGranted('IS_AUTHENTICATED_FULLY'))
             return $this->redirectToRoute('dashboard');
 

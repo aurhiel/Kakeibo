@@ -15,6 +15,7 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
   * Require ROLE_USER for *every* controller method in this class.
@@ -39,9 +40,8 @@ class IgnitionController extends AbstractController
     /**
      * @Route("/demarrage/creation-premier-compte", name="ignition-first-bank-account")
      */
-    public function first_bank_account(
-        Request $request
-    ) {
+    public function first_bank_account(Request $request): Response
+    {
         if (count($this->user->getBankAccounts()) > 0)
             return $this->redirectToRoute('ignition-first-transaction');
 
@@ -92,9 +92,8 @@ class IgnitionController extends AbstractController
     /**
      * @Route("/demarrage/ajout-premiere-transaction", name="ignition-first-transaction")
      */
-    public function first_transaction(
-      Request $request
-    ) {
+    public function first_transaction(Request $request): Response
+    {
         // Force user to create at least ONE bank account !
         if (empty($this->user) || count($this->user->getBankAccounts()) < 1)
             return $this->redirectToRoute('ignition-first-bank-account');

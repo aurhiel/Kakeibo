@@ -7,6 +7,8 @@ global :
     MONTHLY : "Monthly"
     WEEKLY : "Weekly"
     DAILY : "Daily"
+  from: "from"
+  to: "to"
 
 ## MENU
 menu :
@@ -83,6 +85,8 @@ page :
         label : "See more"
       no_expenses : "No expenses for <b>%date%</b>"
       no_incomes : "No incomes for <b>%date%</b>"
+      no_expenses_period : "No expenses for this period"
+      no_incomes_period : "No incomes for this period"
       nav_tab :
         expenses : "expenses"
         incomes : "incomes"
@@ -90,9 +94,10 @@ page :
   statistics :
     meta :
       title : "Statistics"
-    title               : "Statistics for %date%"
-    title_period_yearly : "Statistics for %year%"
-    title_period_custom : "Statistics from %date_start% to %date_end%"
+    title               : "Statistics for <span class=\"stats-period\" data-toggler-class=\"scp-is-visible\" data-toggler-target=\".stats-change-period\">%date%</span>"
+    title_period_yearly : "Statistics for year <span class=\"stats-period\" data-toggler-class=\"scp-is-visible\" data-toggler-target=\".stats-change-period\">%year%</span>"
+    title_period_weekly : "Statistics for week %date_week% <span class=\"stats-period\" data-toggler-class=\"scp-is-visible\" data-toggler-target=\".stats-change-period\">%year%</span>"
+    title_period_custom : "Statistics from <span class=\"stats-period\" data-toggler-class=\"scp-is-visible\" data-toggler-target=\".stats-change-period\">%date_start% to %date_end%</span>"
     chart_exp_inc :
       title : "Transactions by Category"
   # PAGE:TRANSACTIONS

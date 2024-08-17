@@ -95,6 +95,7 @@ page :
       title             : "Statistiques"
     title               : "Statistiques %for_literal%<span class=\"stats-period\" data-toggler-class=\"scp-is-visible\" data-toggler-target=\".stats-change-period\">%date%</span>"
     title_period_yearly : "Statistiques de l'année <span class=\"stats-period\" data-toggler-class=\"scp-is-visible\" data-toggler-target=\".stats-change-period\">%year%</span>"
+    title_period_weekly : "Statistiques de la semaine %date_week%, du <span class=\"stats-period\" data-toggler-class=\"scp-is-visible\" data-toggler-target=\".stats-change-period\">%date_start% au %date_end%</span>"
     title_period_custom : "Statistiques du <span class=\"stats-period\" data-toggler-class=\"scp-is-visible\" data-toggler-target=\".stats-change-period\">%date_start% au %date_end%</span>"
     chart_exp_inc :
       title             : "Transactions par catégorie"

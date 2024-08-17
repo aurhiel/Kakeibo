@@ -93,49 +93,32 @@ class StatisticsController extends AbstractController
         $total_expenses_by_cats = $this->transcationRepository->findTotalGroupBy($default_bank_account, $date_start, $date_end, 'category', 'expenses');
 
         // Get period selected type (monthly, yearly or custom)
-        //    & create previous + next links
+        //  & generate next and previous dates
         $period_type = $this->getTypeOfPeriod($date_start, $date_end);
         $prev_link = $next_link = null;
         $prev_date = $next_date = null;
+        list($prev_date_start, $prev_date_end, $next_date_start, $next_date_end) = $this->generatePreviousAndNextDates(
+            $date_start,
+            $date_end,
+            $period_type
+        );
 
-        // Create links (no navigation with custom periods TODO implement it ?)
-        if ($period_type !== 'custom') {
-            $search_period = str_replace('ly', '', $period_type);
-            // Get previous + next "YEAR | MONTH" & check if has transactions
-            //    before creating links & if so create previous link
-            $prev_date_end = (new \DateTime($date_end))
-                ->modify(($period_type !== 'weekly' ? 'last day of ' : '') . '-1 ' . $search_period)
-                ->format('Y-m-d')
-            ;
-            $nb_prev_trans = $this->transcationRepository->countAllByBankAccountAndByDate($default_bank_account, null, $prev_date_end);
-            if ($nb_prev_trans > 0) {
-                $prev_date_start = (new \DateTime($date_start))
-                    ->modify(($period_type !== 'weekly' ? 'first day of ' : '') . '-1 ' . $search_period)
-                    ->format('Y-m-d')
-                ;
-                $prev_link = $this->generateUrl('statistics', [
-                    'date_start' => $prev_date_start,
-                    'date_end' => $prev_date_end
-                ]);
-                $prev_date = $prev_date_start;
-            }
-            //  & check next transactions and create link
-            $next_date_start = (new \DateTime($date_start))
-                ->modify(($period_type !== 'weekly' ? 'first day of ' : '') . '+1 ' . $search_period)
-                ->format('Y-m-d')
-            ;
-            $nb_next_trans = $this->transcationRepository->countAllByBankAccountAndByDate($default_bank_account, $next_date_start, null);
-            if ($nb_next_trans > 0) {
-                $next_date_end = (new \DateTime($date_end))
-                    ->modify(($period_type !== 'weekly' ? 'last day of ' : '') . '+1 ' . $search_period)
-                    ->format('Y-m-d')
-                ;
-                $next_link = $this->generateUrl('statistics', [
-                    'date_start' => $next_date_start,
-                    'date_end' => $next_date_end
-                ]);
-                $next_date = $next_date_start;
-            }
+        // Create previous and next links
+        $nb_prev_trans = $this->transcationRepository->countAllByBankAccountAndByDate($default_bank_account, null, $prev_date_end);
+        if ($nb_prev_trans > 0) {
+            $prev_link = $this->generateUrl('statistics', [
+                'date_start' => $prev_date_start,
+                'date_end' => $prev_date_end
+            ]);
+            $prev_date = $prev_date_start;
+        }
+        $nb_next_trans = $this->transcationRepository->countAllByBankAccountAndByDate($default_bank_account, $next_date_start, null);
+        if ($nb_next_trans > 0) {
+            $next_link = $this->generateUrl('statistics', [
+                'date_start' => $next_date_start,
+                'date_end' => $next_date_end
+            ]);
+            $next_date = $next_date_start;
         }
 
         return $this->render('statistics/index.html.twig', [
@@ -211,5 +194,44 @@ class StatisticsController extends AbstractController
         }
 
         return $periodType;
+    }
+
+    private function generatePreviousAndNextDates(string $date_start, string $date_end, string $period_type): array
+    {
+        $firstOrLastDay = $period_type !== 'weekly' && $period_type !== 'custom';
+        if ($period_type === 'custom') {
+            $search_period = 'day';
+            $modifier = (int) (new \DateTime($date_end))->diff(new \DateTime($date_start))->format('%a') + 1;
+        } else {
+            $search_period = str_replace('ly', '', $period_type);
+            $modifier = 1;
+        }
+
+        $prev_date_start = (new \DateTime($date_start))
+            ->modify(sprintf('%s-%d %s', ($firstOrLastDay ? 'first day of ' : ''), $modifier, $search_period))
+            ->format('Y-m-d')
+        ;
+
+        $prev_date_end = (new \DateTime($date_end))
+            ->modify(sprintf('%s-%d %s', ($firstOrLastDay ? 'last day of ' : ''), $modifier, $search_period))
+            ->format('Y-m-d')
+        ;
+
+        $next_date_start = (new \DateTime($date_start))
+            ->modify(sprintf('%s+%d %s', ($firstOrLastDay ? 'first day of ' : ''), $modifier, $search_period))
+            ->format('Y-m-d')
+        ;
+
+        $next_date_end = (new \DateTime($date_end))
+            ->modify(sprintf('%s+%d %s', ($firstOrLastDay ? 'last day of ' : ''), $modifier, $search_period))
+            ->format('Y-m-d')
+        ;
+
+        return [
+            $prev_date_start,
+            $prev_date_end,
+            $next_date_start,
+            $next_date_end
+        ];
     }
 }

@@ -170,6 +170,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getRole(): string
+    {
+        return $this->role;
+    }
+
     // Active/lock/expired methods
     public function isAccountNonExpired()
     {

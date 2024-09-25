@@ -37,15 +37,9 @@
         {% endif %}
         {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and is_granted('ROLE_ADMIN') %}
           <li class="list-inline-item">
-            <a href="{{ path('admin') }}">
+            <a href="{{ path('admin', { _locale: 'en' }) }}">
               <span class="icon icon-settings"></span>
               Admin
-            </a>
-          </li>
-          <li class="list-inline-item">
-            <a href="{{ path('jmose_command_scheduler_list') }}" target="_blank">
-              <span class="icon icon-watch"></span>
-              Tâches
             </a>
           </li>
         {% endif %}

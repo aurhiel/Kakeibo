@@ -37,9 +37,6 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Categories', 'fa fa-tags', Category::class);
         yield MenuItem::linkToCrud('Users', 'fa fa-users', User::class);
 
-        yield MenuItem::section('Misc.');
-        yield MenuItem::linkToUrl('Command Scheduler', 'fa fa-calendar', '/command-scheduler/list');
-
         yield MenuItem::section('');
         yield MenuItem::linkToUrl('Back to Homepage', 'fa fa-arrow-left', '/dashboard');
     }

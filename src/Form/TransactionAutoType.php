@@ -17,12 +17,20 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Security\Core\Security;
 
 class TransactionAutoType extends AbstractType
 {
+    public function __construct(Security $security)
+    {
+        /** @var User $user */
+        $this->user = $security->getUser();
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $is_edit = ($options['type_form'] == 'edit');
+        $user = $this->user;
 
         $repeat_type_choices = [];
         // Generate repeat type <select> options
@@ -30,19 +38,18 @@ class TransactionAutoType extends AbstractType
             $repeat_type_choices['global.repeat_types.' . $repeat_type] = $repeat_type;
         }
 
-        $date_start_attrs = [];
+        $min_datetime = new \DateTime('now + 1 day');
+        $date_start_attrs = ['min' => $min_datetime->format('Y-m-d'), 'value' => $min_datetime->format('Y-m-d')];
 
         if ($is_edit == true) {
-            // Disable date start field, only if already launched
-            // if (!empty($options['data']->getDateLast()))
-            //     $date_start_attrs['disabled'] = 'disabled';
+            // Set date start field as readonly if already launched
+            if (!empty($options['data']->getDateLast())) {
+                $date_start_attrs['readonly'] = true;
+                $date_start_attrs['min'] = $options['data']->getDateStart()->format('Y-m-d');
+            }
+
             // Force date start value
             $date_start_attrs['value'] = $options['data']->getDateStart()->format('Y-m-d');
-        } else {
-            $min_datetime = new \DateTime('now + 1 day');
-            // Set default & min values only when adding a new trans auto
-            $date_start_attrs['value'] = $min_datetime->format('Y-m-d');
-            $date_start_attrs['min'] = $min_datetime->format('Y-m-d');
         }
 
         $builder
@@ -80,8 +87,11 @@ class TransactionAutoType extends AbstractType
                 'label'         => 'form_trans_auto.category.label',
                 'placeholder'   => 'form_trans_auto.category.placeholder',
                 'attr'          => ['class' => 'custom-select'],
-                'query_builder' => function (CategoryRepository $r) {
+                'query_builder' => function (CategoryRepository $r) use ($user) {
                     return $r->createQueryBuilder('c')
+                        ->where('c.is_default = true')
+                        ->orWhere('c.user = :userId')
+                        ->setParameter('userId', $user->getId())
                         // Order on theme name
                         ->addOrderBy('c.label', 'ASC');
                 },

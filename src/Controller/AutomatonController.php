@@ -151,7 +151,7 @@ class AutomatonController extends AbstractController
                 'page_title'  => '<span class="icon icon-command"></span> ' . $this->translator->trans('page.trans_auto.title'),
                 'is_trans_auto_edit'    => $is_edit,
                 'form_trans_auto'       => $trans_auto_form->createView(),
-                'default_category'      => $this->categoryRepository->findDefault(),
+                'default_category'      => $is_edit ? $trans_auto_entity->getCategory() : $this->categoryRepository->findDefault(),
                 'trans_auto'            => $return_data['trans_auto'],
                 'total_auto_expenses'   => $return_data['total_auto_expenses'],
                 'total_auto_incomes'    => $return_data['total_auto_incomes'],

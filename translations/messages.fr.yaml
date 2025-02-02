@@ -144,6 +144,17 @@ page :
     title_update    : "Mise%plural% à jour"
     title_fix       : "Correction%plural% diverse%plural%"
     # VERSIONS
+    beta_0_5_0 :
+      title : "Version Beta 0.5.0"
+      date  : "2025-02-02"
+      list_fix :
+        item_1 : "Retrait d'une librairie plus utilisée pour gérer les tâches CRON."
+        item_2 : "Corrections diverses dans la partie récurrences (finalisation du formulaire et de la liste des récurrences)."
+    alpha_0_4_1 :
+      title : "Version Alpha 0.4.1"
+      date  : "2024-09-25"
+      list_new:
+        item_1: "Mise en place d'un nouvel admin de gestion back-office et suppression de celui fait-maison."
     alpha_0_4_0 :
       title : "Version Alpha 0.4.0"
       date  : "2023-02-11"
@@ -235,7 +246,7 @@ page :
           <b>Tri des transactions par catégorie</b> &amp; gestion <b>automatique des catégories
           à l'importation</b> du fichier de banque."
         item_3 : "<b>Statistiques par mois</b> des transactions, avec les dépenses et revenus triés par catégorie."
-    # BLOCKS
+    # TODO
     todo :
       title : "Fonctionnalités à venir"
       list :
@@ -249,7 +260,7 @@ page :
           desc  : "Permettre d'<b>automatiser des transactions récurrentes</b>, comme
             le loyer, le virement d'une paie, de manière périodique (mensuelle, hebdomadaire)
             selon le choix de l'utilisateur."
-          percent_status : 60
+          percent_status : 100
         item_3 :
           label : "Transactions automatiques par pourcentage"
           desc  : "Ajouter des transactions récurrentes <b>basés sur un pourcentage</b>, défini préalablement par l'utilisateur, <b>des revenus du mois</b>."
@@ -258,20 +269,6 @@ page :
           label : "Navigation dans les statistiques"
           desc  : "Finaliser la page des statistiques afin de <b>naviguer par mois ou via une période</b> choisi par l'utilisateur."
           percent_status : 80
-  # PAGE:ADMIN
-  admin :
-    title : "Administration du site"
-    users :
-      amount :
-        label : "Nombre d'utilisateur&middot;rice&middot;s"
-      last_user :
-        label : "Dernier&middot;ère utilisateur&middot;rice inscrit&middot;e"
-    categories :
-      amount :
-        label : "Nombre de catégories"
-    transactions :
-      amount :
-        label : "Nombre de transactions"
 
 ## BLOCKS
 block :

@@ -15,8 +15,8 @@ class CurrencyFixtures extends Fixture
     {
         $currencies = [
             [ 'name' => "Euro",           'label' => "€", 'slug' => "EUR" ],
-            [ 'name' => "Dollar",         'label' => "\$US", 'slug' => "USD" ],
-            [ 'name' => "Livre sterling", 'label' => "£GB", 'slug' => "GBP" ],
+            [ 'name' => "Dollar",         'label' => "$", 'slug' => "USD" ],
+            [ 'name' => "Livre sterling", 'label' => "£", 'slug' => "GBP" ],
         ];
 
         foreach ($currencies as $currency)

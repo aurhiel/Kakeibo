@@ -65,12 +65,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $registerDate;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Category", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="App\Entity\Category", mappedBy="user", cascade={"remove"})
      */
     private $categories;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\BankAccount", mappedBy="user", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\BankAccount", mappedBy="user", cascade={"remove"}, orphanRemoval=true)
      */
     private $bankAccounts;
 

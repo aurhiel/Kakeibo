@@ -2,7 +2,9 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\BankBrand;
 use App\Entity\Category;
+use App\Entity\Currency;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -34,6 +36,8 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::section('Entities');
+        yield MenuItem::linkToCrud('Currencies', 'fa fa-money', Currency::class);
+        yield MenuItem::linkToCrud('Bank brands', 'fa fa-landmark', BankBrand::class);
         yield MenuItem::linkToCrud('Categories', 'fa fa-tags', Category::class);
         yield MenuItem::linkToCrud('Users', 'fa fa-users', User::class);
 

@@ -141,20 +141,136 @@ page :
   release_notes :
     link :
       label : "Release Notes"
-  # PAGE:ADMIN
-  admin :
-    title : "Website admin"
-    users :
-      amount :
-        label : "Amount of users"
-      last_user :
-        label : "Last registered user"
-    categories :
-      amount :
-        label : "Amount of categories"
-    transactions :
-      amount :
-        label : "Amount of transactions"
+    title   : "Release Notes"
+    title_func_add  : "Added feature%plural%"
+    title_update    : "Update%plural%"
+    title_fix       : "Misc. correction%plural%"
+    # VERSIONS
+    beta_0_5_0 :
+      title : "Version Beta 0.5.0"
+      date  : "2025-02-02"
+      list_fix :
+        item_1 : "Retrait d'une librairie plus utilisée pour gérer les tâches CRON."
+        item_2 : "Corrections diverses dans la partie récurrences (finalisation du formulaire et de la liste des récurrences)."
+    alpha_0_4_1 :
+      title : "Version Alpha 0.4.1"
+      date  : "2024-09-25"
+      list_new:
+        item_1: "Mise en place d'un nouvel admin de gestion back-office et suppression de celui fait-maison."
+    alpha_0_4_0 :
+      title : "Version Alpha 0.4.0"
+      date  : "2023-02-11"
+      list_new:
+        item_1: "Mise en place du nouveau formulaire pour gérer les transactions !"
+        item_2: "Nouvel en-tête \"sticky\"."
+    alpha_0_3_1 :
+      title : "Version Alpha 0.3.1"
+      date  : "2022-12-30"
+      list_new :
+        item_1 : "Ajout de quelques données sur page d'admin."
+      list_update:
+        item_1 : "Mise à jour de Symfony (5.3 > 5.4)"
+      list_fix :
+        item_1 : "Corrections diverses (retrait scroll, mise à jour code déprécié et nettoyage divers)."
+    alpha_0_3_0 :
+      title : "Version Alpha 0.3.0"
+      date  : "2022-09-18"
+      list_new :
+        item_1 : "Gestion dynamique de la suppresion d'une transaction et ajout d'un mode \"chargement\" pour le formulaire."
+        item_2 : "Ajout d'un effet flou quand une modale Bootstrap est ouverte."
+        item_3 : "Ajout d'un loader à l'ajout ou la modification d'une transaction."
+        item_4 : "Affichage d'un message quand le chargement d'un formulaire est trop long."
+      list_fix:
+        item_1 : "Affichage correct du lien vers l'admin."
+    alpha_0_2_2 :
+      title : "Version Alpha 0.2.2"
+      date  : "2022-09-10"
+      list_new :
+        item_1 : "Ajout d'une ombre portée au clic sur le bouton du \"centre de création\"."
+      list_fix :
+        item_1 : "Correction fermeture automatiquement de la modale d'ajout d'une transaction que clic sur \"Ajouter & continuer\"."
+        item_2 : "Corrections diverses."
+    alpha_0_2_1 :
+      title : "Version Alpha 0.2.1"
+      date  : "2022-08-03"
+      list_update :
+        item_1: "Mise en place de quelques contenus \"sticky\"."
+    alpha_0_2_0 :
+      title : "Version Alpha 0.2.0"
+      date  : "2022-07-30"
+      list_update :
+        item_1: "Mise en place du formulaire pour <b>ajouter ses propres catégories</b>."
+        item_2: "Ajout possibilité de double-clic sur le \"centre de création\" pour rapidement ajouter une nouvelle transaction."
+    alpha_0_1_6 :
+      title : "Version Alpha 0.1.6"
+      date  : "2022-07-29"
+      list_update :
+        item_1 : "Ajout d'un \"centre de création\" pour facilement ajouter des transactions et catégories à venir"
+        item_2 : "Remplacement du panel fait-maison pour gérer les transactions par la modale Bootstrap classique, en prévision de la gestion d'autres entités (ex: catégories)."
+      list_fix :
+        item_1 : "Pied de page \"sticky\" sur les templates verticaux (pages statiques)."
+        item_2 : "Ajout de nouvelles icônes pour les catégories."
+        item_3 : "Corrections diverses."
+    alpha_0_1_3 :
+      title : "Version Alpha 0.1.3"
+      date  : "2021-08-10"
+      list_new :
+        item_1 : "Affichage des revenus par catégorie dans le <b>Dashboard</b> et la page des <b>Statistiques</b>."
+        item_2 : "Page des <b>Statistiques</b>, ajout des boutons de navigation par mois."
+        item_3 : "Ajout d'une icône du site pour l'ensemble des types de navigateurs."
+      list_update :
+        item_1 : "Mise à jour de Symfony (3.4 > 5.3)"
+      list_fix :
+        item_1 : "Limitation du nombre de pages affichées dans les paginations."
+        item_2 : "Corrections et modifications diverses suite à la mise à jour de Symfony."
+    alpha_0_1_2 :
+      title : "Version Alpha 0.1.2"
+      date  : "2020-05-19"
+      list_new :
+        item_1 : "Ajout de la page d'accueil, avec quelques informations clés."
+      list_fix :
+        item_1 : "Correction de la modification des transactions et mise à jour des différents montants (revenus, dépenses et solde du compte) via JS / Ajax."
+        item_2 : "Corrections et modifications diverses (UI, bug, ...)."
+    alpha_0_1_0 :
+      title : "Version Alpha 0.1.0"
+      date  : "2020-04-25"
+      list_new :
+        item_1 : "
+          <p class=\"mb-2\">
+            <b>Inscription</b> &amp; <b>importation d'un fichier de banque</b>
+            au format .csv lors de la création du compte.<br>
+          </p>
+          <p class=\"alert alert-warning mb-0\">
+            <b>Seul les fichiers de la <u>Caisse d'&Eacute;pargne</u></b>
+            sont acceptés pour l'instant, d'autres formats seront supportés à l'avenir.
+          </p>"
+        item_2 : "
+          <b>Tri des transactions par catégorie</b> &amp; gestion <b>automatique des catégories
+          à l'importation</b> du fichier de banque."
+        item_3 : "<b>Statistiques par mois</b> des transactions, avec les dépenses et revenus triés par catégorie."
+    # TODO
+    todo :
+      title : "Fonctionnalités à venir"
+      list :
+        item_1 :
+          label : "Importation de fichiers .csv de tout format"
+          desc  : "Rendre possible l'<b>importation de fichiers .csv</b> avec un format défini
+            <b>manuellement par l'utilisateur</b>."
+          percent_status : 0
+        item_2 :
+          label : "Transactions automatiques par période"
+          desc  : "Permettre d'<b>automatiser des transactions récurrentes</b>, comme
+            le loyer, le virement d'une paie, de manière périodique (mensuelle, hebdomadaire)
+            selon le choix de l'utilisateur."
+          percent_status : 100
+        item_3 :
+          label : "Transactions automatiques par pourcentage"
+          desc  : "Ajouter des transactions récurrentes <b>basés sur un pourcentage</b>, défini préalablement par l'utilisateur, <b>des revenus du mois</b>."
+          percent_status : 0
+        item_4 :
+          label : "Navigation dans les statistiques"
+          desc  : "Finaliser la page des statistiques afin de <b>naviguer par mois ou via une période</b> choisi par l'utilisateur."
+          percent_status : 80
 
 ## BLOCKS
 block :

@@ -1,6 +1,8 @@
 {% extends 'vertically.html.twig' %}
 
 {% set releases = [
+  { 'slug': 'beta_0_5_0',  'count_fix': 2 },
+  { 'slug': 'alpha_0_4_1', 'count_new': 1 },
   { 'slug': 'alpha_0_4_0', 'count_new': 2 },
   { 'slug': 'alpha_0_3_1', 'count_new': 1, 'count_update': 1, 'count_fix': 1 },
   { 'slug': 'alpha_0_3_0', 'count_new': 4, 'count_fix': 1 },
@@ -15,10 +17,14 @@
 
 
 {% block body_vertical_content %}
+<a href="{{ path('dashboard') }}" class="btn btn-outline-secondary btn-sm">
+  <span class="icon-chevron-left"></span> {{ 'page.btn_back_website.label'|trans }}
+</a>
+
 <div class="textual-content">
   {# TODO LIST ----------------------- #}
   {% set prefix_txt_todo = 'page.release_notes.todo.' %}
-  <h1 class="page-header h2 mt-3 mb-4">{{ (prefix_txt_todo ~ 'title')|trans }}</h1>
+  <h1 class="page-header h2 my-4">{{ (prefix_txt_todo ~ 'title')|trans }}</h1>
   <div class="card mb-4">
     <table class="table table-striped mb-0">
       <thead>
@@ -94,9 +100,7 @@
   {% endfor %}
 </div>
 
-<div>
-  <a href="{{ path('dashboard') }}" class="btn btn-outline-secondary btn-sm">
-    <span class="icon-chevron-left"></span> {{ 'page.btn_back_website.label'|trans }}
-  </a>
-</div>
+<a href="{{ path('dashboard') }}" class="btn btn-outline-secondary btn-sm">
+  <span class="icon-chevron-left"></span> {{ 'page.btn_back_website.label'|trans }}
+</a>
 {% endblock %}

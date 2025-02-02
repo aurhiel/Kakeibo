@@ -97,9 +97,6 @@
     "doctrine/sql-formatter": {
         "version": "1.1.1"
     },
-    "dragonmantank/cron-expression": {
-        "version": "v3.1.0"
-    },
     "easycorp/easyadmin-bundle": {
         "version": "3.5",
         "recipe": {
@@ -114,15 +111,6 @@
     },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.5"
-    },
-    "jmose/command-scheduler-bundle": {
-        "version": "2.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "master",
-            "version": "2.0",
-            "ref": "a1d79fcdbfc453e4319171a2b6a3d5dd402421c7"
-        }
     },
     "laminas/laminas-code": {
         "version": "4.4.0"
@@ -565,9 +553,6 @@
     },
     "symfony/string": {
         "version": "v5.3.3"
-    },
-    "symfony/templating": {
-        "version": "v5.3.7"
     },
     "symfony/test-pack": {
         "version": "v1.0.8"

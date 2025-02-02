@@ -17,12 +17,20 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Security\Core\Security;
 
 class TransactionAutoType extends AbstractType
 {
+    public function __construct(Security $security)
+    {
+        /** @var User $user */
+        $this->user = $security->getUser();
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $is_edit = ($options['type_form'] == 'edit');
+        $user = $this->user;
 
         $repeat_type_choices = [];
         // Generate repeat type <select> options
@@ -80,8 +88,11 @@ class TransactionAutoType extends AbstractType
                 'label'         => 'form_trans_auto.category.label',
                 'placeholder'   => 'form_trans_auto.category.placeholder',
                 'attr'          => ['class' => 'custom-select'],
-                'query_builder' => function (CategoryRepository $r) {
+                'query_builder' => function (CategoryRepository $r) use ($user) {
                     return $r->createQueryBuilder('c')
+                        ->where('c.is_default = true')
+                        ->orWhere('c.user = :userId')
+                        ->setParameter('userId', $user->getId())
                         // Order on theme name
                         ->addOrderBy('c.label', 'ASC');
                 },

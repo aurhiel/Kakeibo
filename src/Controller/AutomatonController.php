@@ -110,7 +110,6 @@ class AutomatonController extends AbstractController
                         // 'default_bank_account' => self::format_json_bank_account($default_bank_account)
                     ];
                 } catch (\Exception $e) {
-                    // Something goes wrong > Store exception message
                     $this->entityManager->clear();
                     $return_data['exception'] = $e->getMessage();
                 }
@@ -174,10 +173,7 @@ class AutomatonController extends AbstractController
 
             // Try to save (flush) or clear entity remove
             try {
-                // Flush OK !
                 $this->entityManager->flush();
-                // Retrieve user's default bank account
-                // $default_bank_account = $this->user->getDefaultBankAccount();
 
                 $return_data = [
                     'query_status' => 1,
@@ -185,10 +181,9 @@ class AutomatonController extends AbstractController
                     'message_status' => $this->translator->trans('form_trans_auto.status.delete_ok'),
                     // Data
                     'entity' => [ 'id' => $id_trans_auto_deleted ],
-                    // 'default_bank_account' => self::format_json_bank_account($default_bank_account)
+                    // 'default_bank_account' => self::format_json_bank_account($this->user->getDefaultBankAccount())
                 ];
             } catch (\Exception $e) {
-                // Something goes wrong > Store exception message
                 $this->entityManager->clear();
                 $return_data['exception'] = $e->getMessage();
             }

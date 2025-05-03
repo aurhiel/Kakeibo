@@ -57,7 +57,7 @@ class SecurityController extends AbstractController
         $form = $this->createForm(UserType::class, $user);
 
         // 1.1) Check if spaces left to register a new user
-        if ($max_reached == false) {
+        if (false === $max_reached) {
             // 2) Handle the submit (will only happen on POST)
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
@@ -105,8 +105,7 @@ class SecurityController extends AbstractController
                         // Redirect to login page
                         return $this->redirectToRoute('login');
                     } catch (\Exception $e) {
-                        // Something goes wrong
-                        $session->getFlashBag()->add('error', $this->translator->trans('page.register.messages.unknown_error'));
+                        $session->getFlashBag()->add('error', $this->translator->trans('form.errors.generic'));
                         $this->entityManager->clear();
                     }
                 }

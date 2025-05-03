@@ -1,14 +1,14 @@
 ## GLOBALS
 global :
-  speech  : "Reprenez le contrôle de vos dépenses !"
-  soon    : "à venir"
+  speech : "Reprenez le contrôle de vos dépenses !"
+  soon : "à venir"
   repeat_types :
     YEARLY : "Annuelle"
     MONTHLY : "Mensuelle"
     WEEKLY : "Hebdomadaire"
     DAILY : "Journalière"
-  from: "du"
-  to: "au"
+  from : "du"
+  to : "au"
 
 ## MENU
 menu :
@@ -32,9 +32,9 @@ menu :
     logout :
       label : "Déconnexion"
   bank_accounts :
-    title   : "Mes comptes"
-    btn_add :
-      label : "Ajouter un compte"
+    title : "Mes comptes"
+    btn_manage :
+      label : "Gérer mes comptes"
   # Account balance
   balance :
     label : "Solde"
@@ -68,7 +68,6 @@ page :
     messages :
       already_registered : "Cet utilisateur existe déjà, veuillez utiliser un autre nom d'utilisateur ou adresse email."
       registration_success : "Inscription effectuée avec succès, vous pouvez dès à présent vous connecter."
-      unknown_error : "Une erreur inconnue est survenue, veuillez essayer de nouveau."
       max_users_reached : "Le nombre maximum d'inscription a été atteint ! Revenez plus tard ou contactez-nous pour que de nouvelles places soient disponibles."
   # PAGE:DASHBOARD
   dashboard :
@@ -92,13 +91,13 @@ page :
   # PAGE:STATS
   statistics:
     meta :
-      title             : "Statistiques"
-    title               : "Statistiques %for_literal%<span class=\"stats-period\" data-toggler-class=\"scp-is-visible\" data-toggler-target=\".stats-change-period\">%date%</span>"
+      title : "Statistiques"
+    title : "Statistiques %for_literal%<span class=\"stats-period\" data-toggler-class=\"scp-is-visible\" data-toggler-target=\".stats-change-period\">%date%</span>"
     title_period_yearly : "Statistiques de l'année <span class=\"stats-period\" data-toggler-class=\"scp-is-visible\" data-toggler-target=\".stats-change-period\">%year%</span>"
     title_period_weekly : "Statistiques de la semaine %date_week%, du <span class=\"stats-period\" data-toggler-class=\"scp-is-visible\" data-toggler-target=\".stats-change-period\">%date_start% au %date_end%</span>"
     title_period_custom : "Statistiques du <span class=\"stats-period\" data-toggler-class=\"scp-is-visible\" data-toggler-target=\".stats-change-period\">%date_start% au %date_end%</span>"
     chart_exp_inc :
-      title             : "Transactions par catégorie"
+      title : "Transactions par catégorie"
   # PAGE:TRANSACTIONS
   transactions :
     title : "Transactions"
@@ -106,18 +105,24 @@ page :
   trans_auto :
     meta :
       title : "Transactions récurrentes"
-    title   : "Récurrences"
+    title : "Récurrences"
     form :
       title : "Ajouter une transaction récurrente"
-      title_edit : "Modifier une transaction récurrente"
+      title_edit : "Modifier la transaction récurrente"
     list :
       title : "Liste des transactions récurrentes"
       empty : "Aucune transaction récurrente définie."
-      col_label   : "Libellé"
-      col_amount  : "Montant"
+      col_label : "Libellé"
+      col_amount : "Montant"
       col_actions : "Actions"
-      next_exec   : "Prochaine exéc. <b>%date%</b>"
-      last_exec   : "Dernière exéc. <b>%date%</b>"
+      next_exec : "Prochaine exéc. <b>%date%</b>"
+      last_exec : "Dernière exéc. <b>%date%</b>"
+  # PAGE:BANK ACCOUNTS
+  bank_accounts :
+    title : "Comptes bancaires"
+    form:
+      title: "Ajouter un compte bancaire"
+      title_edit: "Modifier un compte bancaire"
   # PAGE:ABOUT
   about :
     link :
@@ -281,15 +286,18 @@ block :
     expenses :
       title         : "Dépenses"
   trans_list :
-    default_title   : "Liste des transactions"
-    total_text      : "Total de <b>%amount%</b> transaction%plural%"
-    empty           : "Aucune transaction à afficher"
+    default_title    : "Liste des transactions"
+    total_text       : "Total de <b>%amount%</b> transaction%plural%"
+    total_text_short : "<b>%amount%</b> transaction%plural%"
+    empty            : "Aucune transaction à afficher"
 
 ## FORMS
 form :
   required : "Champs obligatoires"
   too_long_text : "Ça en prend du temps !<br>Actualiser pour ré-essayer ?"
   too_long_button : "Actualiser"
+  errors :
+    generic : "Une erreur inconnue est survenue, veuillez essayer de nouveau."
 # Form login
 form_login :
   password :

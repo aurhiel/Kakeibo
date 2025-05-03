@@ -51,7 +51,7 @@ class BankAccount
     /**
      * @ORM\Column(type="boolean")
      */
-    private $is_default;
+    private $is_default = false;
 
     /**
     * According to transactions sum
@@ -68,7 +68,6 @@ class BankAccount
         $this->transactions = new ArrayCollection();
 
         $this->setUser($user);
-        $this->transactionAutos = new ArrayCollection();
         $this->transaction_autos = new ArrayCollection();
     }
 
@@ -132,7 +131,7 @@ class BankAccount
             }
         }
 
-        return $this->balance;
+        return (float) $this->balance;
     }
 
     public function getBankBrand(): ?BankBrand

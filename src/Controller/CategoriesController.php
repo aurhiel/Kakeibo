@@ -88,7 +88,6 @@ class CategoriesController extends AbstractController
                 if ($is_edit && isset($old_cat_json))
                     $return_data['entity']['old'] = $old_cat_json;
             } catch (\Exception $e) {
-                // Something goes wrong > Store exception message
                 $this->entityManager->clear();
                 $return_data['exception'] = $e->getMessage();
             }

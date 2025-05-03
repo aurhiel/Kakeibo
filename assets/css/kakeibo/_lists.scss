@@ -1,6 +1,38 @@
 // Lists
 //
 
+// List with actions displayed on hover
+.list-with-actions {
+  .-item {
+    overflow: hidden;
+
+    &:hover {
+      .col-more {
+        right: 1rem;
+        opacity: 1;
+        transition:
+          opacity $animation-duration ease $animation-duration/2,
+          right $animation-duration*1.25 ease;
+      }
+    }
+
+    .col-more {
+      background-color: $card-bg;
+      // max-width: $list-actions--col-more-max-width;
+      width: auto;
+      padding: .2rem;
+      position: absolute;
+      right: -6rem;
+      opacity: 0;
+      box-shadow: -.2rem 0 .6rem .2rem $card-bg;
+      backdrop-filter: blur(2px);
+        transition:
+          opacity $animation-duration ease,
+          right $animation-duration*4 ease;
+    }
+  }
+}
+
 // Transactions
 .list-transactions {
   .-item {
@@ -37,18 +69,6 @@
 }
 
 .-item-transac {
-  &:hover {
-    .col {
-      &-more {
-        right: 1rem;
-        opacity: 1;
-        transition:
-          opacity $animation-duration ease $animation-duration/2,
-          right $animation-duration*1.25 ease;
-      }
-    }
-  }
-
   .col {
     &-icon {
       font-size: $list-trans--col-icon-size;
@@ -84,21 +104,6 @@
       max-width: $list-trans--col-price-max-width;
       padding-right: 0;
       padding-left: 0;
-    }
-
-    &-more {
-      background-color: $card-bg;
-      // max-width: $list-trans--col-more-max-width;
-      width: auto;
-      padding: .2rem;
-      position: absolute;
-      right: -6rem;
-      opacity: 0;
-      box-shadow: -.2rem 0 .6rem .2rem $card-bg;
-      backdrop-filter: blur(2px);
-        transition:
-          opacity $animation-duration ease,
-          right $animation-duration*4 ease;
     }
   }
 }
@@ -149,6 +154,11 @@
     opacity: .4;
     transition: opacity $animation-duration ease;
   }
+}
+
+// Bank accounts
+.list-bank-accounts {
+  line-height: 1.2;
 }
 
 //

@@ -1,14 +1,14 @@
 ## GLOBALS
 global :
-  speech  : "Take back control of your expenses !"
-  soon    : "coming soon"
+  speech : "Take back control of your expenses !"
+  soon : "coming soon"
   repeat_types :
     YEARLY : "Yearly"
     MONTHLY : "Monthly"
     WEEKLY : "Weekly"
     DAILY : "Daily"
-  from: "from"
-  to: "to"
+  from : "from"
+  to : "to"
 
 ## MENU
 menu :
@@ -33,9 +33,9 @@ menu :
       label : "Logout"
   # Bank accounts
   bank_accounts :
-    title   : "My bank accounts"
-    btn_add :
-      label : "Add an account"
+    title : "My bank accounts"
+    btn_manage :
+      label : "Manage my accounts"
   # Account balance
   balance :
     label : "Balance"
@@ -69,7 +69,6 @@ page :
     messages :
       already_registered : "This user already exist, please chose another username or mail address."
       registration_success : "Registration successfully completed, you can now log in."
-      unknown_error : "An unknown error has occurred, please try again."
       max_users_reached : "The maximum number of registrations has been reached! Come back later or contact us to make new places available."
   # PAGE:DASHBOARD
   dashboard :
@@ -94,7 +93,7 @@ page :
   statistics :
     meta :
       title : "Statistics"
-    title               : "Statistics for <span class=\"stats-period\" data-toggler-class=\"scp-is-visible\" data-toggler-target=\".stats-change-period\">%date%</span>"
+    title : "Statistics for <span class=\"stats-period\" data-toggler-class=\"scp-is-visible\" data-toggler-target=\".stats-change-period\">%date%</span>"
     title_period_yearly : "Statistics for year <span class=\"stats-period\" data-toggler-class=\"scp-is-visible\" data-toggler-target=\".stats-change-period\">%year%</span>"
     title_period_weekly : "Statistics for week %date_week% <span class=\"stats-period\" data-toggler-class=\"scp-is-visible\" data-toggler-target=\".stats-change-period\">%year%</span>"
     title_period_custom : "Statistics from <span class=\"stats-period\" data-toggler-class=\"scp-is-visible\" data-toggler-target=\".stats-change-period\">%date_start% to %date_end%</span>"
@@ -110,15 +109,21 @@ page :
     title : "Recurrences"
     form :
       title : "Add a recurrence transaction"
-      title_edit : "Edit a recurrence transaction"
+      title_edit : "Edit recurrence transaction"
     list :
       title : "Recurrences transactions list"
       empty : "No recurrence transaction defined."
-      col_label   : "Label"
-      col_amount  : "Amount"
+      col_label : "Label"
+      col_amount : "Amount"
       col_actions : "Actions"
-      next_exec   : "Next exec. <b>%date%</b>"
-      last_exec   : "Last exec. <b>%date%</b>"
+      next_exec : "Next exec. <b>%date%</b>"
+      last_exec : "Last exec. <b>%date%</b>"
+  # PAGE:BANK ACCOUNTS
+  bank_accounts :
+    title : "Bank accounts"
+    form:
+      title: "Add a bank account"
+      title_edit: "Edit bank account"
   # PAGE:ABOUT
   about :
     meta :
@@ -283,15 +288,18 @@ block :
     expenses :
       title         : "Expenses"
   trans_list :
-    default_title   : "Transactions list"
-    total_text      : "<b>%amount%</b> transaction%plural% in total"
-    empty           : "No transaction to display"
+    default_title    : "Transactions list"
+    total_text       : "<b>%amount%</b> transaction%plural% in total"
+    total_text_short : "<b>%amount%</b> transaction%plural%"
+    empty            : "No transaction to display"
 
 ## FORMS
 form :
   required : "Required fields"
   too_long_text : "It takes some times !<br>Refresh to retry ?"
   too_long_button : "Refresh"
+  errors :
+    generic : "An unknown error has occurred, please try again."
 # Form login
 form_login :
   password :

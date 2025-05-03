@@ -14,6 +14,7 @@ use Symfony\Component\Security\Core\Security;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
   * Require ROLE_USER for *every* controller method in this class.
@@ -24,13 +25,16 @@ class ProfileController extends AbstractController
 {
     private User $user;
     private EntityManagerInterface $entityManager;
+    private TranslatorInterface $translator;
 
     public function __construct(
         Security $security,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator
     ) {
         $this->user = $security->getUser();
         $this->entityManager = $entityManager;
+        $this->translator = $translator;
     }
 
     /**
@@ -43,7 +47,7 @@ class ProfileController extends AbstractController
         /** @var Session $session */
         $session = $request->getSession();
 
-        $form = $this->createForm(UserType::class, $this->user, array('type_form' => 'edit'));
+        $form = $this->createForm(UserType::class, $this->user, ['type_form' => 'edit']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -57,7 +61,7 @@ class ProfileController extends AbstractController
                 $session->getFlashBag()->add('success', 'Modification(s) effectuée(s) avec succès.');
                 $this->entityManager->flush();
             } catch (\Exception $e) {
-                $session->getFlashBag()->add('error', 'Une erreur inconnue est survenue, veuillez essayer de nouveau.');
+                $session->getFlashBag()->add('error', $this->translator->trans('form.errors.generic'));
                 $this->entityManager->clear();
             }
         }

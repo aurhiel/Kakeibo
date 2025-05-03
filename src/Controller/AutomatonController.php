@@ -54,15 +54,8 @@ class AutomatonController extends AbstractController
         if (count($this->user->getBankAccounts()) < 1)
             return $this->redirectToRoute('ignition-first-bank-account');
 
-        $is_edit = (!empty($id) && ((int) $id) > 0); // Edit transaction auto ?
+        $is_edit = (!empty($id) && ((int) $id) > 0);
         $return_data = [];
-
-        // User has a bank account
-        $default_bank_account = $this->user->getDefaultBankAccount();
-
-        // Force user to create at least ONE bank account !
-        if (count($this->user->getBankAccounts()) < 1)
-            return $this->redirectToRoute('ignition-first-bank-account');
 
         // User has a bank account
         $default_bank_account = $this->user->getDefaultBankAccount();
@@ -81,7 +74,7 @@ class AutomatonController extends AbstractController
         }
 
         // 1) Build the form
-        $trans_auto_form = $this->createForm(TransactionAutoType::class, $trans_auto_entity, array('type_form' => ($is_edit ? 'edit' : 'add')));
+        $trans_auto_form = $this->createForm(TransactionAutoType::class, $trans_auto_entity, ['type_form' => $is_edit ? 'edit' : 'add']);
 
         // 2) Handle the submit (will only happen on POST)
         $trans_auto_form->handleRequest($request);

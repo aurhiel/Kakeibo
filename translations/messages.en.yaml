@@ -336,14 +336,23 @@ form_user :
     label : "Active"
 # Form bank account
 form_bank_account :
+  status :
+    add_ok : "New bank account created with success!"
+    add_nok : "There was an issue during the process to create the bank account."
+    edit_ok : "Bank account successfully edited."
+    edit_nok : "There was an issue during the process to edit the bank account."
+    # Delete call
+    delete_ok : "Bank account deleted."
+    delete_nok : "There was an issue during the process to delete the bank account."
+    delete_unknown_entity : "No bank account exists for this ID."
   label :
-    label       : "Bank account title"
+    label : "Bank account title"
     placeholder : "eg. Checking account"
   bank_brand :
-    label       : "Banking establishment"
+    label : "Banking establishment"
     placeholder : "Choose an establishment"
   currency :
-    label       : "Currency"
+    label : "Currency"
 # Form category
 form_category :
   label :
@@ -373,26 +382,26 @@ form_transaction :
 # Form transaction auto
 form_trans_auto :
   status :
-    add_ok    : "Recurrent transaction added."
-    add_nok   : "There was an issue during the process to add the recurrent transaction."
-    edit_ok   : "Recurrent transaction edited."
-    edit_nok  : "There was an issue during the process to edit the recurrent transaction."
+    add_ok : "Recurrent transaction added."
+    add_nok : "There was an issue during the process to add the recurrent transaction."
+    edit_ok : "Recurrent transaction edited."
+    edit_nok : "There was an issue during the process to edit the recurrent transaction."
     # Delete call
-    delete_ok   : "Recurrent transaction deleted."
-    delete_nok  : "There was an issue during the process to delete the recurrent transaction."
+    delete_ok : "Recurrent transaction deleted."
+    delete_nok : "There was an issue during the process to delete the recurrent transaction."
     delete_unknown_entity : "No recurrent transaction exists for this ID."
   label :
-    label       : "Title of the recurrent transaction"
+    label : "Title of the recurrent transaction"
     placeholder : "eg. Rent, Insurance, ..."
   amount :
-    label       : "Amount"
+    label : "Amount"
     placeholder : "eg. 560,48"
   repeat_type :
-    label       : "Recurrence Type"
+    label : "Recurrence Type"
   date_start :
-    label       : "Date of the first transaction"
+    label : "Date of the first transaction"
   category :
-    label       : "Category"
+    label : "Category"
     placeholder : "Choose a category"
 
 ## CATEGORY

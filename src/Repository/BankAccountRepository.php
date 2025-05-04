@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\BankAccount;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,45 +20,17 @@ class BankAccountRepository extends ServiceEntityRepository
         parent::__construct($registry, BankAccount::class);
     }
 
-    public function findAll()
+    public function findOneByIdAndUser(int $id, User $user)
     {
         return $this->createQueryBuilder('ba')
-            // Join relations
-            ->innerJoin('ba.currency', 'currency')
-            ->addSelect('currency')
-            ->leftJoin('ba.bank_brand', 'bank_brand')
-            ->addSelect('bank_brand')
-            // Join relations
-            ->getQuery()
-            ->getResult();
-    }
-
-//    /**
-//     * @return BankAccount[] Returns an array of BankAccount objects
-//     */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('b.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?BankAccount
-    {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
+            ->where('ba.id = :id')
+            ->andWhere('ba.user = :user')
+            ->setParameters([
+                'id' => $id,
+                'user' => $user,
+            ])
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
 }

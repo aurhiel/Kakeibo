@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\BankAccount;
 use App\Entity\User;
 use App\Form\BankAccountType;
+use App\Repository\BankAccountRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,15 +19,18 @@ class BankAccountsController extends AbstractController
     private User $user;
     private EntityManagerInterface $entityManager;
     private TranslatorInterface $translator;
+    private BankAccountRepository $bankAccountRepository;
 
     public function __construct(
         Security $security,
         EntityManagerInterface $entityManager,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        BankAccountRepository $bankAccountRepository
     ) {
         $this->user = $security->getUser();
         $this->entityManager = $entityManager;
         $this->translator = $translator;
+        $this->bankAccountRepository = $bankAccountRepository;
     }
 
     /**
@@ -42,7 +46,7 @@ class BankAccountsController extends AbstractController
         $return_data = [];
 
         if ($is_edit) {
-            exit('TODO: Retrieve bank account from given $id');
+            $entity = $this->bankAccountRepository->findOneByIdAndUser($id, $this->user);
             $message_status_ok = $this->translator->trans('form_bank_account.status.edit_ok');
             $message_status_nok = $this->translator->trans('form_bank_account.status.edit_nok');
         } else {
@@ -56,10 +60,7 @@ class BankAccountsController extends AbstractController
 
         // Handle the submitted form
         if ($form->isSubmitted()) {
-            $return_data = [
-                'slug_status' => 'error',
-                'message_status' => $this->translator->trans('form.errors.generic')
-            ];
+            $return_data = [ 'slug_status' => 'error', 'message_status' => $message_status_nok ];
 
             if ($form->isValid()) {
                 $this->entityManager->persist($entity);
@@ -67,12 +68,10 @@ class BankAccountsController extends AbstractController
                 try {
                     $this->entityManager->flush();
 
-                    $return_data = [
-                        'slug_status' => 'success',
-                        'message_status' => 'Nouveau compte bancaire créé avec succès.',
-                    ];
+                    $return_data = [ 'slug_status' => 'success', 'message_status' => $message_status_ok ];
                 } catch (\Exception $e) {
                     $this->entityManager->clear();
+                    $return_data['message_status'] = $this->translator->trans('form.errors.generic');
                     $return_data['exception'] = $e->getMessage();
                 }
             }

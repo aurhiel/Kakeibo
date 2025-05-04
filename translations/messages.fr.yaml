@@ -334,14 +334,24 @@ form_user :
     label : "Actif(ve)"
 # Form bank account
 form_bank_account :
+  # Messages status
+  status :
+    add_ok : "Nouveau compte bancaire créé avec succès !"
+    add_nok : "Un problème est survenu lors de la création du compte bancaire."
+    edit_ok : "Modificiation du compte bancaire effectuée."
+    edit_nok : "Un problème est survenu lors de la modification du compte bancaire."
+    delete_ok : "Suppression du compte bancaire effectuée."
+    delete_nok : "Un problème est survenu lors de la suppression du compte bancaire."
+    delete_unknown_entity : "Aucun compte bancaire n'existe pour cet ID."
+  # Fields
   label :
-    label :        "Intitulé du compte"
+    label : "Intitulé du compte"
     placeholder :  "ex: Compte courant"
   bank_brand :
-    label :        "Établissement bancaire"
+    label : "Établissement bancaire"
     placeholder :  "Choisissez un établissement"
   currency :
-    label :        "Monnaie"
+    label : "Monnaie"
 # Form category
 form_category :
   label :
@@ -372,27 +382,27 @@ form_transaction :
 form_trans_auto :
   # Messages status
   status :
-    add_ok    : "Ajout de la transaction récurrente effectuée."
-    add_nok   : "Un problème est survenu lors de l'ajout de la transaction récurrente."
-    edit_ok   : "Modificiation de la transaction récurrente effectuée."
-    edit_nok  : "Un problème est survenu lors de la modification de la transaction récurrente."
+    add_ok : "Ajout de la transaction récurrente effectuée."
+    add_nok : "Un problème est survenu lors de l'ajout de la transaction récurrente."
+    edit_ok : "Modificiation de la transaction récurrente effectuée."
+    edit_nok : "Un problème est survenu lors de la modification de la transaction récurrente."
     # Delete call
-    delete_ok   : "Suppression de la transaction récurrente effectuée."
-    delete_nok  : "Un problème est survenu lors de la suppression de la transaction récurrente."
+    delete_ok : "Suppression de la transaction récurrente effectuée."
+    delete_nok : "Un problème est survenu lors de la suppression de la transaction récurrente."
     delete_unknown_entity : "Aucune transaction récurrente n'existe pour cet ID."
   # Fields
   label :
-    label       : "Intitulé de la transaction récurrente"
+    label : "Intitulé de la transaction récurrente"
     placeholder : "ex: Loyer, Assurance, ..."
   amount :
-    label       : "Montant"
+    label : "Montant"
     placeholder : "ex: 560,48"
   repeat_type :
-    label       : "Type de récurrence"
+    label : "Type de récurrence"
   date_start :
-    label       : "Date de la 1ère transaction récurrente"
+    label : "Date de la 1ère transaction récurrente"
   category :
-    label       : "Catégorie"
+    label : "Catégorie"
     placeholder : "Choisissez une catégorie"
 
 ## CATEGORY

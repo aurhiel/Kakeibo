@@ -98,4 +98,56 @@ class BankAccountsController extends AbstractController
             ]);
         }
     }
+
+    /**
+     * @Route("/compte-bancaires/delete/{id}", name="bank_accounts_delete")
+     */
+    public function delete(int $id, Request $request): Response
+    {
+        $entity = $this->bankAccountRepository->findOneByIdAndUser($id, $this->user);
+        $return_data = [
+            'slug_status' => 'error',
+            'message_status' => $this->translator->trans('form_bank_account.status.delete_nok')
+        ];
+
+        if(!is_null($entity) && false === $entity->isDefault()) {
+            $entity_deleted = $entity;
+            $id_entity_deleted = $entity_deleted->getId();
+
+            $this->entityManager->remove($entity);
+
+            try {
+                $this->entityManager->flush();
+
+                $return_data = [
+                    'slug_status' => 'success',
+                    'message_status' => $this->translator->trans('form_bank_account.status.delete_ok'),
+                    // Data
+                    'entity' => [ 'id' => $id_entity_deleted ],
+                    // 'default_bank_account' => self::format_json_bank_account($this->user->getDefaultBankAccount())
+                ];
+            } catch (\Exception $e) {
+                $this->entityManager->clear();
+                $return_data['message_status'] = $this->translator->trans('form.errors.generic');
+                $return_data['exception'] = $e->getMessage();
+            }
+        } else {
+            $return_data['message_status'] = $this->translator->trans(sprintf(
+                'form_bank_account.status.%s',
+                $entity->isDefault() ? 'delete_default_nok' : 'delete_unknown_entity',
+            ));
+        }
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->json($return_data);
+        } else {
+            /** @var Session $session */
+            $session = $request->getSession();
+            // Set message in flashbag on direct access
+            $session->getFlashBag()->add($return_data['slug_status'], $return_data['message_status']);
+
+            // Redirect to previous page (= referer)
+            return $this->redirect($request->headers->get('referer'));
+        }
+    }
 }

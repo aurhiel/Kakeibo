@@ -52,11 +52,13 @@
               <a class="btn btn-sm btn-pill btn-outline-secondary mr-1" href="{{ path('bank_accounts', { id: ba.id }) }}">
                 <span class="icon icon-edit"></span>
               </a>
-              <button class="btn btn-sm btn-pill btn-outline-danger" type="button" data-confirm-href="#TODO{# path('bank_accounts_delete', { id: ba.id }) #}"
+            {% if ba.isDefault == false %}
+              <button class="btn btn-sm btn-pill btn-outline-danger" type="button" data-confirm-href="{{ path('bank_accounts_delete', { id: ba.id }) }}"
                 data-confirm-body="Êtes-vous sûr de vouloir supprimer le compte bancaire : <br><b>&laquo;&nbsp;{{ ba.label }}&nbsp;&raquo;</b> ?"
                   data-toggle="modal" data-target="#modal-confirm-delete">
                 <span class="icon icon-trash"></span>
               </button>
+            {% endif %}
             </div>
           </li>
         {% endfor %}

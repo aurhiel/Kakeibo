@@ -49,7 +49,7 @@ class BankAccount
     private $user;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false)
      */
     private $is_default = false;
 
@@ -170,7 +170,13 @@ class BankAccount
         return $this;
     }
 
-    public function getIsDefault(): ?bool
+    public function getIsDefault(): bool
+    {
+        return $this->is_default;
+    }
+
+
+    public function isDefault(): bool
     {
         return $this->is_default;
     }

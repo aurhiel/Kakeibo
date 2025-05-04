@@ -345,6 +345,7 @@ form_bank_account :
     delete_ok : "Bank account deleted."
     delete_nok : "There was an issue during the process to delete the bank account."
     delete_unknown_entity : "No bank account exists for this ID."
+    delete_default_nok : "The default bank account cannot be deleted."
   label :
     label : "Bank account title"
     placeholder : "eg. Checking account"

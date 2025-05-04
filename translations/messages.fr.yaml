@@ -343,6 +343,7 @@ form_bank_account :
     delete_ok : "Suppression du compte bancaire effectuée."
     delete_nok : "Un problème est survenu lors de la suppression du compte bancaire."
     delete_unknown_entity : "Aucun compte bancaire n'existe pour cet ID."
+    delete_default_nok : "Le compte bancaire par défaut ne peut pas être supprimé."
   # Fields
   label :
     label : "Intitulé du compte"

@@ -92,7 +92,7 @@ class BankAccountsController extends AbstractController
             return $this->render('bank-accounts/index.html.twig', [
                 'core_class'  => 'app-core--bank-accounts app-core--merge-body-in-header',
                 'meta' => [ 'title' => $this->translator->trans('page.bank_accounts.title') ],
-                'page_title' => '<span class="icon icon-book"></span> ' . $this->translator->trans('page.bank_accounts.title'),
+                'page_title' => '<span class="icon icon-briefcase"></span> ' . $this->translator->trans('page.bank_accounts.title'),
                 'is_bank_account_edit' => $is_edit,
                 'form_bank_account' => $form->createView(),
             ]);

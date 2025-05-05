@@ -9,6 +9,7 @@ global :
     DAILY : "Daily"
   from : "from"
   to : "to"
+  default_bank_account: "Default bank account"
 
 ## MENU
 menu :

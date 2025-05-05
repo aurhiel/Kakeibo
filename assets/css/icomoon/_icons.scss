@@ -198,6 +198,11 @@
     content: $icon-sliders;
   }
 }
+.icon-star {
+  &:before {
+    content: $icon-star;
+  }
+}
 .icon-tag {
   &:before {
     content: $icon-tag;

@@ -36,7 +36,7 @@
         {% for ba in app.user.bankAccounts %}
           <li class="-item list-group-item d-flex">
             <div class="col pl-0">
-              {{ ba.label }}<br>
+              {% if ba.isDefault == true %}<span class="icon icon-star" title="{{ 'global.default_bank_account'|trans }}" data-toggle="tooltip" data-placement="top"></span> {% endif %}{{ ba.label }}<br>
               <span class="text-muted small">{{ ba.bankBrand.label }}</span>
             </div>
             <div class="col-auto px-0 text-right">

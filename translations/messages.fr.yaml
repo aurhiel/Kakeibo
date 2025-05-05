@@ -9,6 +9,7 @@ global :
     DAILY : "Journalière"
   from : "du"
   to : "au"
+  default_bank_account: "Compte bancaire par défaut"
 
 ## MENU
 menu :

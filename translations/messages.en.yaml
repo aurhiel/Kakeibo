@@ -151,6 +151,13 @@ page :
     title_update    : "Update%plural%"
     title_fix       : "Misc. correction%plural%"
     # VERSIONS
+    beta_0_6_0 :
+      title : "Version Beta 0.6.0"
+      date : "2025-05-05"
+      list_new :
+        item_1 : "Mise en place de la gestion des comptes bancaires (ajout, édition, suppression et changement de celui en cours d'utilisation)."
+      list_update:
+        item_1 : "Ajout de nouvelles icônes pour les catégories (par exemple: <span class=\"icon-travel-boat\"></span>, <span class=\"icon-travel-taxi\"></span>, <span class=\"icon-two-wheelers\"></span>, ...)"
     beta_0_5_0 :
       title : "Version Beta 0.5.0"
       date  : "2025-02-02"

@@ -60,6 +60,10 @@ class AutomatonController extends AbstractController
         // User has a bank account
         $default_bank_account = $this->user->getDefaultBankAccount();
 
+        // Force user to add or import transaction(s) first
+        if (count($default_bank_account->getTransactions()) < 1)
+            return $this->redirectToRoute('ignition-first-transaction');
+
         // Initialize default message & change entity if needed
         if($is_edit) {
             // Get transaction auto to edit with id AND user (for security)

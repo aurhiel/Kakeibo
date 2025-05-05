@@ -33,4 +33,16 @@ class BankAccountRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
     }
+
+    public function resetDefault(User $user)
+    {
+        return $this->createQueryBuilder('ba')
+            ->update()
+            ->set('ba.is_default', 'false')
+            ->where('ba.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->execute()
+        ;
+    }
 }

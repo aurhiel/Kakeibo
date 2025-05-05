@@ -336,14 +336,15 @@ form_user :
 form_bank_account :
   # Messages status
   status :
+    unknown_entity : "Aucun compte bancaire n'existe pour cet ID."
     add_ok : "Nouveau compte bancaire créé avec succès !"
     add_nok : "Un problème est survenu lors de la création du compte bancaire."
     edit_ok : "Modificiation du compte bancaire effectuée."
     edit_nok : "Un problème est survenu lors de la modification du compte bancaire."
     delete_ok : "Suppression du compte bancaire effectuée."
     delete_nok : "Un problème est survenu lors de la suppression du compte bancaire."
-    delete_unknown_entity : "Aucun compte bancaire n'existe pour cet ID."
     delete_default_nok : "Le compte bancaire par défaut ne peut pas être supprimé."
+    change_default_ok : "Le passage au compte bancaire \"<b>%bank_account_label%</b>\" a réussi !"
   # Fields
   label :
     label : "Intitulé du compte"

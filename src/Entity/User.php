@@ -280,6 +280,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         $matches = $this->bankAccounts->matching($criteria);
 
-        return (count($matches) > 0) ? $matches[0] : null;
+        return (count($matches) > 0) ? $matches->first() : null;
     }
 }

@@ -33,17 +33,20 @@ class TransactionsController extends AbstractController
     private EntityManagerInterface $entityManager;
     private TransactionRepository $transactionRepository;
     private CategoryRepository $categoryRepository;
+    private TranslatorInterface $translator;
 
     public function __construct(
         Security $security,
         EntityManagerInterface $entityManager,
         TransactionRepository $transactionRepository,
-        CategoryRepository $categoryRepository
+        CategoryRepository $categoryRepository,
+        TranslatorInterface $translator
     ) {
         $this->user = $security->getUser();
         $this->entityManager = $entityManager;
         $this->transactionRepository = $transactionRepository;
         $this->categoryRepository = $categoryRepository;
+        $this->translator = $translator;
     }
 
     /**
@@ -111,7 +114,6 @@ class TransactionsController extends AbstractController
                 if ($is_edit && isset($old_trans_json))
                     $return_data['entity']['old'] = $old_trans_json;
             } catch (\Exception $e) {
-                // Something goes wrong > Store exception message
                 $this->entityManager->clear();
                 $return_data['exception'] = $e->getMessage();
             }
@@ -134,7 +136,12 @@ class TransactionsController extends AbstractController
      */
     public function retrieve(int $id, Request $request): Response
     {
-        $data = [ 'query_status' => 0, 'slug_status' => 'error', 'message_status' => 'Error...' ];
+        $data = [
+            'query_status' => 0,
+            'slug_status' => 'error',
+            'message_status' => $this->translator->trans('form.errors.generic')
+        ];
+
         // Retrieve transaction with id AND user (for security)
         $trans = $this->transactionRepository->findOneByIdAndUser($id, $this->user);
 
@@ -193,7 +200,6 @@ class TransactionsController extends AbstractController
                 $return_data['entity']['amount'] = 0;
                 $return_data['entity']['old'] = $trans_deleted_json;
             } catch (\Exception $e) {
-                // Something goes wrong > Store exception message
                 $this->entityManager->clear();
                 $return_data['exception'] = $e->getMessage();
             }
@@ -216,7 +222,7 @@ class TransactionsController extends AbstractController
     /**
      * @Route("/transactions/{page}", name="transactions", defaults={"page"=1})
      */
-    public function index(int $page, TranslatorInterface $translator): Response
+    public function index(int $page): Response
     {
         // Force user to create at least ONE bank account !
         if (count($this->user->getBankAccounts()) < 1)
@@ -260,8 +266,8 @@ class TransactionsController extends AbstractController
         $date_start = (count($transactions) > 1) ? $transactions[count($transactions)-1]->getDate()->format('Y-m-d') : null;
 
         return $this->render('transactions/index.html.twig', [
-            'page_title'        => '<span class="icon icon-list"></span> ' . $translator->trans('page.transactions.title'),
-            'meta'              => [ 'title' => $translator->trans('page.transactions.title') ],
+            'page_title'        => '<span class="icon icon-list"></span> ' . $this->translator->trans('page.transactions.title'),
+            'meta'              => [ 'title' => $this->translator->trans('page.transactions.title') ],
             'core_class'        => 'app-core--transactions app-core--merge-body-in-header',
             // 'stylesheets'       => [ 'kb-dashboard.css' ],
             // 'scripts'           => [ 'kb-dashboard.js' ],
@@ -406,9 +412,8 @@ class TransactionsController extends AbstractController
             $this->entityManager->flush();
             $session->getFlashBag()->add('success', 'Importation des transactions effectuée avec succès.');
         } catch (\Exception $e) {
-            // Something goes wrong > clear entity manager & add error message
             $this->entityManager->clear();
-            $session->getFlashBag()->add('error', 'Une erreur inconnue est survenue, veuillez essayer de nouveau.');
+            $session->getFlashBag()->add('error', $this->translator->trans('form.errors.generic'));
         }
 
         if ($request->isXmlHttpRequest()) {

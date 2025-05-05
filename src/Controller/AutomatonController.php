@@ -54,18 +54,15 @@ class AutomatonController extends AbstractController
         if (count($this->user->getBankAccounts()) < 1)
             return $this->redirectToRoute('ignition-first-bank-account');
 
-        $is_edit = (!empty($id) && ((int) $id) > 0); // Edit transaction auto ?
+        $is_edit = (!empty($id) && ((int) $id) > 0);
         $return_data = [];
 
         // User has a bank account
         $default_bank_account = $this->user->getDefaultBankAccount();
 
-        // Force user to create at least ONE bank account !
-        if (count($this->user->getBankAccounts()) < 1)
-            return $this->redirectToRoute('ignition-first-bank-account');
-
-        // User has a bank account
-        $default_bank_account = $this->user->getDefaultBankAccount();
+        // Force user to add or import transaction(s) first
+        if (count($default_bank_account->getTransactions()) < 1)
+            return $this->redirectToRoute('ignition-first-transaction');
 
         // Initialize default message & change entity if needed
         if($is_edit) {
@@ -81,7 +78,7 @@ class AutomatonController extends AbstractController
         }
 
         // 1) Build the form
-        $trans_auto_form = $this->createForm(TransactionAutoType::class, $trans_auto_entity, array('type_form' => ($is_edit ? 'edit' : 'add')));
+        $trans_auto_form = $this->createForm(TransactionAutoType::class, $trans_auto_entity, ['type_form' => $is_edit ? 'edit' : 'add']);
 
         // 2) Handle the submit (will only happen on POST)
         $trans_auto_form->handleRequest($request);
@@ -117,7 +114,6 @@ class AutomatonController extends AbstractController
                         // 'default_bank_account' => self::format_json_bank_account($default_bank_account)
                     ];
                 } catch (\Exception $e) {
-                    // Something goes wrong > Store exception message
                     $this->entityManager->clear();
                     $return_data['exception'] = $e->getMessage();
                 }
@@ -181,10 +177,7 @@ class AutomatonController extends AbstractController
 
             // Try to save (flush) or clear entity remove
             try {
-                // Flush OK !
                 $this->entityManager->flush();
-                // Retrieve user's default bank account
-                // $default_bank_account = $this->user->getDefaultBankAccount();
 
                 $return_data = [
                     'query_status' => 1,
@@ -192,10 +185,9 @@ class AutomatonController extends AbstractController
                     'message_status' => $this->translator->trans('form_trans_auto.status.delete_ok'),
                     // Data
                     'entity' => [ 'id' => $id_trans_auto_deleted ],
-                    // 'default_bank_account' => self::format_json_bank_account($default_bank_account)
+                    // 'default_bank_account' => self::format_json_bank_account($this->user->getDefaultBankAccount())
                 ];
             } catch (\Exception $e) {
-                // Something goes wrong > Store exception message
                 $this->entityManager->clear();
                 $return_data['exception'] = $e->getMessage();
             }

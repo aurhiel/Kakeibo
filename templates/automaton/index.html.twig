@@ -14,7 +14,7 @@
         </div>
         <div class="card-body">
           {{ form_start(form_trans_auto) }}
-            {% include 'components/forms/transaction_auto.html.twig' with { is_edit: is_trans_auto_edit } %}
+            {% include 'components/forms/transaction-auto.html.twig' with { is_edit: is_trans_auto_edit } %}
 
             <div class="mt-2 text-center">
               <button class="btn btn-primary mx-1" type="submit" name="submit">
@@ -37,7 +37,7 @@
           <h3 class="h4 mb-0">{{ 'page.trans_auto.list.title'|trans }}</h3>
         </div>#}
         {% if trans_auto is not empty %}
-          <div class="list-transactions -no-scroll py-1">
+          <div class="list-with-actions list-transactions -no-scroll py-1">
           {% for ta in trans_auto %}
             <div class="-item -item-transac" data-kb-id-transaction="{{ ta.id }}">
               {# TRANS:CATEGORY/ICON & COLOR #}

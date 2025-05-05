@@ -7,15 +7,24 @@ parameters:
       - laptop
       - desktop
       - travel-car
+      - two-wheelers
       - travel-bus
+      - travel-taxi
       - train
+      - tram
+      - travel-boat
+      - bike
+      - electric-bike
+      - electric-scooter
       - gas-station
       - ev-station
       - flight-takeoff
       - earth
       - donation
       - housing
+      - apartment
       - store
+      - storefront
       - bank
       - gavel
       - hospital

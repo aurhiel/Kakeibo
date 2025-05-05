@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
   * Require ROLE_USER for *every* controller method in this class.
@@ -28,13 +29,16 @@ class IgnitionController extends AbstractController
 
     private User $user;
     private EntityManagerInterface $entityManager;
+    private TranslatorInterface $translator;
 
     public function __construct(
         Security $security,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator
     ) {
         $this->user = $security->getUser();
         $this->entityManager = $entityManager;
+        $this->translator = $translator;
     }
 
     /**
@@ -49,8 +53,8 @@ class IgnitionController extends AbstractController
         $session = $request->getSession();
 
         // 1) build the form
-        $ba_entity  = new BankAccount($this->user);
-        $ba_form    = $this->createForm(BankAccountType::class, $ba_entity);
+        $ba_entity = new BankAccount($this->user);
+        $ba_form = $this->createForm(BankAccountType::class, $ba_entity);
 
         // 2) handle the submit (will only happen on POST)
         $ba_form->handleRequest($request);
@@ -72,17 +76,14 @@ class IgnitionController extends AbstractController
                 // Redirect to first transaction
                 return $this->redirectToRoute('ignition-first-transaction');
             } catch (\Exception $e) {
-                // Something goes wrong
-                $session->getFlashBag()->add('error', 'Une erreur inconnue est survenue, veuillez essayer de nouveau.');
+                $session->getFlashBag()->add('error', $this->translator->trans('form.errors.generic'));
                 $this->entityManager->clear();
             }
         }
 
         return $this->render('ignition/first-bank-account.html.twig', [
             // Metas
-            'meta' => [
-                'title' => 'Création du 1er compte'
-            ],
+            'meta' => [ 'title' => 'Création du 1er compte' ],
             'step' => 1,
             'nb_steps' => self::NB_STEPS,
             'form_bank_account' => $ba_form->createView(),
@@ -110,7 +111,7 @@ class IgnitionController extends AbstractController
 
         // 1) Build the form
         $trans_entity = new Transaction();
-        $trans_form   = $this->createForm(TransactionType::class, $trans_entity);
+        $trans_form = $this->createForm(TransactionType::class, $trans_entity);
 
         // 2) Handle the submit (will only happen on POST)
         $trans_form->handleRequest($request);
@@ -132,8 +133,7 @@ class IgnitionController extends AbstractController
                 // Redirect to Dashboard
                 return $this->redirectToRoute('dashboard');
             } catch (\Exception $e) {
-                // Something goes wrong
-                $session->getFlashBag()->add('error', 'Une erreur inconnue est survenue, veuillez essayer de nouveau.');
+                $session->getFlashBag()->add('error', $this->translator->trans('form.errors.generic'));
                 $this->entityManager->clear();
             }
         }

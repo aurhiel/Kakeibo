@@ -1,14 +1,15 @@
 ## GLOBALS
 global :
-  speech  : "Take back control of your expenses !"
-  soon    : "coming soon"
+  speech : "Take back control of your expenses !"
+  soon : "coming soon"
   repeat_types :
     YEARLY : "Yearly"
     MONTHLY : "Monthly"
     WEEKLY : "Weekly"
     DAILY : "Daily"
-  from: "from"
-  to: "to"
+  from : "from"
+  to : "to"
+  default_bank_account: "Default bank account"
 
 ## MENU
 menu :
@@ -33,9 +34,9 @@ menu :
       label : "Logout"
   # Bank accounts
   bank_accounts :
-    title   : "My bank accounts"
-    btn_add :
-      label : "Add an account"
+    title : "My bank accounts"
+    btn_manage :
+      label : "Manage my accounts"
   # Account balance
   balance :
     label : "Balance"
@@ -69,7 +70,6 @@ page :
     messages :
       already_registered : "This user already exist, please chose another username or mail address."
       registration_success : "Registration successfully completed, you can now log in."
-      unknown_error : "An unknown error has occurred, please try again."
       max_users_reached : "The maximum number of registrations has been reached! Come back later or contact us to make new places available."
   # PAGE:DASHBOARD
   dashboard :
@@ -94,7 +94,7 @@ page :
   statistics :
     meta :
       title : "Statistics"
-    title               : "Statistics for <span class=\"stats-period\" data-toggler-class=\"scp-is-visible\" data-toggler-target=\".stats-change-period\">%date%</span>"
+    title : "Statistics for <span class=\"stats-period\" data-toggler-class=\"scp-is-visible\" data-toggler-target=\".stats-change-period\">%date%</span>"
     title_period_yearly : "Statistics for year <span class=\"stats-period\" data-toggler-class=\"scp-is-visible\" data-toggler-target=\".stats-change-period\">%year%</span>"
     title_period_weekly : "Statistics for week %date_week% <span class=\"stats-period\" data-toggler-class=\"scp-is-visible\" data-toggler-target=\".stats-change-period\">%year%</span>"
     title_period_custom : "Statistics from <span class=\"stats-period\" data-toggler-class=\"scp-is-visible\" data-toggler-target=\".stats-change-period\">%date_start% to %date_end%</span>"
@@ -110,15 +110,21 @@ page :
     title : "Recurrences"
     form :
       title : "Add a recurrence transaction"
-      title_edit : "Edit a recurrence transaction"
+      title_edit : "Edit recurrence transaction"
     list :
       title : "Recurrences transactions list"
       empty : "No recurrence transaction defined."
-      col_label   : "Label"
-      col_amount  : "Amount"
+      col_label : "Label"
+      col_amount : "Amount"
       col_actions : "Actions"
-      next_exec   : "Next exec. <b>%date%</b>"
-      last_exec   : "Last exec. <b>%date%</b>"
+      next_exec : "Next exec. <b>%date%</b>"
+      last_exec : "Last exec. <b>%date%</b>"
+  # PAGE:BANK ACCOUNTS
+  bank_accounts :
+    title : "Bank accounts"
+    form:
+      title: "Add a bank account"
+      title_edit: "Edit bank account"
   # PAGE:ABOUT
   about :
     meta :
@@ -146,6 +152,13 @@ page :
     title_update    : "Update%plural%"
     title_fix       : "Misc. correction%plural%"
     # VERSIONS
+    beta_0_6_0 :
+      title : "Version Beta 0.6.0"
+      date : "2025-05-05"
+      list_new :
+        item_1 : "Mise en place de la gestion des comptes bancaires (ajout, édition, suppression et changement de celui en cours d'utilisation)."
+      list_update:
+        item_1 : "Ajout de nouvelles icônes pour les catégories (par exemple: <span class=\"icon-travel-boat\"></span>, <span class=\"icon-travel-taxi\"></span>, <span class=\"icon-two-wheelers\"></span>, ...)"
     beta_0_5_0 :
       title : "Version Beta 0.5.0"
       date  : "2025-02-02"
@@ -283,15 +296,18 @@ block :
     expenses :
       title         : "Expenses"
   trans_list :
-    default_title   : "Transactions list"
-    total_text      : "<b>%amount%</b> transaction%plural% in total"
-    empty           : "No transaction to display"
+    default_title    : "Transactions list"
+    total_text       : "<b>%amount%</b> transaction%plural% in total"
+    total_text_short : "<b>%amount%</b> transaction%plural%"
+    empty            : "No transaction to display"
 
 ## FORMS
 form :
   required : "Required fields"
   too_long_text : "It takes some times !<br>Refresh to retry ?"
   too_long_button : "Refresh"
+  errors :
+    generic : "An unknown error has occurred, please try again."
 # Form login
 form_login :
   password :
@@ -328,14 +344,24 @@ form_user :
     label : "Active"
 # Form bank account
 form_bank_account :
+  status :
+    unknown_entity : "No bank account exists for this ID."
+    add_ok : "New bank account created with success!"
+    add_nok : "There was an issue during the process to create the bank account."
+    edit_ok : "Bank account successfully edited."
+    edit_nok : "There was an issue during the process to edit the bank account."
+    delete_ok : "Bank account deleted."
+    delete_nok : "There was an issue during the process to delete the bank account."
+    delete_default_nok : "The default bank account cannot be deleted."
+    change_default_ok : "Switching to the bank account \"<b>%bank_account_label%</b>\" succeeded!"
   label :
-    label       : "Bank account title"
+    label : "Bank account title"
     placeholder : "eg. Checking account"
   bank_brand :
-    label       : "Banking establishment"
+    label : "Banking establishment"
     placeholder : "Choose an establishment"
   currency :
-    label       : "Currency"
+    label : "Currency"
 # Form category
 form_category :
   label :
@@ -365,26 +391,26 @@ form_transaction :
 # Form transaction auto
 form_trans_auto :
   status :
-    add_ok    : "Recurrent transaction added."
-    add_nok   : "There was an issue during the process to add the recurrent transaction."
-    edit_ok   : "Recurrent transaction edited."
-    edit_nok  : "There was an issue during the process to edit the recurrent transaction."
+    add_ok : "Recurrent transaction added."
+    add_nok : "There was an issue during the process to add the recurrent transaction."
+    edit_ok : "Recurrent transaction edited."
+    edit_nok : "There was an issue during the process to edit the recurrent transaction."
     # Delete call
-    delete_ok   : "Recurrent transaction deleted."
-    delete_nok  : "There was an issue during the process to delete the recurrent transaction."
+    delete_ok : "Recurrent transaction deleted."
+    delete_nok : "There was an issue during the process to delete the recurrent transaction."
     delete_unknown_entity : "No recurrent transaction exists for this ID."
   label :
-    label       : "Title of the recurrent transaction"
+    label : "Title of the recurrent transaction"
     placeholder : "eg. Rent, Insurance, ..."
   amount :
-    label       : "Amount"
+    label : "Amount"
     placeholder : "eg. 560,48"
   repeat_type :
-    label       : "Recurrence Type"
+    label : "Recurrence Type"
   date_start :
-    label       : "Date of the first transaction"
+    label : "Date of the first transaction"
   category :
-    label       : "Category"
+    label : "Category"
     placeholder : "Choose a category"
 
 ## CATEGORY
@@ -397,15 +423,24 @@ category:
     laptop: "Laptop"
     desktop: "Desktop"
     travel-car: "Car"
+    two-wheelers: "Motorcycle"
     travel-bus: "Bus"
+    travel-taxi: "Taxi"
     train: "Train"
+    tram: "Metro"
+    travel-boat: "Boat"
+    bike: "Bike"
+    electric-bike: "Electric Bike"
+    electric-scooter: "Electric Scooter"
     gas-station: "Gas Station"
     ev-station: "EV Station"
     flight-takeoff: "Flight Takeoff"
     earth: "Earth"
     donation: "Donation"
     housing: "Housing"
+    apartment: "Apartment"
     store: "Store"
+    storefront: "Store (alt)"
     bank: "Bank"
     gavel: "Gavel"
     hospital: "Hospital"

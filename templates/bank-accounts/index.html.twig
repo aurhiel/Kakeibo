@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container">
+  <div class="row">
+    <div class="col-12 col-lg-6 col-xl-5 mb-3 mb-lg-0 order-lg-last align-self-start position-lg-sticky top-lg-3">
+      <div class="card">
+        <div class="card-header">
+        {% if is_bank_account_edit == true %}
+          <h3 class="h4 mb-0">{{ 'page.bank_accounts.form.title_edit'|trans }}</h3>
+        {% else %}
+          <h3 class="h4 mb-0">{{ 'page.bank_accounts.form.title'|trans }}</h3>
+        {% endif %}
+        </div>
+        <div class="card-body">
+          {{ form_start(form_bank_account) }}
+            {% include 'components/forms/bank-account.html.twig' with { is_edit: is_bank_account_edit } %}
+
+            <div class="mt-2 text-center">
+              <button class="btn btn-primary mx-1" type="submit" name="submit">
+              {% if is_bank_account_edit == true %}
+                <span class="icon icon-edit"></span>
+                Modifier
+              {% else %}
+                <span class="icon icon-plus-square"></span>
+                Ajouter
+              {% endif %}
+              </button>
+            </div>
+          {{ form_end(form_bank_account) }}
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-6 col-xl-7">
+        <ul class="list-group list-with-actions list-bank-accounts">
+        {% for ba in app.user.bankAccounts %}
+          <li class="-item list-group-item d-flex">
+            <div class="col pl-0">
+              {% if ba.isDefault == true %}<span class="icon icon-star" title="{{ 'global.default_bank_account'|trans }}" data-toggle="tooltip" data-placement="top"></span> {% endif %}{{ ba.label }}<br>
+              <span class="text-muted small">{{ ba.bankBrand.label }}</span>
+            </div>
+            <div class="col-auto px-0 text-right">
+              {% include 'components/price.html.twig' with { amount : ba.balance, currency : ba.currency.label } %}<br>
+              <span class="text-muted small">
+                {{ 'block.trans_list.total_text_short'|trans({
+                  '%amount%': ba.transactions|length,
+                  '%plural%': (ba.transactions|length > 1) ? 's' : ''
+                })|raw }}
+              </span>
+            </div>
+            <div class="col col-more">
+              <a class="btn btn-sm btn-pill btn-outline-secondary mr-1" href="{{ path('bank_accounts', { id: ba.id }) }}">
+                <span class="icon icon-edit"></span>
+              </a>
+            {% if ba.isDefault == false %}
+              <button class="btn btn-sm btn-pill btn-outline-danger" type="button" data-confirm-href="{{ path('bank_accounts_delete', { id: ba.id }) }}"
+                data-confirm-body="Êtes-vous sûr de vouloir supprimer le compte bancaire : <br><b>&laquo;&nbsp;{{ ba.label }}&nbsp;&raquo;</b> ?"
+                  data-toggle="modal" data-target="#modal-confirm-delete">
+                <span class="icon icon-trash"></span>
+              </button>
+            {% endif %}
+            </div>
+          </li>
+        {% endfor %}
+        </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

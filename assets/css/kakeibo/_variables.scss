@@ -42,6 +42,7 @@ $body-bg:     $gray-100 !default;
 $body-color:  $gray-800 !default;
 
 
+// Borders
 $border-radius:     .375rem !default;
 $border-radius-lg:  .5rem !default;
 $border-radius-sm:  .25rem !default;
@@ -54,7 +55,6 @@ $text-muted:                inherit !default;
 $text-muted-opacity:        .6 !default;
 
 $hr-border-color:           rgba($black, .05) !default;
-
 
 
 // Header
@@ -129,16 +129,21 @@ $label-margin-left: .25rem;
 $label-margin-bottom: .25rem;
 
 
-
 // Cards
-$card-border-color:     rgba($black, .075) !default;
-$card-border-radius:    $border-radius-lg !default;
+$card-border-color: rgba($black, .075) !default;
+$card-border-radius: $border-radius-lg !default;
 
+
+// List group
+// $list-group-color: null !default;
+// $list-group-bg: $white !default;
+$list-group-border-color: $card-border-color !default;
+// $list-group-border-width: $border-width !default;
+// $list-group-border-radius: $border-radius !default;
 
 
 // Dropdowns
 $dropdown-border-color: rgba($black, .075) !default;
-
 
 
 // Text selection
@@ -247,6 +252,10 @@ $panel-color:   $white !default;
 // List
 //
 
+
+// List with Actions
+// Actions:Columns:More
+$list-actions--col-more-max-width:      2.2em !default;
 // Transactions list
 $list-trans-border-width:             1px !default;
 // Trans:Item
@@ -259,8 +268,6 @@ $list-trans--col-icon-avatar-size:    .778em !default;
 $list-trans--col-repeat-type-max-width: 9em !default;
 // Trans:Columns:Price
 $list-trans--col-price-max-width:       7.4em !default;
-// Trans:Columns:More
-$list-trans--col-more-max-width:        2.2em !default;
 
 
 

@@ -49,9 +49,9 @@ class BankAccount
     private $user;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=false)
      */
-    private $is_default;
+    private $is_default = false;
 
     /**
     * According to transactions sum
@@ -68,7 +68,6 @@ class BankAccount
         $this->transactions = new ArrayCollection();
 
         $this->setUser($user);
-        $this->transactionAutos = new ArrayCollection();
         $this->transaction_autos = new ArrayCollection();
     }
 
@@ -132,7 +131,7 @@ class BankAccount
             }
         }
 
-        return $this->balance;
+        return (float) $this->balance;
     }
 
     public function getBankBrand(): ?BankBrand
@@ -171,7 +170,13 @@ class BankAccount
         return $this;
     }
 
-    public function getIsDefault(): ?bool
+    public function getIsDefault(): bool
+    {
+        return $this->is_default;
+    }
+
+
+    public function isDefault(): bool
     {
         return $this->is_default;
     }

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\BankTransferType;
 use App\Form\CategoryType;
 use App\Form\TransactionType;
 use App\Repository\CategoryRepository;
@@ -88,12 +89,13 @@ class DashboardController extends AbstractController
             'last_trans_amount'     => self::NB_LAST_TRANS,
             'total_incomes'         => $total_incomes,
             'total_expenses'        => $total_expenses,
-            'total_incomes_by_cats'   => $total_incomes_by_cats,
-            'total_expenses_by_cats'  => $total_expenses_by_cats,
-            'categories'        => $this->categoryRepository->findAllByUserId($this->user->getId()),
-            'default_category'  => $this->categoryRepository->findDefault(),
-            'form_transaction'  => $this->createForm(TransactionType::class)->createView(),
-            'form_category'     => $this->createForm(CategoryType::class)->createView()
+            'total_incomes_by_cats'  => $total_incomes_by_cats,
+            'total_expenses_by_cats' => $total_expenses_by_cats,
+            'categories'       => $this->categoryRepository->findAllByUserId($this->user->getId()),
+            'default_category' => $this->categoryRepository->findDefault(),
+            'form_transaction'   => $this->createForm(TransactionType::class)->createView(),
+            'form_category'      => $this->createForm(CategoryType::class)->createView(),
+            'form_bank_transfer' => $this->user->hasManyBankAccounts() ? $this->createForm(BankTransferType::class)->createView() : null,
         ]);
     }
 }

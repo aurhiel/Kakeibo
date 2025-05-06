@@ -298,6 +298,8 @@ block :
     total_text       : "Total de <b>%amount%</b> transaction%plural%"
     total_text_short : "<b>%amount%</b> transaction%plural%"
     empty            : "Aucune transaction à afficher"
+    bank_transfer_to   : "Virement vers: <b>%bank_account_label%</b>"
+    bank_transfer_from : "Virement de: <b>%bank_account_label%</b>"
 
 ## FORMS
 form :
@@ -411,6 +413,25 @@ form_trans_auto :
     label : "Type de récurrence"
   date_start :
     label : "Date de la 1ère transaction récurrente"
+  category :
+    label : "Catégorie"
+    placeholder : "Choisissez une catégorie"
+# Form bank transfer
+form_bank_transfer :
+  bank_account_to :
+    label : "Compte bancaire destinataire"
+    placeholder : "Choisissez un compte bancaire"
+  label :
+    label : "Intitulé du virement"
+    placeholder : "ex: Virement - Livret A"
+  details :
+    label : "Détails supplémentaires"
+    placeholder : "ex: Référence, information sur le virement, ..."
+  amount :
+    label : "Montant"
+    placeholder : "ex: 256,52"
+  date :
+    label : "Date du virement"
   category :
     label : "Catégorie"
     placeholder : "Choisissez une catégorie"

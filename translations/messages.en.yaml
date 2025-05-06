@@ -300,6 +300,8 @@ block :
     total_text       : "<b>%amount%</b> transaction%plural% in total"
     total_text_short : "<b>%amount%</b> transaction%plural%"
     empty            : "No transaction to display"
+    bank_transfer_to   : "Bank transfer to: <b>%bank_account_label%</b>"
+    bank_transfer_from : "Bank transfer from: <b>%bank_account_label%</b>"
 
 ## FORMS
 form :
@@ -409,6 +411,25 @@ form_trans_auto :
     label : "Recurrence Type"
   date_start :
     label : "Date of the first transaction"
+  category :
+    label : "Category"
+    placeholder : "Choose a category"
+# Form bank transfer
+form_bank_transfer :
+  bank_account_to :
+    label : "Recipient bank account"
+    placeholder : "Choose a bank account"
+  label :
+    label : "Label of the bank transfer"
+    placeholder : "eg. Bank transfer to ..."
+  details :
+    label : "Additional details"
+    placeholder : "ex: Bank transfer reference, more information, ..."
+  amount :
+    label : "Amount"
+    placeholder : "eg. 256,52"
+  date :
+    label : "Date of the bank transfer"
   category :
     label : "Category"
     placeholder : "Choose a category"

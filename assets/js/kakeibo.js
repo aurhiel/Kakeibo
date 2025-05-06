@@ -291,7 +291,7 @@ var kakeibo = {
       };
     },
     manage: function(transaction, bank_account, is_edit) {
-      // console.log('[transaction:manage]', transaction, bank_account, is_edit);
+      console.log('[transaction:manage]', transaction, bank_account, is_edit);
       // Data
       var currency = bank_account.currency_entity;
       var category = transaction.category_entity;
@@ -498,6 +498,21 @@ var kakeibo = {
       if ((date >= date_start || date_start == false) && (date <= date_end || date_end == false))
           $text.html(kakeibo.format.price(new_total, currency.slug));
     }
+  },
+  bank_transfer: {
+    after_update: function(data, is_edit) {
+      // console.log('[bank_transfer.after_update]', data, is_edit);
+      var bank_account = data.default_bank_account;
+      var currency = bank_account.currency_entity;
+      var transaction = data.entity;
+
+      // Manage transaction in list & co
+      kakeibo.transaction.manage(transaction, bank_account, is_edit);
+
+      // Manage amounts (balance, totals expenses & incomes)
+      kakeibo.transaction.update_balance(bank_account.balance, currency);
+      kakeibo.transaction.update_exp_and_inc(transaction, currency);
+    },
   },
   forms: {
     $items: null,

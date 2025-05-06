@@ -4,7 +4,7 @@ namespace App\Form;
 // Entities
 use App\Entity\TransactionAuto;
 use App\Entity\Category;
-
+use App\Entity\User;
 // Repositories
 use App\Repository\CategoryRepository;
 
@@ -21,9 +21,10 @@ use Symfony\Component\Security\Core\Security;
 
 class TransactionAutoType extends AbstractType
 {
+    private User $user;
+
     public function __construct(Security $security)
     {
-        /** @var User $user */
         $this->user = $security->getUser();
     }
 
@@ -105,9 +106,9 @@ class TransactionAutoType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            // 'csrf_protection' => false,             // NOTE : Remove CSRF protection to get ajax submit working
-            'data_class'  => TransactionAuto::class,
-            'type_form'   => 'add'
+            // 'csrf_protection' => false, // NOTE : Remove CSRF protection to get ajax submit working
+            'data_class' => TransactionAuto::class,
+            'type_form' => 'add'
         ));
     }
 }

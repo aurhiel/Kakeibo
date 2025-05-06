@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Category;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,6 +20,20 @@ class CategoryRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Category::class);
+    }
+
+    public function findOneByIdAndUser(int $id, User $user): ?Category
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.id = :id')
+            ->andWhere('c.is_default = true OR c.user = :user')
+            ->setParameters([
+                'id' => $id,
+                'user' => $user,
+            ])
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
     }
 
     public function findAllIndexedBy(string $column = 'id'): array

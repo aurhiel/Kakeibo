@@ -36,7 +36,6 @@ Encore
     // .addEntry('kakeibo-app', './assets/vue/kakeibo.js')
     .addEntry('kakeibo', './assets/js/kakeibo.js')
     .addEntry('kb-home', './assets/js/kb-home.js')
-    //.addEntry('kb-dashboard', './assets/js/kb-dashboard.js')
     .addEntry('kb-statistics', './assets/js/kb-statistics.js')
 
     // CSS only

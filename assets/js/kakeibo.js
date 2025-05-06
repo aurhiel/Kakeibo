@@ -499,6 +499,12 @@ var kakeibo = {
           $text.html(kakeibo.format.price(new_total, currency.slug));
     }
   },
+  bank_transfer: {
+    after_update: function(data, is_edit) {
+      console.log('[bank_transfer.after_update]', data, is_edit);
+      alert('[bank_transfer.after_update]');
+    },
+  },
   forms: {
     $items: null,
     $modals: null,

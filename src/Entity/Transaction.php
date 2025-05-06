@@ -48,6 +48,11 @@ class Transaction
      */
     private $details;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Transaction::class, cascade={"persist", "remove"})
+     */
+    private $bankTransferLinkedTransaction;
+
     public function getId()
     {
         return $this->id;
@@ -133,6 +138,18 @@ class Transaction
           ->setCategory($trans_auto->getCategory())
           ->setAmount($trans_auto->getAmount())
         ;
+
+        return $this;
+    }
+
+    public function getBankTransferLinkedTransaction(): ?self
+    {
+        return $this->bankTransferLinkedTransaction;
+    }
+
+    public function setBankTransferLinkedTransaction(?self $bankTransferLinkedTransaction): self
+    {
+        $this->bankTransferLinkedTransaction = $bankTransferLinkedTransaction;
 
         return $this;
     }

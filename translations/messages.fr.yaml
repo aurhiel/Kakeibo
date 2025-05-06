@@ -414,6 +414,25 @@ form_trans_auto :
   category :
     label : "Catégorie"
     placeholder : "Choisissez une catégorie"
+# Form bank transfer
+form_bank_transfer :
+  bank_account_to :
+    label : "Compte bancaire destinataire"
+    placeholder : "Choisissez un compte bancaire"
+  label :
+    label : "Intitulé du virement"
+    placeholder : "ex: Virement - Livret A"
+  details :
+    label : "Détails supplémentaires"
+    placeholder : "ex: Référence, information sur le virement, ..."
+  amount :
+    label : "Montant"
+    placeholder : "ex: 256,52"
+  date :
+    label : "Date du virement"
+  category :
+    label : "Catégorie"
+    placeholder : "Choisissez une catégorie"
 
 ## CATEGORY
 category:

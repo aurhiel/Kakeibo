@@ -273,7 +273,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getDefaultBankAccount()
+    public function hasManyBankAccounts(): bool
+    {
+        return count($this->getBankAccounts()) > 1;
+    }
+
+    public function getDefaultBankAccount(): ?BankAccount
     {
         $criteria = Criteria::create();
         $criteria->where(Criteria::expr()->eq('is_default', true));

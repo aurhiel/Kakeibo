@@ -1,0 +1,68 @@
+{% set default_bank_account = app.user.getDefaultBankAccount() %}
+
+{# Delete errors form label ! #}
+{% form_theme form_bank_transfer _self %}
+{% block form_label_errors %}{% endblock %}
+
+<div class="modal modal-manage-entity fade" id="modal-manage-bank-transfer" tabindex="-1" role="dialog" aria-labelledby="modal-manage-bank-transfer-label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-maximized modal-sm">
+    <div class="modal-content overflow-hidden">
+    {{ form_start(form_bank_transfer, { 'action': path('transactions_bank_transfer'), 'attr' : { 'class': 'app-form-transaction -use-ajax-submit' } }) }}
+      <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+        <span aria-hidden="true">&times;</span>
+      </button>
+
+      <div class="p-4">
+        {{ form_label(form_bank_transfer.bank_account_to) }}
+        {{ form_widget(form_bank_transfer.bank_account_to) }}
+        {{ form_errors(form_bank_transfer.bank_account_to) }}
+      </div>
+
+      <div class="modal-header px-4 py-5 d-block border-0" style="background-color: {{ default_category is not empty ? default_category.color : '' }};">
+        <h5 class="modal-title font-weight-bold" id="modal-manage-bank-transfer-label">
+          {{ form_widget(form_bank_transfer.label) }}
+          {{ form_errors(form_bank_transfer.label) }}
+        </h5>
+
+        <div class="my-4">
+          {{ form_widget(form_bank_transfer.amount) }}
+        </div>
+
+        <div class="custom-select-icons" style="color: {{ default_category is not empty ? default_category.color : '' }};">
+          <span class="-icon icon-{{ default_category is not empty ? default_category.icon : '' }}"></span>
+          {{ form_widget(form_bank_transfer.category, { attr: { 'data-form-default-value': default_category is not empty ? default_category.id : '' } }) }}
+        </div>
+      </div>
+
+      <div class="modal-body px-4 pt-4 pb-3">
+        <div class="mb-3">
+          {{ form_label(form_bank_transfer.date) }}
+          {{ form_widget(form_bank_transfer.date, { attr: { 'data-form-clear': 'false', 'value': ('now'|date('Y-m-d')) } }) }}
+        </div>
+        <div>
+          {{ form_label(form_bank_transfer.details) }}
+          {{ form_widget(form_bank_transfer.details) }}
+          {{ form_errors(form_bank_transfer.details) }}
+        </div>
+      </div>
+
+      <div class="modal-footer justify-content-center pt-0 border-0">
+        <button class="btn btn-outline-secondary btn-sm mx-1 d-edit-none -modal-stay-open" type="submit" name="submit">
+          Ajouter et continuer
+        </button>
+        <button class="btn btn-primary mx-1" type="submit" name="submit">
+          <span class="d-edit-none">
+            <span class="icon icon-plus-square"></span>
+            Ajouter
+          </span>
+          <span class="d-edit-inline-block">
+            <span class="icon icon-edit"></span>
+            Modifier
+          </span>
+        </button>
+      </div>
+      {% include 'components/forms/ajax-components.html.twig' %}
+    {{ form_end(form_bank_transfer) }}
+    </div>
+  </div>
+</div>

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Entity\Transaction;
 use App\Entity\User;
+use App\Form\BankTransferType;
 use App\Form\TransactionType;
 use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
@@ -77,11 +78,11 @@ class TransactionsController extends AbstractController
         // User has a bank account
         $default_bank_account = $this->user->getDefaultBankAccount();
         // Data to return/display
-        $return_data = array(
+        $return_data = [
             'query_status' => 0,
             'slug_status' => 'error',
             'message_status' => $message_status_nok
-        );
+        ];
 
         // 1) Build the form
         $trans_form = $this->createForm(TransactionType::class, $trans_entity);
@@ -101,14 +102,13 @@ class TransactionsController extends AbstractController
                 // Flush OK !
                 $this->entityManager->flush();
 
-                $return_data = array(
+                $return_data = [
                     'query_status' => 1,
                     'slug_status' => 'success',
                     'message_status' => $message_status_ok,
-                    // Data
                     'entity' => self::format_json($trans_entity),
                     'default_bank_account' => self::format_json_bank_account($default_bank_account)
-                );
+                ];
 
                 // Force old entity values into entity data (useful for JS edit)
                 if ($is_edit && isset($old_trans_json))
@@ -220,6 +220,15 @@ class TransactionsController extends AbstractController
     }
 
     /**
+     * @Route("/transactions/bank-transfer", name="transactions_bank_transfer")
+     */
+    public function bankTransfer(Request $request): Response
+    {
+        dump($request);
+        exit('TODO!');
+    }
+
+    /**
      * @Route("/transactions/{page}", name="transactions", defaults={"page"=1})
      */
     public function index(int $page): Response
@@ -281,10 +290,11 @@ class TransactionsController extends AbstractController
             'nb_by_page'        => self::NB_TRANSAC_BY_PAGE,
             'total_incomes'     => $total_incomes,
             'total_expenses'    => $total_expenses,
-            'categories'        => $this->categoryRepository->findAllByUserId($this->user->getId()),
-            'default_category'  => $this->categoryRepository->findDefault(),
-            'form_transaction'  => $this->createForm(TransactionType::class)->createView(),
-            'form_category'     => $this->createForm(CategoryType::class)->createView(),
+            'categories'       => $this->categoryRepository->findAllByUserId($this->user->getId()),
+            'default_category' => $this->categoryRepository->findDefault(),
+            'form_transaction'   => $this->createForm(TransactionType::class)->createView(),
+            'form_category'      => $this->createForm(CategoryType::class)->createView(),
+            'form_bank_transfer' => $this->user->hasManyBankAccounts() ? $this->createForm(BankTransferType::class)->createView() : null,
         ]);
     }
 
@@ -294,7 +304,7 @@ class TransactionsController extends AbstractController
      *          need to do more test with other banks files
      *          + custom import ? (TODO auto-detect fields + user validation)
      */
-    public function import_csv(Request $request): Response
+    public function importCSV(Request $request): Response
     {
         // Force user to create at least ONE bank account !
         if (count($this->user->getBankAccounts()) < 1)
@@ -470,7 +480,6 @@ class TransactionsController extends AbstractController
         return [
             'id'        => $bank_account->getId(),
             'balance'   => round($bank_account->getBalance(), 2),
-            'currency'  => $currency->getId(),
             'currency_entity' => [
                 'id'    => $currency->getId(),
                 'name'  => $currency->getName(),

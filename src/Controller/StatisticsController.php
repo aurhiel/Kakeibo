@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\BankTransferType;
 use App\Form\TransactionType;
 use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
@@ -137,14 +138,15 @@ class StatisticsController extends AbstractController
             'trans_next_date'       => $next_date,
             'total_incomes'         => $total_incomes,
             'total_expenses'        => $total_expenses,
-            'total_incomes_by_date'   => $total_incomes_by_date,
-            'total_incomes_by_cats'   => $total_incomes_by_cats,
-            'total_expenses_by_date'  => $total_expenses_by_date,
-            'total_expenses_by_cats'  => $total_expenses_by_cats,
-            'categories'              => $this->categoryRepository->findAllByUserId($this->user->getId()),
-            'default_category'        => $this->categoryRepository->findDefault(),
-            'form_transaction'        => $this->createForm(TransactionType::class)->createView(),
-            'form_category'           => $this->createForm(CategoryType::class)->createView(),
+            'total_incomes_by_date'  => $total_incomes_by_date,
+            'total_incomes_by_cats'  => $total_incomes_by_cats,
+            'total_expenses_by_date' => $total_expenses_by_date,
+            'total_expenses_by_cats' => $total_expenses_by_cats,
+            'categories'       => $this->categoryRepository->findAllByUserId($this->user->getId()),
+            'default_category' => $this->categoryRepository->findDefault(),
+            'form_transaction'   => $this->createForm(TransactionType::class)->createView(),
+            'form_category'      => $this->createForm(CategoryType::class)->createView(),
+            'form_bank_transfer' => $this->user->hasManyBankAccounts() ? $this->createForm(BankTransferType::class)->createView() : null,
         ]);
     }
 

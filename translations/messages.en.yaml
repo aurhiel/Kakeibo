@@ -412,6 +412,25 @@ form_trans_auto :
   category :
     label : "Category"
     placeholder : "Choose a category"
+# Form bank transfer
+form_bank_transfer :
+  bank_account_to :
+    label : "Recipient bank account"
+    placeholder : "Choose a bank account"
+  label :
+    label : "Label of the bank transfer"
+    placeholder : "eg. Bank transfer to ..."
+  details :
+    label : "Additional details"
+    placeholder : "ex: Bank transfer reference, more information, ..."
+  amount :
+    label : "Amount"
+    placeholder : "eg. 256,52"
+  date :
+    label : "Date of the bank transfer"
+  category :
+    label : "Category"
+    placeholder : "Choose a category"
 
 ## CATEGORY
 category:

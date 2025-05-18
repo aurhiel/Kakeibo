@@ -530,9 +530,22 @@ class TransactionsController extends AbstractController
         return $category;
     }
 
-    private static function format_json($transaction): array
+    private static function format_json(Transaction $transaction): array
     {
         $category = $transaction->getCategory();
+
+        $btltRaw = null;
+        if ($transaction->getBankTransferLinkedTransaction()) {
+            $btlt = $transaction->getBankTransferLinkedTransaction();
+            $btltRaw = [
+                'id' => $btlt->getId(),
+                'amount' => $btlt->getAmount(),
+                'bank_account_to' => [
+                    'id' => $btlt->getBankAccount()->getId(),
+                    'label' => $btlt->getBankAccount()->getLabel(),
+                ],
+            ];
+        }
 
         return [
             'id'        => $transaction->getId(),
@@ -545,8 +558,9 @@ class TransactionsController extends AbstractController
                 'id'    => $category->getId(),
                 'label' => $category->getLabel(),
                 'icon'  => $category->getIcon(),
-                'color' => $category->getColor()
+                'color' => $category->getColor(),
             ],
+            'bank_transfer_linked_transaction' => $btltRaw,
         ];
     }
 

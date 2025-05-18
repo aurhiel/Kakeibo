@@ -291,12 +291,13 @@ var kakeibo = {
       };
     },
     manage: function(transaction, bank_account, is_edit) {
-      console.log('[transaction:manage]', transaction, bank_account, is_edit);
+      // console.log('[transaction:manage]', transaction, bank_account, is_edit);
       // Data
       var currency = bank_account.currency_entity;
       var category = transaction.category_entity;
       var url_delete = this.url_delete;
-      var has_edit = this.$modal.length > 0;
+      var is_bank_transfer = transaction.bank_transfer_linked_transaction !== null;
+      var has_edit = this.$modal.length > 0 && !is_bank_transfer;
       var transaction_date = new Date(transaction.date);
 
       // Add transaction to list
@@ -327,11 +328,21 @@ var kakeibo = {
             // Add new transaction
             if (date_find.matched_date !== null && date_find.matched_date.index != -1) {
               var btn_edit = '';
-              if (has_edit == true) {
+              if (has_edit === true) {
                 btn_edit = '<button class="btn btn-sm btn-pill btn-outline-secondary mr-1" type="button" data-id-edit="' + transaction.id + '"' +
                   'data-toggle="modal" data-target="#modal-manage-transaction">' +
                   '<span class="icon icon-edit"></span>' +
                 '</button>';
+              }
+
+              var trans_details = transaction.details;
+              if (is_bank_transfer === true) {
+                var bankAccountTo = transaction.bank_transfer_linked_transaction.bank_account_to;
+                if (trans_details === null) {
+                  trans_details = 'Virement vers: <b>' + bankAccountTo.label + '</b>';
+                }
+
+                trans_details = '<span class="icon icon-log-out"></span> ' + trans_details;
               }
 
               date_find.matched_date.$node.after($('<div class="-item -item-transac" data-kb-id-transaction="' + transaction.id + '">' +
@@ -344,7 +355,7 @@ var kakeibo = {
                 '</div>' +
                 '<div class="col col-text">' +
                   '<span class="-transac-label">' + transaction.label + '</span>' +
-                  '<div class="-transac-details -more-info small text-muted">' + ((transaction.details != null) ? transaction.details : '') + '</div>' +
+                  '<div class="-transac-details -more-info small text-muted">' + ((trans_details != null) ? trans_details : '') + '</div>' +
                 '</div>' +
                 '<div class="col col-price">' +
                   '<span class="-transac-amount text-price text-' + (transaction.amount > 0 ? 'success' : (transaction.amount < 0) ? 'danger' : 'warning') + '">' +

@@ -51,7 +51,7 @@ form {
     right: 0;
     opacity: 0;
     transition: opacity $animation-duration ease;
-  
+
     p {
       color: $text-muted;
       font-size: .85rem;
@@ -119,9 +119,20 @@ form {
 // Specific forms
 
 .app-form-transaction {
+  &, .modal-header {
+    .close {
+      position: absolute;
+      right: 0;
+      top: 0;
+      margin: 0;
+      padding: .5rem 1rem;
+    }
+  }
+
   .modal-header {
     background-color: $gray-600;
     color: $white;
+    border-radius: 0;
     position: relative;
     overflow: hidden;
     transition: background-color $animation-duration ease;
@@ -146,11 +157,6 @@ form {
 
     .close {
       color: $white;
-      position: absolute;
-      right: 0;
-      top: 0;
-      margin: 0;
-      padding: .5rem 1rem;
     }
 
     .form-control {
@@ -199,8 +205,8 @@ form {
         }
       }
     }
-    
-    #transaction_amount {
+
+    #transaction_amount, #bank_transfer_amount {
       font-family: $price-font-family;
       font-size: 2.5rem;
       border: 0;

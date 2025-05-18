@@ -1,7 +1,7 @@
 {% set has_action_transaction = form_transaction is defined %}
 {% set has_action_category = form_category is defined %}
-{% set has_action_bank_account = form_bank_account is defined %}
-{% set display_actions = (has_action_transaction or has_action_category) and hide_creation_center is not defined %}
+{% set has_action_bank_transfer = form_bank_transfer is defined and form_bank_transfer is not null %}
+{% set display_actions = (has_action_transaction or has_action_category or has_action_bank_transfer) and hide_creation_center is not defined %}
 {% set btn_actions_class = 'btn btn-sm btn-primary bg-dark border-primary' %}
 
 {% if display_actions %}
@@ -11,25 +11,25 @@
         <span class="icon icon-plus"></span>
       </button>
       <ul class="list-actions">
-      {% if has_action_bank_account %}
-        <li class="-item">
-          <button class="{{ btn_actions_class }}" type="button" name="display-modal-bank-account" 
-            data-toggle="modal" data-target="#modal-manage-bank-account">
-            <span class="icon icon-folder-plus text-primary mr-1"></span> Ajouter compte
-          </button>
-        </li>
-      {% endif %}
       {% if has_action_category %}
         <li class="-item">
-          <button class="{{ btn_actions_class }}" type="button" name="display-modal-category" 
+          <button class="{{ btn_actions_class }}" type="button" name="display-modal-category"
             data-toggle="modal" data-target="#modal-manage-category">
             <span class="icon icon-tag text-primary mr-1"></span> Ajouter catégorie
           </button>
         </li>
       {% endif %}
+      {% if has_action_bank_transfer %}
+        <li class="-item">
+          <button class="{{ btn_actions_class }}" type="button" name="display-modal-bank-transfer"
+            data-toggle="modal" data-target="#modal-manage-bank-transfer">
+            <span class="icon icon-log-out text-primary mr-1"></span> Effectuer virement
+          </button>
+        </li>
+      {% endif %}
       {% if has_action_transaction %}
         <li class="-item">
-          <button class="{{ btn_actions_class }}" type="button" name="display-modal-transaction" 
+          <button class="{{ btn_actions_class }}" type="button" name="display-modal-transaction"
             data-toggle="modal" data-target="#modal-manage-transaction">
             <span class="icon icon-repeat text-primary mr-1"></span>
             Ajouter transaction
@@ -42,6 +42,10 @@
 
   {% if has_action_transaction %}
     {% include 'components/modals/manage-transaction.html.twig' %}
+  {% endif %}
+
+  {% if has_action_bank_transfer %}
+    {% include 'components/modals/manage-bank-transfer.html.twig' %}
   {% endif %}
 
   {% if has_action_category %}

@@ -7,7 +7,7 @@
 
 <div class="modal modal-manage-entity fade" id="modal-manage-transaction" tabindex="-1" role="dialog" aria-labelledby="modal-manage-transaction-label" aria-hidden="true">
   <div class="modal-dialog modal-dialog-maximized modal-sm">
-    <div class="modal-content">
+    <div class="modal-content overflow-hidden">
     {{ form_start(form_transaction, { 'action': path('transaction_manage'), 'attr' : { 'class': 'app-form-transaction -use-ajax-submit' } }) }}
       <div class="modal-header px-4 py-5 d-block border-0" style="background-color: {{ default_category is not empty ? default_category.color : '' }};">
         <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
@@ -45,7 +45,7 @@
         <button class="btn btn-outline-secondary btn-sm mx-1 d-edit-none -modal-stay-open" type="submit" name="submit">
           Ajouter et continuer
         </button>
-        <button class="btn btn-secondary mx-1" type="submit" name="submit">
+        <button class="btn btn-primary mx-1" type="submit" name="submit">
           <span class="d-edit-none">
             <span class="icon icon-plus-square"></span>
             Ajouter

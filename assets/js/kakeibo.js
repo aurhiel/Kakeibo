@@ -291,7 +291,7 @@ var kakeibo = {
       };
     },
     manage: function(transaction, bank_account, is_edit) {
-      // console.log('[transaction:manage]', transaction, bank_account, is_edit);
+      console.log('[transaction:manage]', transaction, bank_account, is_edit);
       // Data
       var currency = bank_account.currency_entity;
       var category = transaction.category_entity;
@@ -499,6 +499,21 @@ var kakeibo = {
           $text.html(kakeibo.format.price(new_total, currency.slug));
     }
   },
+  bank_transfer: {
+    after_update: function(data, is_edit) {
+      // console.log('[bank_transfer.after_update]', data, is_edit);
+      var bank_account = data.default_bank_account;
+      var currency = bank_account.currency_entity;
+      var transaction = data.entity;
+
+      // Manage transaction in list & co
+      kakeibo.transaction.manage(transaction, bank_account, is_edit);
+
+      // Manage amounts (balance, totals expenses & incomes)
+      kakeibo.transaction.update_balance(bank_account.balance, currency);
+      kakeibo.transaction.update_exp_and_inc(transaction, currency);
+    },
+  },
   forms: {
     $items: null,
     $modals: null,
@@ -523,6 +538,9 @@ var kakeibo = {
       this.$modals.on('hidden.bs.modal', function (e) {
         var $form = $(this).find('form');
         self.clear($form.attr('name'));
+
+        // Avoid re-focusing on toggle button that could lead to display issue
+        e.stopImmediatePropagation();
       });
 
       // EVENT:AJAX SUBMIT
@@ -829,6 +847,9 @@ var kakeibo = {
 
         // Clear shitty forcing backdrop z-index (can't use confirm backdrop upon overs modal)
         self.$body.find('.modal-backdrop').removeAttr('style');
+
+        // Avoid re-focusing on toggle button that could lead to display issue
+        e.stopImmediatePropagation();
       });
 
       this.$modal_confirm_delete.on('click', '.btn-submit-delete', function(e) {

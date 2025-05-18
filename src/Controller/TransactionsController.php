@@ -5,11 +5,12 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Entity\Transaction;
 use App\Entity\User;
+use App\Form\BankTransferType;
 use App\Form\TransactionType;
 use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
 use App\Repository\TransactionRepository;
-
+use App\Service\TransactionManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
@@ -34,19 +35,22 @@ class TransactionsController extends AbstractController
     private TransactionRepository $transactionRepository;
     private CategoryRepository $categoryRepository;
     private TranslatorInterface $translator;
+    private TransactionManager $transactionManager;
 
     public function __construct(
         Security $security,
         EntityManagerInterface $entityManager,
         TransactionRepository $transactionRepository,
         CategoryRepository $categoryRepository,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        TransactionManager $transactionManager
     ) {
         $this->user = $security->getUser();
         $this->entityManager = $entityManager;
         $this->transactionRepository = $transactionRepository;
         $this->categoryRepository = $categoryRepository;
         $this->translator = $translator;
+        $this->transactionManager = $transactionManager;
     }
 
     /**
@@ -77,11 +81,11 @@ class TransactionsController extends AbstractController
         // User has a bank account
         $default_bank_account = $this->user->getDefaultBankAccount();
         // Data to return/display
-        $return_data = array(
+        $return_data = [
             'query_status' => 0,
             'slug_status' => 'error',
             'message_status' => $message_status_nok
-        );
+        ];
 
         // 1) Build the form
         $trans_form = $this->createForm(TransactionType::class, $trans_entity);
@@ -101,14 +105,13 @@ class TransactionsController extends AbstractController
                 // Flush OK !
                 $this->entityManager->flush();
 
-                $return_data = array(
+                $return_data = [
                     'query_status' => 1,
                     'slug_status' => 'success',
                     'message_status' => $message_status_ok,
-                    // Data
                     'entity' => self::format_json($trans_entity),
                     'default_bank_account' => self::format_json_bank_account($default_bank_account)
-                );
+                ];
 
                 // Force old entity values into entity data (useful for JS edit)
                 if ($is_edit && isset($old_trans_json))
@@ -175,7 +178,7 @@ class TransactionsController extends AbstractController
             'message_status' => 'Un problème est survenu lors de la suppression de la transaction'
         ];
 
-        if(!is_null($trans)) {
+        if(null !== $trans) {
             $trans_deleted = $trans;
             $trans_deleted_json = self::format_json($trans_deleted);
 
@@ -216,6 +219,88 @@ class TransactionsController extends AbstractController
 
             // Redirect to previous page (= referer)
             return $this->redirect($request->headers->get('referer'));
+        }
+    }
+
+    /**
+     * @Route("/transactions/bank-transfer", name="transactions_bank_transfer")
+     */
+    public function bankTransfer(Request $request): Response
+    {
+        $id_trans = (int) $request->request->get('id');
+        $is_edit = (!empty($id_trans) && $id_trans > 0);
+
+        if($is_edit) {
+            // Get transaction to edit with id AND user (for security)
+            $entity = $this->transactionRepository->findOneByIdAndUser($id_trans, $this->user);
+            $old_entity_json = self::format_json($entity);
+            $message_status_ok = 'Modificiation du transfert effectuée.';
+            $message_status_nok = 'Un problème est survenu lors de la modification du transfert';
+        } else {
+            // New Entity
+            $entity = new Transaction();
+            $message_status_ok = 'Transfert effectué avec succès.';
+            $message_status_nok = 'Un problème est survenu lors de la création du transfert';
+        }
+
+        // Force user to create at least ONE bank account !
+        if (count($this->user->getBankAccounts()) < 1)
+            return $this->redirectToRoute('ignition-first-bank-account');
+
+        // User has a bank account
+        $default_bank_account = $this->user->getDefaultBankAccount();
+        // Data to return/display
+        $return_data = [
+            'query_status' => 0,
+            'slug_status' => 'error',
+            'message_status' => $message_status_nok
+        ];
+
+        $form = $this->createForm(BankTransferType::class, $entity);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $data = $request->request->get('bank_transfer');
+
+                list($transactionFrom) = $this->transactionManager->handleBankTransfer(
+                    $this->user,
+                    $default_bank_account->getId(),
+                    (int) $data['bank_account_to'],
+                    (int) $data['category'],
+                    (float) $data['amount'],
+                    new \DateTime($data['date']),
+                    $data['label'],
+                    !empty($data['details']) ? $data['details'] : null,
+                    $is_edit ? $id_trans : null,
+                );
+
+                $return_data = [
+                    'query_status' => 1,
+                    'slug_status' => 'success',
+                    'message_status' => $message_status_ok,
+                    'entity' => self::format_json($transactionFrom),
+                    'default_bank_account' => self::format_json_bank_account($default_bank_account)
+                ];
+
+                // Force old entity values into entity data (useful for JS edit)
+                if ($is_edit && isset($old_entity_json))
+                    $return_data['entity']['old'] = $old_entity_json;
+            } catch (\Exception $e) {
+                $this->entityManager->clear();
+                $return_data['exception'] = $e->getMessage();
+            }
+        }
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->json($return_data);
+        } else {
+            /** @var Session $session */
+            $session = $request->getSession();
+            $session->getFlashBag()->add($return_data['slug_status'], $return_data['message_status']);
+
+            // Redirect to dashboard
+            return $this->redirectToRoute('dashboard');
         }
     }
 
@@ -281,10 +366,11 @@ class TransactionsController extends AbstractController
             'nb_by_page'        => self::NB_TRANSAC_BY_PAGE,
             'total_incomes'     => $total_incomes,
             'total_expenses'    => $total_expenses,
-            'categories'        => $this->categoryRepository->findAllByUserId($this->user->getId()),
-            'default_category'  => $this->categoryRepository->findDefault(),
-            'form_transaction'  => $this->createForm(TransactionType::class)->createView(),
-            'form_category'     => $this->createForm(CategoryType::class)->createView(),
+            'categories'       => $this->categoryRepository->findAllByUserId($this->user->getId()),
+            'default_category' => $this->categoryRepository->findDefault(),
+            'form_transaction'   => $this->createForm(TransactionType::class)->createView(),
+            'form_category'      => $this->createForm(CategoryType::class)->createView(),
+            'form_bank_transfer' => $this->user->hasManyBankAccounts() ? $this->createForm(BankTransferType::class)->createView() : null,
         ]);
     }
 
@@ -294,7 +380,7 @@ class TransactionsController extends AbstractController
      *          need to do more test with other banks files
      *          + custom import ? (TODO auto-detect fields + user validation)
      */
-    public function import_csv(Request $request): Response
+    public function importCSV(Request $request): Response
     {
         // Force user to create at least ONE bank account !
         if (count($this->user->getBankAccounts()) < 1)
@@ -470,7 +556,6 @@ class TransactionsController extends AbstractController
         return [
             'id'        => $bank_account->getId(),
             'balance'   => round($bank_account->getBalance(), 2),
-            'currency'  => $currency->getId(),
             'currency_entity' => [
                 'id'    => $currency->getId(),
                 'name'  => $currency->getName(),

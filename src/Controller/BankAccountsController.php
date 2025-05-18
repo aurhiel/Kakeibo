@@ -175,10 +175,10 @@ class BankAccountsController extends AbstractController
 
                 $return_data = [
                     'slug_status' => 'success',
-                    'message_status' => $this->translator->trans(
+                    'message_status' => null, /*$this->translator->trans(
                         'form_bank_account.status.change_default_ok',
                         [ '%bank_account_label%' => $entity->getLabel() ],
-                    ),
+                    )*/
                     'entity' => [ 'id' => $entity->getId() ],
                 ];
             } catch (\Exception $e) {

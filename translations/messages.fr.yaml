@@ -150,6 +150,14 @@ page :
     title_update    : "Mise%plural% à jour"
     title_fix       : "Correction%plural% diverse%plural%"
     # VERSIONS
+    beta_0_7_0 :
+      title : "Version Beta 0.7.0"
+      date : "2025-05-18"
+      list_new :
+        item_1 : "Ajout de la possibilité d'effectuer des virements entre ses comptes bancaires."
+      list_fix :
+        item_1 : "Correction d'un bug lors du focus sur les boutons d'action de la liste des transactions."
+        item_2 : "Retrait du message de succès lors du changement du compte en cours d'utilisation."
     beta_0_6_0 :
       title : "Version Beta 0.6.0"
       date : "2025-05-05"
@@ -298,6 +306,8 @@ block :
     total_text       : "Total de <b>%amount%</b> transaction%plural%"
     total_text_short : "<b>%amount%</b> transaction%plural%"
     empty            : "Aucune transaction à afficher"
+    bank_transfer_to   : "Virement vers: <b>%bank_account_label%</b>"
+    bank_transfer_from : "Virement de: <b>%bank_account_label%</b>"
 
 ## FORMS
 form :
@@ -411,6 +421,25 @@ form_trans_auto :
     label : "Type de récurrence"
   date_start :
     label : "Date de la 1ère transaction récurrente"
+  category :
+    label : "Catégorie"
+    placeholder : "Choisissez une catégorie"
+# Form bank transfer
+form_bank_transfer :
+  bank_account_to :
+    label : "Compte bancaire destinataire"
+    placeholder : "Choisissez un compte bancaire"
+  label :
+    label : "Intitulé du virement"
+    placeholder : "ex: Virement - Livret A"
+  details :
+    label : "Détails supplémentaires"
+    placeholder : "ex: Référence, information sur le virement, ..."
+  amount :
+    label : "Montant"
+    placeholder : "ex: 256,52"
+  date :
+    label : "Date du virement"
   category :
     label : "Catégorie"
     placeholder : "Choisissez une catégorie"

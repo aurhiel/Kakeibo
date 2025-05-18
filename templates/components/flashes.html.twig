@@ -17,12 +17,14 @@
   {% set flash_messages = app.session.flashbag.get(slug_flash) %}
   {% if flash_messages is not empty %}
     {% for message in flash_messages %}
-      <div class="alert alert-{{ type_flash.css_class }}">
-        {{ message|raw }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
+      {% if message is not empty %}
+        <div class="alert alert-{{ type_flash.css_class }}">
+          {{ message|raw }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      {% endif %}
     {% endfor %}
   {% endif %}
 {% endfor %}

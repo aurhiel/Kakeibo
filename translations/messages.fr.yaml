@@ -150,6 +150,14 @@ page :
     title_update    : "Mise%plural% à jour"
     title_fix       : "Correction%plural% diverse%plural%"
     # VERSIONS
+    beta_0_7_0 :
+      title : "Version Beta 0.7.0"
+      date : "2025-05-18"
+      list_new :
+        item_1 : "Ajout de la possibilité d'effectuer des virements entre ses comptes bancaires."
+      list_fix :
+        item_1 : "Correction d'un bug lors du focus sur les boutons d'action de la liste des transactions."
+        item_2 : "Retrait du message de succès lors du changement du compte en cours d'utilisation."
     beta_0_6_0 :
       title : "Version Beta 0.6.0"
       date : "2025-05-05"

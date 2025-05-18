@@ -538,6 +538,9 @@ var kakeibo = {
       this.$modals.on('hidden.bs.modal', function (e) {
         var $form = $(this).find('form');
         self.clear($form.attr('name'));
+
+        // Avoid re-focusing on toggle button that could lead to display issue
+        e.stopImmediatePropagation();
       });
 
       // EVENT:AJAX SUBMIT
@@ -844,6 +847,9 @@ var kakeibo = {
 
         // Clear shitty forcing backdrop z-index (can't use confirm backdrop upon overs modal)
         self.$body.find('.modal-backdrop').removeAttr('style');
+
+        // Avoid re-focusing on toggle button that could lead to display issue
+        e.stopImmediatePropagation();
       });
 
       this.$modal_confirm_delete.on('click', '.btn-submit-delete', function(e) {

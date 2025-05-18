@@ -61,7 +61,7 @@
           <div class="col col-more">
             {% if form_transaction is defined and is_bank_transfer == false %}
               <button class="btn btn-sm btn-pill btn-outline-secondary mr-1" type="button" data-id-edit="{{ transac.id }}"
-                data-toggle="modal" data-target="#modal-manage-transaction">
+                data-toggle="modal" data-target="#modal-manage-transaction" tabindex="-1">
                 <span class="icon icon-edit"></span>
               </button>
             {% endif %}
@@ -69,7 +69,7 @@
             <button class="btn btn-sm btn-pill btn-outline-danger" type="button" data-confirm-href="{{ path('transaction_delete', { id: transac.id }) }}"
               data-entity-name="transaction" data-entity-id="{{ transac.id }}"
                 data-confirm-body="Êtes-vous sûr de vouloir supprimer la transaction : <br><b>&laquo;&nbsp;{{ transac.label }}&nbsp;&raquo;</b> ?"
-                  data-toggle="modal" data-target="#modal-confirm-delete">
+                  data-toggle="modal" data-target="#modal-confirm-delete" tabindex="-1">
               <span class="icon icon-trash"></span>
             </button>
           </div>

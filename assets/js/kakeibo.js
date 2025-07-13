@@ -353,9 +353,9 @@ var kakeibo = {
                     '</span>' +
                   '</span>' +
                 '</div>' +
-                '<div class="col col-text">' +
+                '<div class="col col-text text-truncate">' +
                   '<span class="-transac-label">' + transaction.label + '</span>' +
-                  '<div class="-transac-details -more-info small text-muted">' + ((trans_details != null) ? trans_details : '') + '</div>' +
+                  '<div class="-transac-details -more-info small text-muted text-truncate">' + ((trans_details != null) ? trans_details : '') + '</div>' +
                 '</div>' +
                 '<div class="col col-price">' +
                   '<span class="-transac-amount text-price text-' + (transaction.amount > 0 ? 'success' : (transaction.amount < 0) ? 'danger' : 'warning') + '">' +

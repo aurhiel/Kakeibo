@@ -10,18 +10,11 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class TransactionManager
 {
-    private BankAccountRepository $bankAccountRepository;
-    private CategoryRepository $categoryRepository;
-    private EntityManagerInterface $entityManager;
-
     public function __construct(
-        BankAccountRepository $bankAccountRepository,
-        CategoryRepository $categoryRepository,
-        EntityManagerInterface $entityManager
+        private BankAccountRepository $bankAccountRepository,
+        private CategoryRepository $categoryRepository,
+        private EntityManagerInterface $entityManager
     ) {
-        $this->bankAccountRepository = $bankAccountRepository;
-        $this->categoryRepository = $categoryRepository;
-        $this->entityManager = $entityManager;
     }
 
     public function handleBankTransfer(

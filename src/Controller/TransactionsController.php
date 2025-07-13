@@ -31,26 +31,16 @@ class TransactionsController extends AbstractController
     const NB_TRANSAC_BY_PAGE = 50;
 
     private User $user;
-    private EntityManagerInterface $entityManager;
-    private TransactionRepository $transactionRepository;
-    private CategoryRepository $categoryRepository;
-    private TranslatorInterface $translator;
-    private TransactionManager $transactionManager;
 
     public function __construct(
+        private EntityManagerInterface $entityManager,
+        private TransactionRepository $transactionRepository,
+        private CategoryRepository $categoryRepository,
+        private TranslatorInterface $translator,
+        private TransactionManager $transactionManager,
         Security $security,
-        EntityManagerInterface $entityManager,
-        TransactionRepository $transactionRepository,
-        CategoryRepository $categoryRepository,
-        TranslatorInterface $translator,
-        TransactionManager $transactionManager
     ) {
         $this->user = $security->getUser();
-        $this->entityManager = $entityManager;
-        $this->transactionRepository = $transactionRepository;
-        $this->categoryRepository = $categoryRepository;
-        $this->translator = $translator;
-        $this->transactionManager = $transactionManager;
     }
 
     /**

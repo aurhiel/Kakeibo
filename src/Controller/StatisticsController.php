@@ -24,20 +24,14 @@ use Symfony\Component\HttpFoundation\Response;
 class StatisticsController extends AbstractController
 {
     private User $user;
-    private TranslatorInterface $translator;
-    private TransactionRepository $transcationRepository;
-    private CategoryRepository $categoryRepository;
 
     public function __construct(
+        private TranslatorInterface $translator,
+        private TransactionRepository $transcationRepository,
+        private CategoryRepository $categoryRepository,
         Security $security,
-        TranslatorInterface $translator,
-        TransactionRepository $transcationRepository,
-        CategoryRepository $categoryRepository
     ) {
         $this->user = $security->getUser();
-        $this->translator = $translator;
-        $this->transcationRepository = $transcationRepository;
-        $this->categoryRepository = $categoryRepository;
     }
 
     /**

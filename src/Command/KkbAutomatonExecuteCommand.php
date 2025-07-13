@@ -21,7 +21,7 @@ class KkbAutomatonExecuteCommand extends Command
     protected static $defaultName = 'kkb:automaton:execute';
     protected static $defaultDescription = 'Parse users recurrent transactions and add transaction if needed.';
 
-    public function __construct($name = null, ContainerInterface $container)
+    public function __construct(ContainerInterface $container, ?string $name = null)
     {
         parent::__construct($name);
 

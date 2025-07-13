@@ -24,17 +24,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ProfileController extends AbstractController
 {
     private User $user;
-    private EntityManagerInterface $entityManager;
-    private TranslatorInterface $translator;
 
     public function __construct(
+        private EntityManagerInterface $entityManager,
+        private TranslatorInterface $translator,
         Security $security,
-        EntityManagerInterface $entityManager,
-        TranslatorInterface $translator
     ) {
         $this->user = $security->getUser();
-        $this->entityManager = $entityManager;
-        $this->translator = $translator;
     }
 
     /**

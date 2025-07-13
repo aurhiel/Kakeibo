@@ -7,11 +7,8 @@ use \Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 
 class TablePrefix implements EventSubscriber
 {
-    protected $prefix = '';
-
-    public function __construct(string $prefix)
+    public function __construct(protected string $prefix = '')
     {
-        $this->prefix = $prefix;
     }
 
     public function getSubscribedEvents()

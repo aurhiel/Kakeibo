@@ -23,15 +23,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SecurityController extends AbstractController
 {
-    private TranslatorInterface $translator;
-    private EntityManagerInterface $entityManager;
-
     public function __construct(
-        TranslatorInterface $translator,
-        EntityManagerInterface $entityManager
+        private TranslatorInterface $translator,
+        private EntityManagerInterface $entityManager,
     ) {
-        $this->translator = $translator;
-        $this->entityManager = $entityManager;
     }
 
     /**

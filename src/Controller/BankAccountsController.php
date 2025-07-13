@@ -17,20 +17,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class BankAccountsController extends AbstractController
 {
     private User $user;
-    private EntityManagerInterface $entityManager;
-    private TranslatorInterface $translator;
-    private BankAccountRepository $bankAccountRepository;
 
     public function __construct(
+        private EntityManagerInterface $entityManager,
+        private TranslatorInterface $translator,
+        private BankAccountRepository $bankAccountRepository,
         Security $security,
-        EntityManagerInterface $entityManager,
-        TranslatorInterface $translator,
-        BankAccountRepository $bankAccountRepository
     ) {
         $this->user = $security->getUser();
-        $this->entityManager = $entityManager;
-        $this->translator = $translator;
-        $this->bankAccountRepository = $bankAccountRepository;
     }
 
     /**

@@ -26,23 +26,15 @@ use Symfony\Component\HttpFoundation\Response;
 class AutomatonController extends AbstractController
 {
     private User $user;
-    private TranslatorInterface $translator;
-    private EntityManagerInterface $entityManager;
-    private CategoryRepository $categoryRepository;
-    private TransactionAutoRepository $transactionAutoRepository;
 
     public function __construct(
+        private TranslatorInterface $translator,
+        private EntityManagerInterface $entityManager,
+        private CategoryRepository $categoryRepository,
+        private TransactionAutoRepository $transactionAutoRepository,
         Security $security,
-        TranslatorInterface $translator,
-        EntityManagerInterface $entityManager,
-        CategoryRepository $categoryRepository,
-        TransactionAutoRepository $transactionAutoRepository
     ) {
         $this->user = $security->getUser();
-        $this->translator = $translator;
-        $this->entityManager = $entityManager;
-        $this->categoryRepository = $categoryRepository;
-        $this->transactionAutoRepository = $transactionAutoRepository;
     }
 
     /**

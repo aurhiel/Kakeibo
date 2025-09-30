@@ -63,6 +63,11 @@ class BankAccount
      */
     private $transaction_autos;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=false)
+     */
+    private $is_archived = false;
+
     public function __construct($user)
     {
         $this->transactions = new ArrayCollection();
@@ -214,6 +219,25 @@ class BankAccount
                 $transactionAuto->setBankAccount(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIsArchived(): bool
+    {
+        return $this->is_archived;
+    }
+
+    public function setIsArchived(bool $is_archived): self
+    {
+        $this->is_archived = $is_archived;
+
+        return $this;
+    }
+
+    public function toggleIsArchived(): self
+    {
+        $this->is_archived = !$this->is_archived;
 
         return $this;
     }

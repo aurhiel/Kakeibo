@@ -363,6 +363,9 @@ form_bank_account :
     delete_nok : "Un problème est survenu lors de la suppression du compte bancaire."
     delete_default_nok : "Le compte bancaire par défaut ne peut pas être supprimé."
     change_default_ok : "Le passage au compte bancaire \"<b>%bank_account_label%</b>\" a réussi !"
+    toggle_archive_status_nok : "Un problème est survenu lors de l'archivage du compte bancaire."
+    toggle_archived_ok : "Compte bancaire archivé avec succès."
+    toggle_unarchived_ok : "Compte bancaire dés-archivé avec succès."
   # Fields
   label :
     label : "Intitulé du compte"

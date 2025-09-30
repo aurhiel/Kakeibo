@@ -81,8 +81,9 @@
                   <span class="icon icon-edit"></span>
                 </a>
                 <button class="btn btn-sm btn-pill btn-outline-danger" type="button" data-confirm-href="{{ path('automaton_trans_auto_delete', { id: ta.id }) }}"
-                  data-confirm-body="Êtes-vous sûr de vouloir supprimer la transaction récurrente : <br><b>&laquo;&nbsp;{{ ta.label }}&nbsp;&raquo;</b> ?"
-                    data-toggle="modal" data-target="#modal-confirm-delete">
+                  data-confirm-title="Confirmer la suppression" data-confirm-theme="danger" data-confirm-btn-text="Supprimer"
+                    data-confirm-body="Êtes-vous sûr de vouloir supprimer la transaction récurrente : <br><b>&laquo;&nbsp;{{ ta.label }}&nbsp;&raquo;</b> ?"
+                      data-toggle="modal" data-target="#modal-confirm">
                   <span class="icon icon-trash"></span>
                 </button>
               </div>

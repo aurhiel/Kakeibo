@@ -20,7 +20,7 @@ class BankAccountRepository extends ServiceEntityRepository
         parent::__construct($registry, BankAccount::class);
     }
 
-    public function findOneByIdAndUser(int $id, User $user)
+    public function findOneByIdAndUser(int $id, User $user): ?BankAccount
     {
         return $this->createQueryBuilder('ba')
             ->where('ba.id = :id')

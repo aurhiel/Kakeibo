@@ -364,6 +364,9 @@ form_bank_account :
     delete_nok : "There was an issue during the process to delete the bank account."
     delete_default_nok : "The default bank account cannot be deleted."
     change_default_ok : "Switching to the bank account \"<b>%bank_account_label%</b>\" succeeded!"
+    toggle_archive_status_nok : "There was an issue during the process to archive the bank account."
+    toggle_archived_ok : "Bank account successfully archived."
+    toggle_unarchived_ok : "Bank account successfully unarchived."
   label :
     label : "Bank account title"
     placeholder : "eg. Checking account"

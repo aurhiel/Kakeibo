@@ -83,7 +83,7 @@
     {# Display some templates ONLY IF user is connected #}
     {% if app.user is defined and app.user is not null %}
       {# Modals #}
-      {% include 'components/modals/confirm-delete.html.twig' %}
+      {% include 'components/modals/confirm.html.twig' %}
 
       {# Bottom right button to create some entities (transactions, categories, ...) #}
       {% include 'components/creation-center.html.twig' %}

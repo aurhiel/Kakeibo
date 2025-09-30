@@ -158,6 +158,15 @@
 // Bank accounts
 .list-bank-accounts {
   line-height: 1.2;
+
+  .-item {
+    &.-is-archived {
+      > *:not(.col-more) {
+        filter: grayscale(1);
+        opacity: .5;
+      }
+    }
+  }
 }
 
 //

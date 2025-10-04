@@ -250,6 +250,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->bankAccounts;
     }
 
+    /**
+     * @return Collection|BankAccount[]
+     */
+    public function getBankAccountsActive(): Collection
+    {
+        return $this->bankAccounts->filter(static fn (BankAccount $bankAccount) => false === $bankAccount->isArchived());
+    }
+
     public function addBankAccount(BankAccount $bankAccount): self
     {
         if (!$this->bankAccounts->contains($bankAccount)) {

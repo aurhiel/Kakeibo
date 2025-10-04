@@ -702,6 +702,19 @@ var kakeibo = {
         // Reset modal CSS classes
         $modal.removeClass('-is-edit');
 
+        // Auto choose an option when select only have 1 option left
+        $form.find('select').each(function() {
+          var $options = $(this).find('option');
+          if ($options.length == 2) {
+            $options.each(function () {
+              var $opt = $(this);
+              if ($opt.first().val().length > 0) {
+                $opt.prop('selected', true);
+              }
+            });
+          }
+        });
+
         // Load entity data into form on edit
         if (type == 'edit') {
           id_edit = parseInt(id_edit);

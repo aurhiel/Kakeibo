@@ -105,6 +105,7 @@ class BankTransferType extends AbstractType
                 'query_builder' => function (BankAccountRepository $r) use ($user, $defaultBankAccountId) {
                     $qb = $r->createQueryBuilder('ba')
                         ->where('ba.user = :userId')
+                        ->andWhere('ba.is_archived = false')
                         ->setParameter('userId', $user->getId())
                     ;
 

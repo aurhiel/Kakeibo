@@ -1,6 +1,6 @@
 {% set has_action_transaction = form_transaction is defined %}
 {% set has_action_category = form_category is defined %}
-{% set has_action_bank_transfer = form_bank_transfer is defined and form_bank_transfer is not null %}
+{% set has_action_bank_transfer = form_bank_transfer is defined and form_bank_transfer is not null and app.user.bankAccountsActive|length > 1 %}
 {% set display_actions = (has_action_transaction or has_action_category or has_action_bank_transfer) and hide_creation_center is not defined %}
 {% set btn_actions_class = 'btn btn-sm btn-primary bg-dark border-primary' %}
 

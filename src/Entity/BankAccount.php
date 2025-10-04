@@ -228,6 +228,11 @@ class BankAccount
         return $this->is_archived;
     }
 
+    public function isArchived(): bool
+    {
+        return $this->is_archived;
+    }
+
     public function setIsArchived(bool $is_archived): self
     {
         $this->is_archived = $is_archived;

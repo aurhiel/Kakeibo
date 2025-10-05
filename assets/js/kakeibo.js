@@ -365,9 +365,10 @@ var kakeibo = {
                 '<div class="col col-more">' +
                   btn_edit +
                   '<button class="btn btn-sm btn-pill btn-outline-danger" type="button" data-confirm-href="' + url_delete + transaction.id + '"' +
-                    'data-entity-name="transaction" data-entity-id="' + transaction.id + '"' +
-                      'data-confirm-body="Êtes-vous sûr de vouloir supprimer la transaction : <br><b>&laquo;&nbsp;' + transaction.label + '&nbsp;&raquo;</b> ?"' +
-                        'data-toggle="modal" data-target="#modal-confirm-delete">' +
+                    'data-entity-name="transaction" data-entity-id="' + transaction.id + '"' + ' data-entity-action="delete"' +
+                      'data-confirm-title="Confirmer la suppression" data-confirm-theme="danger" data-confirm-btn-text="Supprimer"' +
+                        'data-confirm-body="Êtes-vous sûr de vouloir supprimer la transaction : <br><b>&laquo;&nbsp;' + transaction.label + '&nbsp;&raquo;</b> ?"' +
+                          'data-toggle="modal" data-target="#modal-confirm">' +
                     '<span class="icon icon-trash"></span>' +
                   '</button>' +
                 '</div>' +
@@ -701,6 +702,19 @@ var kakeibo = {
         // Reset modal CSS classes
         $modal.removeClass('-is-edit');
 
+        // Auto choose an option when select only have 1 option left
+        $form.find('select').each(function() {
+          var $options = $(this).find('option');
+          if ($options.length == 2) {
+            $options.each(function () {
+              var $opt = $(this);
+              if ($opt.first().val().length > 0) {
+                $opt.prop('selected', true);
+              }
+            });
+          }
+        });
+
         // Load entity data into form on edit
         if (type == 'edit') {
           id_edit = parseInt(id_edit);
@@ -773,7 +787,7 @@ var kakeibo = {
     this.$bank_account_total_expenses = this.$body.find('.bank-account-total-expenses');
     this.$bank_account_total_incomes  = this.$body.find('.bank-account-total-incomes');
     // Modals
-    this.$modal_confirm_delete = this.$body.find('#modal-confirm-delete');
+    this.$modal_confirm = this.$body.find('#modal-confirm');
 
     // ====================================
     // PLUGINS ============================
@@ -796,32 +810,57 @@ var kakeibo = {
     $('[data-toggle="tooltip"]').tooltip();
 
     // Modal: Confirm delete, add link to delete and add custom things (title, body, ...)
-    if (this.$modal_confirm_delete.length > 0) {
+    if (this.$modal_confirm.length > 0) {
       var $btn_clicked = null;
       // Add links & custom things just before modal is showed
-      this.$modal_confirm_delete.on('show.bs.modal', function (e) {
-        var $modal_confirm_delete = $(this);
-        var $btn_confirm = $modal_confirm_delete.find('.btn-submit-delete');
+      this.$modal_confirm.on('show.bs.modal', function (e) {
+        var $modal_confirm = $(this);
+        var $btn_confirm = $modal_confirm.find('.btn-submit-confirm');
 
         $btn_clicked = $(e.relatedTarget);
 
-        // Check if the confirm[data-href] is defined
+        // Check if the confirm[data-href] or confirm[data-entity-*] are defined
         if (typeof $btn_clicked.data('confirm-href') != 'undefined'
-          || (typeof $btn_clicked.data('entity-name') != 'undefined' && typeof $btn_clicked.data('entity-id') != 'undefined')
+          || (typeof $btn_clicked.data('entity-name') != 'undefined'
+            && typeof $btn_clicked.data('entity-id') != 'undefined'
+            && typeof $btn_clicked.data('entity-action') != 'undefined')
         ) {
           // Reset modal body and set body if defined
-          $modal_confirm_delete.find('.modal-body').html('');
+          $modal_confirm.find('.modal-body').html('');
           if (typeof $btn_clicked.data('confirm-body') != 'undefined')
-            $modal_confirm_delete.find('.modal-body').html($('<div>' + $btn_clicked.data('confirm-body') + '</div>'));
+            $modal_confirm.find('.modal-body').html($('<div>' + $btn_clicked.data('confirm-body') + '</div>'));
+
+          // ... reset & set modal title
+          $modal_confirm.find('.modal-title').html('');
+          if (typeof $btn_clicked.data('confirm-title') != 'undefined')
+            $modal_confirm.find('.modal-title').html($btn_clicked.data('confirm-title'));
+
+          // Set theme
+          var theme = $btn_clicked.data('confirm-theme');
+          if (typeof theme != 'undefined') {
+            $modal_confirm.find('.modal-content').addClass('bg-' + theme);
+            if (theme == 'danger') {
+              $modal_confirm.find('.modal-title, .modal-body').addClass('text-white');
+            }
+          }
+
+          // Set button text
+          if (typeof $btn_clicked.data('confirm-btn-text')) {
+            $btn_confirm.html($btn_clicked.data('confirm-btn-text'));
+          }
 
           // Set delete link href
           if (typeof $btn_clicked.data('confirm-href') != 'undefined') {
             $btn_confirm.attr('href', $btn_clicked.data('confirm-href'));
           }
           // ... or set data for ajax submit
-          if (typeof $btn_clicked.attr('data-entity-name') != 'undefined' && typeof $btn_clicked.attr('data-entity-id') != 'undefined') {
+          if (typeof $btn_clicked.attr('data-entity-name') != 'undefined'
+            && typeof $btn_clicked.attr('data-entity-id') != 'undefined'
+            && typeof $btn_clicked.attr('data-entity-id') != 'undefined'
+          ) {
             $btn_confirm.attr('data-entity-name', $btn_clicked.attr('data-entity-name'));
             $btn_confirm.attr('data-entity-id', $btn_clicked.attr('data-entity-id'));
+            $btn_confirm.attr('data-entity-action', $btn_clicked.attr('data-entity-action'));
           }
 
           // Set link additionnal CSS class
@@ -838,14 +877,14 @@ var kakeibo = {
           self.$body.find('.modal-backdrop').css('z-index', 1080);
         // ... or check if the confirm[data-entity-name][data-entity-id] are defined
         } else {
-          console.log('[modal.confirm()] Must define a "data-confirm-href" or a "data-entity-name" and a "data-entity-id"');
+          console.log('[modal.confirm()] Must define a "data-confirm-href" or a "data-entity-name" and a "data-entity-id" and a "data-entity-action"');
         }
       });
 
       // When confirm modal is hidden
-      this.$modal_confirm_delete.on('hidden.bs.modal', function (e) {
-        var $modal_confirm_delete = $(this);
-        var $btn_confirm = $modal_confirm_delete.find('.btn-submit-delete');
+      this.$modal_confirm.on('hidden.bs.modal', function (e) {
+        var $modal_confirm = $(this);
+        var $btn_confirm = $modal_confirm.find('.btn-submit-confirm');
 
         // Clear custom link CSS classes
         if ($btn_clicked != null && typeof $btn_clicked.data('confirm-link-class') !== 'undefined') {
@@ -854,7 +893,11 @@ var kakeibo = {
         }
         // & clear forced dismiss
         $btn_confirm.attr('href', '#')
-          .removeAttr('data-dismiss data-entity-name data-entity-name');
+          .removeAttr('data-dismiss data-entity-name data-entity-name data-entity-action');
+
+        // Remove theme CSS classes
+        $modal_confirm.find('.modal-content').removeClass('bg-danger bg-warning');
+        $modal_confirm.find('.modal-title, .modal-body').removeClass('text-white');
 
         // Clear shitty forcing backdrop z-index (can't use confirm backdrop upon overs modal)
         self.$body.find('.modal-backdrop').removeAttr('style');
@@ -863,16 +906,17 @@ var kakeibo = {
         e.stopImmediatePropagation();
       });
 
-      this.$modal_confirm_delete.on('click', '.btn-submit-delete', function(e) {
+      this.$modal_confirm.on('click', '.btn-submit-confirm', function(e) {
         var $btn = $(this);
         var entity_name = $btn.attr('data-entity-name');
         var entity_id = $btn.attr('data-entity-id');
+        var action = $btn.attr('data-entity-action');
 
-        if (typeof entity_name !== 'undefined' && typeof entity_id !== 'undefined'
-          && typeof kakeibo[entity_name]['load'] != 'undefined'
+        if (typeof entity_name !== 'undefined' && typeof entity_id !== 'undefined' && typeof action !== 'undefined'
+          && typeof kakeibo[entity_name][action] != 'undefined'
         ) {
-          kakeibo[entity_name]['delete'](entity_id, function(r) {
-            kakeibo.$modal_confirm_delete.modal('hide');
+          kakeibo[entity_name][action](entity_id, function(r) {
+            kakeibo.$modal_confirm.modal('hide');
           });
 
           e.preventDefault();

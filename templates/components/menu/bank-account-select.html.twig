@@ -1,4 +1,4 @@
-{% set bank_accounts = app.user.bankAccounts %}
+{% set bank_accounts = app.user.bankAccountsActive %}
 
 {% if bank_accounts is not empty %}
   {% set default_bank_account = app.user.defaultBankAccount %}

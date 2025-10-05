@@ -105,6 +105,7 @@ class BankTransferType extends AbstractType
                 'query_builder' => function (BankAccountRepository $r) use ($user, $defaultBankAccountId) {
                     $qb = $r->createQueryBuilder('ba')
                         ->where('ba.user = :userId')
+                        ->andWhere('ba.is_archived = false')
                         ->setParameter('userId', $user->getId())
                     ;
 
@@ -116,8 +117,8 @@ class BankTransferType extends AbstractType
 
                     return $qb;
                 },
-                'choice_label' => function ($bankAccount) {
-                    return $bankAccount->getLabel();
+                'choice_label' => function (BankAccount $bankAccount) {
+                    return sprintf('%s (%s)', $bankAccount->getLabel(), $bankAccount->getBankBrand()->getLabel());
                 }
             ])
         ;

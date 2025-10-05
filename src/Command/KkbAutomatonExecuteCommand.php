@@ -5,6 +5,7 @@ namespace App\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -36,22 +37,33 @@ class KkbAutomatonExecuteCommand extends Command
                 'repeat_type',
                 InputArgument::REQUIRED,
                 'The recurrent transations repeat type to execute (' . implode(', ', TransactionAuto::RT_LIST) . ').')
+            ->addOption(
+                'dry-run',
+                'd',
+                InputOption::VALUE_OPTIONAL,
+                'Do not apply things done during command.',
+                false
+            )
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        // Retrieve inputs arguments
+        // Retrieve inputs arguments / options
         $repeat_type = $input->getArgument('repeat_type');
+        $dry_run = false !== $input->getOption('dry-run');
         // Set some vars.
-        $error          = null;
-        $io             = new SymfonyStyle($input, $output);
-        $em             = $this->doctrine->getManager();
-        $r_trans_auto   = $em->getRepository(TransactionAuto::class);
-        $trans_to_exec  = $r_trans_auto->findAllToExecuteByRepeatType($repeat_type);
+        $error = null;
+        $io = new SymfonyStyle($input, $output);
+        $em = $this->doctrine->getManager();
+        $r_trans_auto = $em->getRepository(TransactionAuto::class);
+        $trans_to_exec = $r_trans_auto->findAllToExecuteByRepeatType($repeat_type);
 
-        // Add title
-        $io->title('Automaton Command (Repeat type: ' . $repeat_type . ')');
+        if (true === $dry_run) {
+            $io->warning('Command is running in dry mode, no changes will be applied');
+        }
+
+        $io->title(sprintf('Automaton Command (Repeat type: %s)', $repeat_type));
 
         // Check if recurrent transactions to do
         if (!empty($trans_to_exec) && $trans_to_exec !== TransactionAuto::ERR_UNKNOWN_RTYPE) {
@@ -63,9 +75,8 @@ class KkbAutomatonExecuteCommand extends Command
             $now = new \DateTime();
 
             // Loop on recurrent transactions
-            foreach ($trans_to_exec as $key => $trans_auto) {
-                // Create new transaction & fill data according to
-                //  recurrent transaction values
+            foreach ($trans_to_exec as $trans_auto) {
+                // Create new transaction & fill data according to recurrent transaction values
                 $trans = new Transaction();
                 $trans->fillWithTransAuto($trans_auto)
                   ->setDate($now);
@@ -87,10 +98,12 @@ class KkbAutomatonExecuteCommand extends Command
             $io->progressFinish();
 
             // Save new transactions in database & update recurrents transactions
-            try {
-                $em->flush();
-            } catch (\Exception $e) {
-                $error = $e->getMessage();
+            if (false === $dry_run) {
+                try {
+                    $em->flush();
+                } catch (\Exception $e) {
+                    $error = $e->getMessage();
+                }
             }
 
             // Display error or success message

@@ -69,6 +69,8 @@ class TransactionAutoRepository extends ServiceEntityRepository
             $date_last_remove = ($repeat_type == TransactionAuto::RT_DAILY) ? 'DAY' : str_replace('LY', '', $repeat_type);
 
             return $this->createQueryBuilder('ta')
+                ->join('ta.bank_account', 'ba')
+                ->andWhere('ba.is_archived = false')
                 ->andWhere('ta.date_start <= CURRENT_DATE()')
                 ->andWhere('ta.date_last IS NULL OR ta.date_last <= DATE_SUB(DATE(CURRENT_DATE()), 1, \'' . $date_last_remove . '\')')
                 ->andWhere('ta.repeat_type = :repeat_type')

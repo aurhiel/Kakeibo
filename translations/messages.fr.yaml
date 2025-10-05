@@ -150,6 +150,15 @@ page :
     title_update    : "Mise%plural% à jour"
     title_fix       : "Correction%plural% diverse%plural%"
     # VERSIONS
+    beta_0_8_0 :
+      title : "Version Beta 0.8.0"
+      date : "2025-10-06"
+      list_new :
+        item_1 : "Ajout de la possibilité d'archiver un compte bancaire."
+      list_update :
+        item_1 : "Sélection automatique du compte destinataire lors d'un virement si seulement 2 comptes bancaires sont actifs."
+        item_2 : "Action de virement bancaire disponible seulement quand plus d'un compte bancaire actif."
+        item_3 : "Implémentation d'une modale de confirmation plus flexible pour la ré-utiliser de différente manière."
     beta_0_7_0 :
       title : "Version Beta 0.7.0"
       date : "2025-05-18"

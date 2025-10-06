@@ -10,7 +10,7 @@
         </div>
         <div class="bank-account-balance">
           {{ 'menu.balance.label'|trans }} : {% include 'components/price.html.twig' with {
-              amount : default_bank_account.balance,
+              amount : default_bank_account|balance,
               currency : default_bank_account.currency.label } %}
         </div>
       </div>

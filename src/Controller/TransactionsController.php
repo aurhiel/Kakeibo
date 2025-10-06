@@ -100,7 +100,7 @@ class TransactionsController extends AbstractController
                     'slug_status' => 'success',
                     'message_status' => $message_status_ok,
                     'entity' => self::format_json($trans_entity),
-                    'default_bank_account' => self::format_json_bank_account($default_bank_account)
+                    'default_bank_account' => $this->format_json_bank_account($default_bank_account)
                 ];
 
                 // Force old entity values into entity data (useful for JS edit)
@@ -188,7 +188,7 @@ class TransactionsController extends AbstractController
                     'message_status' => 'Suppression de la transaction effectuée.',
                     // Data
                     'entity' => $trans_deleted_json,
-                    'default_bank_account' => self::format_json_bank_account($default_bank_account)
+                    'default_bank_account' => $this->format_json_bank_account($default_bank_account)
                 ];
                 $return_data['entity']['amount'] = 0;
                 $return_data['entity']['old'] = $trans_deleted_json;
@@ -270,7 +270,7 @@ class TransactionsController extends AbstractController
                     'slug_status' => 'success',
                     'message_status' => $message_status_ok,
                     'entity' => self::format_json($transactionFrom),
-                    'default_bank_account' => self::format_json_bank_account($default_bank_account)
+                    'default_bank_account' => $this->format_json_bank_account($default_bank_account)
                 ];
 
                 // Force old entity values into entity data (useful for JS edit)
@@ -554,12 +554,13 @@ class TransactionsController extends AbstractController
         ];
     }
 
-    private static function format_json_bank_account($bank_account): array
+    private function format_json_bank_account($bank_account): array
     {
         $currency = $bank_account->getCurrency();
+
         return [
             'id'        => $bank_account->getId(),
-            'balance'   => round($bank_account->getBalance(), 2),
+            'balance'   => round($this->transactionRepository->findBalance($bank_account), 2),
             'currency_entity' => [
                 'id'    => $currency->getId(),
                 'name'  => $currency->getName(),

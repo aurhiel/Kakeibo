@@ -40,7 +40,7 @@
               <span class="text-muted small">{{ ba.bankBrand.label }}</span>
             </div>
             <div class="col-auto px-0 text-right">
-              {% include 'components/price.html.twig' with { amount : ba.balance, currency : ba.currency.label } %}<br>
+              {% include 'components/price.html.twig' with { amount : ba|balance, currency : ba.currency.label } %}<br>
               <span class="text-muted small">
                 {{ 'block.trans_list.total_text_short'|trans({
                   '%amount%': ba.transactions|length,

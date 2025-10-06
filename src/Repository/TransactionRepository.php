@@ -128,8 +128,10 @@ class TransactionRepository extends ServiceEntityRepository
             ->setParameter('bank_account', $bank_account);
 
         // WHERE: Incomes or Expenses ?
-        if ($spent_type == 'incomes') $qb->andWhere('t.amount > 0');
-        else $qb->andWhere('t.amount < 0');
+        if (null !== $spent_type) {
+            if ('incomes' === $spent_type) $qb->andWhere('t.amount > 0');
+            else $qb->andWhere('t.amount < 0');
+        }
 
         // WHERE: transaction's date start
         if (!is_null($date_start))
@@ -147,6 +149,11 @@ class TransactionRepository extends ServiceEntityRepository
 
         return (float) $qb->getQuery()
             ->getSingleScalarResult();
+    }
+
+    public function findBalance($bank_account, $date_start = null, $date_end = null): float
+    {
+        return $this->findTotal($bank_account, $date_start, $date_end, null);
     }
 
     /**

@@ -12,13 +12,11 @@ return RectorConfig::configure()
         __DIR__ . '/src',
         __DIR__ . '/tests',
     ])
-    ->withRules([
-        TypedPropertyFromStrictConstructorRector::class
-    ])
+    ->withPhpSets()
     ->withPreparedSets(
         deadCode: true,
-        codeQuality: true
+        codeQuality: true,
     )
-    // uncomment to reach your current PHP version
-    // ->withPhpSets()
-    ->withTypeCoverageLevel(0);
+    ->withImportNames(
+        importShortClasses: false,
+    );

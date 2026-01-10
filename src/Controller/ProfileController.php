@@ -67,7 +67,7 @@ class ProfileController extends AbstractController
             [
                 'page_title'  => '<span class="icon icon-user"></span> Profil',
                 'core_class'  => 'app-core--merge-body-in-header',
-                'meta'        => array('title' => 'Profil'),
+                'meta'        => ['title' => 'Profil'],
                 'form'        => $form->createView()
             ]
         );

@@ -170,7 +170,7 @@ class TransactionsController extends AbstractController
             'message_status' => 'Un problème est survenu lors de la suppression de la transaction'
         ];
 
-        if($trans instanceof \App\Entity\Transaction) {
+        if($trans instanceof Transaction) {
             $trans_deleted = $trans;
             $trans_deleted_json = $this->format_json($trans_deleted);
 
@@ -256,7 +256,7 @@ class TransactionsController extends AbstractController
             try {
                 $data = $request->request->get('bank_transfer');
 
-                list($transactionFrom) = $this->transactionManager->handleBankTransfer(
+                [$transactionFrom] = $this->transactionManager->handleBankTransfer(
                     $this->user,
                     $default_bank_account->getId(),
                     (int) $data['bank_account_to'],
@@ -533,7 +533,7 @@ class TransactionsController extends AbstractController
         $category = $transaction->getCategory();
 
         $btltRaw = null;
-        if ($transaction->getBankTransferLinkedTransaction() instanceof \App\Entity\Transaction) {
+        if ($transaction->getBankTransferLinkedTransaction() instanceof Transaction) {
             $btlt = $transaction->getBankTransferLinkedTransaction();
             $btltRaw = [
                 'id' => $btlt->getId(),

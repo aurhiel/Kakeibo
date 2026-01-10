@@ -131,7 +131,7 @@ class TransactionFixtures extends Fixture implements DependentFixtureInterface
                 if ($old_month != $curr_month) {
                     foreach ($trans_presets['monthly'] as $trans_m) {
                         $trans = new Transaction();
-                        $amount = ($trans_m['min'] == $trans_m['max']) ? $trans_m['max'] : rand($trans_m['min'], $trans_m['max']);
+                        $amount = ($trans_m['min'] == $trans_m['max']) ? $trans_m['max'] : random_int($trans_m['min'], $trans_m['max']);
 
                         // Set transaction fields
                         $trans->setLabel($trans_m['label'])
@@ -146,14 +146,14 @@ class TransactionFixtures extends Fixture implements DependentFixtureInterface
                 }
 
                 // Add daily transactions
-                $nb_trans_to_add = rand(2, 4);
+                $nb_trans_to_add = random_int(2, 4);
                 for ($i=0; $i < $nb_trans_to_add; $i++) {
                     // Retrieve a random daily transaction
-                    $trans_d = $trans_presets['daily'][rand(0, count($trans_presets['daily']) - 1)];
+                    $trans_d = $trans_presets['daily'][random_int(0, count($trans_presets['daily']) - 1)];
 
                     // Create new transaction
                     $trans  = new Transaction();
-                    $amount = ($trans_d['min'] == $trans_d['max']) ? $trans_d['max'] : rand($trans_d['min'], $trans_d['max']);
+                    $amount = ($trans_d['min'] == $trans_d['max']) ? $trans_d['max'] : random_int($trans_d['min'], $trans_d['max']);
 
                     // Set transaction fields
                     $trans->setLabel($trans_d['label'])

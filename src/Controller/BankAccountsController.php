@@ -130,7 +130,7 @@ class BankAccountsController extends AbstractController
         } else {
             $return_data['message_status'] = $this->translator->trans(sprintf(
                 'form_bank_account.status.%s',
-                $entity instanceof \App\Entity\BankAccount && $entity->isDefault() ? 'delete_default_nok' : 'unknown_entity',
+                $entity instanceof BankAccount && $entity->isDefault() ? 'delete_default_nok' : 'unknown_entity',
             ));
         }
 

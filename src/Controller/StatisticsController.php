@@ -93,7 +93,7 @@ class StatisticsController extends AbstractController
         $period_type = $this->getTypeOfPeriod($date_start, $date_end);
         $prev_link = $next_link = null;
         $prev_date = $next_date = null;
-        list($prev_date_start, $prev_date_end, $next_date_start, $next_date_end) = $this->generatePreviousAndNextDates(
+        [$prev_date_start, $prev_date_end, $next_date_start, $next_date_end] = $this->generatePreviousAndNextDates(
             $date_start,
             $date_end,
             $period_type
@@ -147,7 +147,7 @@ class StatisticsController extends AbstractController
 
     private function reindexByDate($transactions): array
     {
-        $tmp = array();
+        $tmp = [];
         foreach ($transactions as $trans) {
             $tmp[$trans['date']->format('Y-m-d')] = $trans;
         }
@@ -159,7 +159,7 @@ class StatisticsController extends AbstractController
     {
         foreach ($completer as $date => $comp) {
             if (!isset($transactions[$date])) {
-                $transactions[$date] = array('amount_sum' => 0, 'date' => $date);
+                $transactions[$date] = ['amount_sum' => 0, 'date' => $date];
             }
         }
 

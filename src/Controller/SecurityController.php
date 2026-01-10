@@ -68,7 +68,7 @@ class SecurityController extends AbstractController
                 $this->entityManager->persist($user);
 
                 // 6) User already exist ?
-                if($userRepository->loadUserByUsername($user->getUsername()) instanceof \App\Entity\User) {
+                if($userRepository->loadUserByUsername($user->getUsername()) instanceof User) {
                   $session->getFlashBag()->add('error', $this->translator->trans('page.register.messages.already_registered'));
                 } else {
                     // 7) Try or clear
@@ -139,11 +139,11 @@ class SecurityController extends AbstractController
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('security/login.html.twig', array(
+        return $this->render('security/login.html.twig', [
             'meta'          => [ 'title' => $this->translator->trans('page.login.title') ],
             'last_username' => $lastUsername,
             'error'         => $error,
-        ));
+        ]);
     }
 
     /**

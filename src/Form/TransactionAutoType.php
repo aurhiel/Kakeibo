@@ -105,10 +105,10 @@ class TransactionAutoType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             // 'csrf_protection' => false, // NOTE : Remove CSRF protection to get ajax submit working
             'data_class' => TransactionAuto::class,
             'type_form' => 'add'
-        ));
+        ]);
     }
 }

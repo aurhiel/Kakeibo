@@ -18,33 +18,33 @@ class BankAccountType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('label', TextType::class, array(
+            ->add('label', TextType::class, [
                 'label'         => 'form_bank_account.label.label',
-                'attr'          => array('placeholder' => 'form_bank_account.label.placeholder'),
-            ))
-            ->add('bank_brand', EntityType::class, array(
+                'attr'          => ['placeholder' => 'form_bank_account.label.placeholder'],
+            ])
+            ->add('bank_brand', EntityType::class, [
                 'class'         => BankBrand::class,
                 'label'         => 'form_bank_account.bank_brand.label',
                 'placeholder'   => 'form_bank_account.bank_brand.placeholder',
                 'choice_label'  => function ($bank_brand) {
                     return $bank_brand->getLabel();
                 }
-            ))
-            ->add('currency', EntityType::class, array(
+            ])
+            ->add('currency', EntityType::class, [
                 'class'         => Currency::class,
                 'label'         => 'form_bank_account.currency.label',
                 'choice_label'  => function ($currency) {
                     return $currency->getLabel().' - '.$currency->getName();
                 }
-            ))
+            ])
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'data_class' => BankAccount::class,
             'type_form' => 'add'
-        ));
+        ]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Doctrine;
 
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\Common\EventSubscriber;
 use \Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 
@@ -27,7 +28,7 @@ class TablePrefix implements EventSubscriber
         }
 
         foreach ($classMetadata->getAssociationMappings() as $fieldName => $mapping) {
-            if ($mapping['type'] == \Doctrine\ORM\Mapping\ClassMetadataInfo::MANY_TO_MANY && $mapping['isOwningSide']) {
+            if ($mapping['type'] == ClassMetadataInfo::MANY_TO_MANY && $mapping['isOwningSide']) {
                 $mappedTableName = $mapping['joinTable']['name'];
                 $classMetadata->associationMappings[$fieldName]['joinTable']['name'] = $this->prefix . $mappedTableName;
             }

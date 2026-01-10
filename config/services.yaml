@@ -42,3 +42,7 @@ services:
             $prefix: '%env(string:DATABASE_PREFIX)%'
         tags:
             - { name: doctrine.event_subscriber, connection: default }
+
+    App\Form\CategoryType:
+        arguments:
+            $categoryIcons: '%app.category_icons%'

@@ -10,26 +10,24 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 // Entities
 use App\Entity\Transaction;
 use App\Entity\TransactionAuto;
+use App\Repository\TransactionAutoRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 class KkbAutomatonExecuteCommand extends Command
 {
-    private $container;
-    private $doctrine;
-
     protected static $defaultName = 'kkb:automaton:execute';
     protected static $defaultDescription = 'Parse users recurrent transactions and add transaction if needed.';
 
-    public function __construct(ContainerInterface $container, ?string $name = null)
-    {
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private TransactionAutoRepository $transactionAutoRepository,
+        ?string $name = null,
+    ) {
         parent::__construct($name);
-
-        $this->container = $container;
-        $this->doctrine = $this->container->get('doctrine');
     }
 
     protected function configure(): void
@@ -57,9 +55,7 @@ class KkbAutomatonExecuteCommand extends Command
         // Set some vars.
         $error = null;
         $io = new SymfonyStyle($input, $output);
-        $em = $this->doctrine->getManager();
-        $r_trans_auto = $em->getRepository(TransactionAuto::class);
-        $trans_to_exec = $r_trans_auto->findAllToExecuteByRepeatType($repeat_type);
+        $trans_to_exec = $this->transactionAutoRepository->findAllToExecuteByRepeatType($repeat_type);
 
         if ($dry_run) {
             $io->warning('Command is running in dry mode, no changes will be applied');
@@ -85,8 +81,8 @@ class KkbAutomatonExecuteCommand extends Command
                 $trans_auto->setDateLast($now);
 
                 // Persist new transaction & update recurrent transaction
-                $em->persist($trans);
-                $em->persist($trans_auto);
+                $this->entityManager->persist($trans);
+                $this->entityManager->persist($trans_auto);
 
                 // Sleep 1 second to get a fake loading TODO remove ?
                 // sleep(1);
@@ -98,7 +94,7 @@ class KkbAutomatonExecuteCommand extends Command
             // Save new transactions in database & update recurrents transactions
             if (false === $dry_run) {
                 try {
-                    $em->flush();
+                    $this->entityManager->flush();
                 } catch (\Exception $e) {
                     $error = $e->getMessage();
                 }

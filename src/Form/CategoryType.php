@@ -13,39 +13,35 @@ use Symfony\Component\Form\Extension\Core\Type\ColorType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class CategoryType extends AbstractType
 {
-    public function __construct(private ContainerInterface $container) {
+    public function __construct(private array $categoryIcons) {
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $icons = $this->container->getParameter('app.category_icons');
-
-        $icons_choices = [];
         // Generate repeat type <select> options
-        foreach ($icons as $icon_slug) {
-            $icons_choices['category.icons.' . $icon_slug] = $icon_slug;
-        }
+        $icons_choices = array_combine(
+            array_map(static fn($slug) => "category.icons.$slug", $this->categoryIcons),
+            $this->categoryIcons
+        );
 
         $builder
             ->add('label', TextType::class, [
                 'label' => 'form_category.label.label',
-                'required' => true,
                 'attr' => [ 'placeholder' => 'form_category.label.placeholder' ],
             ])
             ->add('color', ColorType::class, [
               'label' => 'form_category.color.label',
-              'required' => true,
               'attr' => [ 'placeholder' => 'form_category.color.placeholder' ]
-          ])
+            ])
             ->add('icon', ChoiceType::class, [
-              'label'       => 'form_category.icon.label',
-              'attr'        => ['class' => 'custom-select'],
-              'multiple'    => false,
-              'choices'     => $icons_choices
-          ])
+              'label' => 'form_category.icon.label',
+              'attr' => ['class' => 'custom-select'],
+              'choices' => $icons_choices
+            ])
         ;
     }
 

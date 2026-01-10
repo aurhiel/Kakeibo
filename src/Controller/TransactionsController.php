@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\BankAccount;
@@ -326,7 +328,7 @@ class TransactionsController extends AbstractController
         //  there is less than 50 subs (=self::NB_TRANSAC_BY_PAGE) to display
         //  > So we need to add 1 more page
         if (($nb_pages_raw - $nb_pages) > 0) {
-            $nb_pages++;
+            ++$nb_pages;
         }
 
         // Check if $page is correct, if not redirect with a correct page number
@@ -470,7 +472,7 @@ class TransactionsController extends AbstractController
                 }
 
                 // increment row number
-                $row++;
+                ++$row;
             }
             fclose($handle);
         }

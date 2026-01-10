@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataFixtures;
 
 // Entity
@@ -147,7 +149,7 @@ class TransactionFixtures extends Fixture implements DependentFixtureInterface
 
                 // Add daily transactions
                 $nb_trans_to_add = random_int(2, 4);
-                for ($i=0; $i < $nb_trans_to_add; $i++) {
+                for ($i=0; $i < $nb_trans_to_add; ++$i) {
                     // Retrieve a random daily transaction
                     $trans_d = $trans_presets['daily'][random_int(0, count($trans_presets['daily']) - 1)];
 

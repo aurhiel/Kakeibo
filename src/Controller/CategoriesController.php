@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Category;
@@ -40,11 +42,11 @@ class CategoriesController extends AbstractController
     public function index(Request $request, Slugger $slugger): Response
     {
         $id_cat = (int) $request->request->get('id');
-        $is_edit = (!empty($id_cat) && $id_cat > 0);
+        $is_edit = ($id_cat !== 0 && $id_cat > 0);
 
         if($is_edit) {
             $cat_entity   = $this->categoryRepository->findOneByIdAndUser($id_cat, $this->user);
-            $old_cat_json = self::format_json($cat_entity);
+            $old_cat_json = $this->format_json($cat_entity);
             $message_status_ok  = 'Modificiation de la catégorie effectuée.';
             $message_status_nok = 'Un problème est survenu lors de la modification de la catégorie';
         } else {
@@ -77,12 +79,13 @@ class CategoriesController extends AbstractController
                     'query_status' => 1,
                     'slug_status' => 'success',
                     'message_status' => $message_status_ok,
-                    'entity' => self::format_json($cat_entity),
+                    'entity' => $this->format_json($cat_entity),
                 ];
 
                 // Force old entity values into entity data (useful for JS edit)
-                if ($is_edit && isset($old_cat_json))
+                if ($is_edit && isset($old_cat_json)) {
                     $return_data['entity']['old'] = $old_cat_json;
+                }
             } catch (\Exception $e) {
                 $this->entityManager->clear();
                 $return_data['exception'] = $e->getMessage();
@@ -100,7 +103,7 @@ class CategoriesController extends AbstractController
         }
     }
 
-    private static function format_json(Category $category)
+    private function format_json(Category $category): array
     {
         return [
             'id'    => $category->getId(),

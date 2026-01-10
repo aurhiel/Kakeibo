@@ -31,3 +31,6 @@ yarn-error.log
 *.code-workspace
 .vscode
 ###< VS Code ###
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###

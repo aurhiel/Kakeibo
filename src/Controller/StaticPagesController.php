@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use Symfony\Component\Routing\Annotation\Route;
@@ -59,8 +61,11 @@ class StaticPagesController extends AbstractController
             $template = $this->page_config['template'];
 
             // Force CSS class for static pages (.app-core--static-page)
-            if (!isset($data['core_class'])) $data['core_class'] = 'app-core--static-page';
-            else $data['core_class'] .= ' app-core--static-page';
+            if (!isset($data['core_class'])) {
+                $data['core_class'] = 'app-core--static-page';
+            } else {
+                $data['core_class'] .= ' app-core--static-page';
+            }
 
             // Render template
             return $this->render($template, $data);

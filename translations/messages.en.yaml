@@ -152,6 +152,12 @@ page :
     title_update    : "Update%plural%"
     title_fix       : "Misc. correction%plural%"
     # VERSIONS
+    beta_0_8_1 :
+      title : "Version Beta 0.8.1"
+      date : "2026-01-10"
+      list_fix :
+        item_1 : "Mise en place de l'outil Rector PHP pour refactoriser et mettre à jour le code plus facilement."
+        item_2 : "Nettoyage et simplification de code divers à la main."
     beta_0_8_0 :
       title : "Version Beta 0.8.0"
       date : "2025-10-06"

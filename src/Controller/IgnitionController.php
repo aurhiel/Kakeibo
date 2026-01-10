@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\BankAccount;
@@ -42,8 +44,9 @@ class IgnitionController extends AbstractController
      */
     public function first_bank_account(Request $request): Response
     {
-        if (count($this->user->getBankAccounts()) > 0)
+        if (count($this->user->getBankAccounts()) > 0) {
             return $this->redirectToRoute('ignition-first-transaction');
+        }
 
         /** @var Session $session */
         $session = $request->getSession();
@@ -92,8 +95,9 @@ class IgnitionController extends AbstractController
     public function first_transaction(Request $request): Response
     {
         // Force user to create at least ONE bank account !
-        if (empty($this->user) || count($this->user->getBankAccounts()) < 1)
+        if (empty($this->user) || count($this->user->getBankAccounts()) < 1) {
             return $this->redirectToRoute('ignition-first-bank-account');
+        }
 
         /** @var Session $session */
         $session = $request->getSession();
@@ -102,8 +106,9 @@ class IgnitionController extends AbstractController
         $default_bank_account = $this->user->getDefaultBankAccount();
 
         // If user has some transactions > redirect to dashboard
-        if (count($default_bank_account->getTransactions()) > 0)
+        if (count($default_bank_account->getTransactions()) > 0) {
             return $this->redirectToRoute('dashboard');
+        }
 
         // 1) Build the form
         $trans_entity = new Transaction();

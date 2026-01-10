@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
+use App\Entity\BankAccount;
 use App\Entity\Category;
 use App\Entity\Transaction;
 use App\Entity\User;
@@ -49,12 +52,12 @@ class TransactionsController extends AbstractController
     public function manage(Request $request): Response
     {
         $id_trans = (int) $request->request->get('id');
-        $is_edit = (!empty($id_trans) && $id_trans > 0); // Edit transaction ?
+        $is_edit = ($id_trans !== 0 && $id_trans > 0); // Edit transaction ?
 
         if($is_edit) {
             // Get transaction to edit with id AND user (for security)
             $trans_entity = $this->transactionRepository->findOneByIdAndUser($id_trans, $this->user);
-            $old_trans_json = self::format_json($trans_entity);
+            $old_trans_json = $this->format_json($trans_entity);
             $message_status_ok = 'Modificiation de la transaction effectuée.';
             $message_status_nok = 'Un problème est survenu lors de la modification de la transaction';
         } else {
@@ -65,8 +68,9 @@ class TransactionsController extends AbstractController
         }
 
         // Force user to create at least ONE bank account !
-        if (count($this->user->getBankAccounts()) < 1)
+        if (count($this->user->getBankAccounts()) < 1) {
             return $this->redirectToRoute('ignition-first-bank-account');
+        }
 
         // User has a bank account
         $default_bank_account = $this->user->getDefaultBankAccount();
@@ -99,13 +103,14 @@ class TransactionsController extends AbstractController
                     'query_status' => 1,
                     'slug_status' => 'success',
                     'message_status' => $message_status_ok,
-                    'entity' => self::format_json($trans_entity),
-                    'default_bank_account' => self::format_json_bank_account($default_bank_account)
+                    'entity' => $this->format_json($trans_entity),
+                    'default_bank_account' => $this->format_json_bank_account($default_bank_account)
                 ];
 
                 // Force old entity values into entity data (useful for JS edit)
-                if ($is_edit && isset($old_trans_json))
+                if ($is_edit && isset($old_trans_json)) {
                     $return_data['entity']['old'] = $old_trans_json;
+                }
             } catch (\Exception $e) {
                 $this->entityManager->clear();
                 $return_data['exception'] = $e->getMessage();
@@ -143,7 +148,7 @@ class TransactionsController extends AbstractController
                 'query_status' => 1,
                 'slug_status' => 'success',
                 'message_status' => 'Success !',
-                'entity' => self::format_json($trans)
+                'entity' => $this->format_json($trans)
             ];
         }
 
@@ -168,9 +173,9 @@ class TransactionsController extends AbstractController
             'message_status' => 'Un problème est survenu lors de la suppression de la transaction'
         ];
 
-        if(null !== $trans) {
+        if($trans instanceof Transaction) {
             $trans_deleted = $trans;
-            $trans_deleted_json = self::format_json($trans_deleted);
+            $trans_deleted_json = $this->format_json($trans_deleted);
 
             // Remove entity
             $this->entityManager->remove($trans);
@@ -188,7 +193,7 @@ class TransactionsController extends AbstractController
                     'message_status' => 'Suppression de la transaction effectuée.',
                     // Data
                     'entity' => $trans_deleted_json,
-                    'default_bank_account' => self::format_json_bank_account($default_bank_account)
+                    'default_bank_account' => $this->format_json_bank_account($default_bank_account)
                 ];
                 $return_data['entity']['amount'] = 0;
                 $return_data['entity']['old'] = $trans_deleted_json;
@@ -218,12 +223,12 @@ class TransactionsController extends AbstractController
     public function bankTransfer(Request $request): Response
     {
         $id_trans = (int) $request->request->get('id');
-        $is_edit = (!empty($id_trans) && $id_trans > 0);
+        $is_edit = ($id_trans !== 0 && $id_trans > 0);
 
         if($is_edit) {
             // Get transaction to edit with id AND user (for security)
             $entity = $this->transactionRepository->findOneByIdAndUser($id_trans, $this->user);
-            $old_entity_json = self::format_json($entity);
+            $old_entity_json = $this->format_json($entity);
             $message_status_ok = 'Modificiation du transfert effectuée.';
             $message_status_nok = 'Un problème est survenu lors de la modification du transfert';
         } else {
@@ -234,8 +239,9 @@ class TransactionsController extends AbstractController
         }
 
         // Force user to create at least ONE bank account !
-        if (count($this->user->getBankAccounts()) < 1)
+        if (count($this->user->getBankAccounts()) < 1) {
             return $this->redirectToRoute('ignition-first-bank-account');
+        }
 
         // User has a bank account
         $default_bank_account = $this->user->getDefaultBankAccount();
@@ -253,7 +259,7 @@ class TransactionsController extends AbstractController
             try {
                 $data = $request->request->get('bank_transfer');
 
-                list($transactionFrom) = $this->transactionManager->handleBankTransfer(
+                [$transactionFrom] = $this->transactionManager->handleBankTransfer(
                     $this->user,
                     $default_bank_account->getId(),
                     (int) $data['bank_account_to'],
@@ -261,7 +267,7 @@ class TransactionsController extends AbstractController
                     (float) $data['amount'],
                     new \DateTime($data['date']),
                     $data['label'],
-                    !empty($data['details']) ? $data['details'] : null,
+                    empty($data['details']) ? null : $data['details'],
                     $is_edit ? $id_trans : null,
                 );
 
@@ -269,13 +275,14 @@ class TransactionsController extends AbstractController
                     'query_status' => 1,
                     'slug_status' => 'success',
                     'message_status' => $message_status_ok,
-                    'entity' => self::format_json($transactionFrom),
-                    'default_bank_account' => self::format_json_bank_account($default_bank_account)
+                    'entity' => $this->format_json($transactionFrom),
+                    'default_bank_account' => $this->format_json_bank_account($default_bank_account)
                 ];
 
                 // Force old entity values into entity data (useful for JS edit)
-                if ($is_edit && isset($old_entity_json))
+                if ($is_edit && isset($old_entity_json)) {
                     $return_data['entity']['old'] = $old_entity_json;
+                }
             } catch (\Exception $e) {
                 $this->entityManager->clear();
                 $return_data['exception'] = $e->getMessage();
@@ -300,15 +307,17 @@ class TransactionsController extends AbstractController
     public function index(int $page): Response
     {
         // Force user to create at least ONE bank account !
-        if (count($this->user->getBankAccounts()) < 1)
+        if (count($this->user->getBankAccounts()) < 1) {
             return $this->redirectToRoute('ignition-first-bank-account');
+        }
 
         // User has a bank account
         $default_bank_account = $this->user->getDefaultBankAccount();
 
         // Force user to add or import transaction(s) first
-        if (count($default_bank_account->getTransactions()) < 1)
+        if (count($default_bank_account->getTransactions()) < 1) {
             return $this->redirectToRoute('ignition-first-transaction');
+        }
 
         // Get nb pages of newsletter subscribes
         $nb_transactions = $this->transactionRepository->countAllByBankAccountAndByDate($default_bank_account);
@@ -318,8 +327,9 @@ class TransactionsController extends AbstractController
         // If there is decimal numbers,
         //  there is less than 50 subs (=self::NB_TRANSAC_BY_PAGE) to display
         //  > So we need to add 1 more page
-        if (($nb_pages_raw - $nb_pages) > 0)
-            $nb_pages++;
+        if (($nb_pages_raw - $nb_pages) > 0) {
+            ++$nb_pages;
+        }
 
         // Check if $page is correct, if not redirect with a correct page number
         if ($nb_pages > 0 && $page > $nb_pages) {
@@ -373,8 +383,9 @@ class TransactionsController extends AbstractController
     public function importCSV(Request $request): Response
     {
         // Force user to create at least ONE bank account !
-        if (count($this->user->getBankAccounts()) < 1)
+        if (count($this->user->getBankAccounts()) < 1) {
             return $this->redirectToRoute('ignition-first-bank-account');
+        }
 
         $csv_path = $request->files->get('first-import-file')->getPathName();
 
@@ -393,8 +404,9 @@ class TransactionsController extends AbstractController
             // Default category
             foreach($categories as $cat) {
                 // Retrieve default category
-                if ($cat->getSlug() == 'misc')
+                if ($cat->getSlug() == 'misc') {
                     $default_category = $cat;
+                }
             }
 
             // Loop on every CSV lines
@@ -402,18 +414,18 @@ class TransactionsController extends AbstractController
                 $nb_fields = count($data);
 
                 // Retrieve bank code
-                if ($row == 1) {
+                if ($row === 1) {
                     $bank_code = explode(' : ', $data[0]);
                     $bank_code = (isset($bank_code[1])) ? (int) $bank_code[1] : false;
                 }
 
                 // Only for "Caisse d'épargne" bank (code = 18315)
-                if ($bank_code !== false && $bank_code == 18315) {
-                    if ($row == 4) {
+                if ($bank_code !== false && $bank_code === 18315) {
+                    if ($row === 4) {
                         $bank_account_total = (float) str_replace(',', '.', $data[4]);
                     } elseif($row > 5) {
                         // Is credit or debit valid ? (= col 3|4) AND with a description (= col 2)
-                        if (($data[3] || $data[4]) && !empty($data[2])) {
+                        if (($data[3] || $data[4]) && (isset($data[2]) && ($data[2] !== '' && $data[2] !== '0'))) {
                             $debit    = (float) str_replace(',', '.', $data[3]);
                             $credit   = (float) str_replace(',', '.', $data[4]);
                             $amount   = ($credit > 0) ? $credit : (($debit < 0) ? $debit : false);
@@ -436,10 +448,11 @@ class TransactionsController extends AbstractController
                                   ->setDate($datetime)
                                   ->setLabel($label)
                                   ->setAmount($amount)
-                                  ->setCategory(!is_null($category) ? $category : $default_category);
+                                  ->setCategory(is_null($category) ? $default_category : $category);
 
-                                if (!empty($details) && $details != $label)
+                                if (!in_array($details, ['', '0', $label], true)) {
                                     $transaction->setDetails($details);
+                                }
 
                                 // Save by persisting entity
                                 $this->entityManager->persist($transaction);
@@ -459,13 +472,13 @@ class TransactionsController extends AbstractController
                 }
 
                 // increment row number
-                $row++;
+                ++$row;
             }
             fclose($handle);
         }
 
         // Add a transaction to adjust the total to the bank account total
-        if ($file_total != $bank_account_total) {
+        if ($file_total !== $bank_account_total) {
             $trans_adjustment = new Transaction();
             $amount_adjust    = $bank_account_total - $file_total;
             // Set adjustment data
@@ -509,23 +522,21 @@ class TransactionsController extends AbstractController
         foreach($categories as $cat) {
             $regex = $cat->getImportRegex();
             // Retrieve category according to her regex on "label"
-            if (!empty($regex)) {
-                if (preg_match('/'.$regex.'/i', $label)) {
-                    $category = $cat;
-                    break;
-                }
+            if (!empty($regex) && preg_match('/'.$regex.'/i', $label)) {
+                $category = $cat;
+                break;
             }
         }
 
         return $category;
     }
 
-    private static function format_json(Transaction $transaction): array
+    private function format_json(Transaction $transaction): array
     {
         $category = $transaction->getCategory();
 
         $btltRaw = null;
-        if ($transaction->getBankTransferLinkedTransaction()) {
+        if ($transaction->getBankTransferLinkedTransaction() instanceof Transaction) {
             $btlt = $transaction->getBankTransferLinkedTransaction();
             $btltRaw = [
                 'id' => $btlt->getId(),
@@ -554,7 +565,7 @@ class TransactionsController extends AbstractController
         ];
     }
 
-    private static function format_json_bank_account($bank_account): array
+    private function format_json_bank_account(?BankAccount $bank_account): array
     {
         $currency = $bank_account->getCurrency();
         return [

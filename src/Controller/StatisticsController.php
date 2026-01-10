@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\User;
@@ -40,8 +42,9 @@ class StatisticsController extends AbstractController
     public function index(string $date_start, string $date_end): Response
     {
         // Force user to create at least ONE bank account !
-        if(count($this->user->getBankAccounts()) < 1)
+        if (count($this->user->getBankAccounts()) < 1) {
             return $this->redirectToRoute('ignition-first-bank-account');
+        }
 
         // User has a bank account
         $default_bank_account = $this->user->getDefaultBankAccount();
@@ -50,9 +53,9 @@ class StatisticsController extends AbstractController
         }
 
         // Default values/params
-        $is_now = ($date_start == 'current' && $date_end == 'current');
-        $date_start = ($date_start == 'current') ? date('Y-m-01') : $date_start;
-        $date_end = ($date_end == 'current') ? date('Y-m-t') : $date_end;
+        $is_now = ($date_start === 'current' && $date_end === 'current');
+        $date_start = ($date_start === 'current') ? date('Y-m-01') : $date_start;
+        $date_end = ($date_end === 'current') ? date('Y-m-t') : $date_end;
 
         // Get totals
         $total_incomes = $this->transcationRepository->findTotal($default_bank_account, $date_start, $date_end, 'incomes');
@@ -64,9 +67,9 @@ class StatisticsController extends AbstractController
 
         // Redirect to a page with transactions based on last one
         //  if current period hasn't any transactions
-        if ($is_now === true && $nb_transactions < 1) {
+        if ($is_now && $nb_transactions < 1) {
             $last_transaction = $this->transcationRepository->findByBankAccountAndDateAndPage($default_bank_account, null, 'now', 1, 1);
-            if (!empty($last_transaction) && isset($last_transaction[0])) {
+            if ($last_transaction !== [] && isset($last_transaction[0])) {
                 $last_transaction = $last_transaction[0];
                 return $this->redirectToRoute('statistics', [
                     'date_start' => $last_transaction->getDate()->format('Y-m-01'),
@@ -92,7 +95,7 @@ class StatisticsController extends AbstractController
         $period_type = $this->getTypeOfPeriod($date_start, $date_end);
         $prev_link = $next_link = null;
         $prev_date = $next_date = null;
-        list($prev_date_start, $prev_date_end, $next_date_start, $next_date_end) = $this->generatePreviousAndNextDates(
+        [$prev_date_start, $prev_date_end, $next_date_start, $next_date_end] = $this->generatePreviousAndNextDates(
             $date_start,
             $date_end,
             $period_type
@@ -107,7 +110,7 @@ class StatisticsController extends AbstractController
             ]);
             $prev_date = $prev_date_start;
         }
-        $nb_next_trans = $this->transcationRepository->countAllByBankAccountAndByDate($default_bank_account, $next_date_start, null);
+        $nb_next_trans = $this->transcationRepository->countAllByBankAccountAndByDate($default_bank_account, $next_date_start);
         if ($nb_next_trans > 0) {
             $next_link = $this->generateUrl('statistics', [
                 'date_start' => $next_date_start,
@@ -144,9 +147,9 @@ class StatisticsController extends AbstractController
         ]);
     }
 
-    private function reindexByDate($transactions): array
+    private function reindexByDate(array $transactions): array
     {
-        $tmp = array();
+        $tmp = [];
         foreach ($transactions as $trans) {
             $tmp[$trans['date']->format('Y-m-d')] = $trans;
         }
@@ -154,11 +157,11 @@ class StatisticsController extends AbstractController
         return $tmp;
     }
 
-    private function completeEmptyDate(&$transactions, $completer): void
+    private function completeEmptyDate(array &$transactions, array $completer): void
     {
-        foreach ($completer as $date => $comp) {
+        foreach (array_keys($completer) as $date) {
             if (!isset($transactions[$date])) {
-                $transactions[$date] = array('amount_sum' => 0, 'date' => $date);
+                $transactions[$date] = ['amount_sum' => 0, 'date' => $date];
             }
         }
 
@@ -174,17 +177,14 @@ class StatisticsController extends AbstractController
         // Check if start & end years are the same (= monthly or yearly)
         if ($dateStart->format('Y') === $dateEnd->format('Y')) {
             if ((int) $dateStart->format('N') === 1
-                && (int) (clone $dateStart)->modify('+6days')->format('d') === (int) $dateEnd->format('d')
-            ) {
+                && (int) (clone $dateStart)->modify('+6days')->format('d') === (int) $dateEnd->format('d')) {
                 $periodType = 'weekly';
-            } else if ($dateStart->format('m') === $dateEnd->format('m')
+            } elseif ($dateStart->format('m') === $dateEnd->format('m')
                 && (int) $dateStart->format('d') === 1
-                && (int) $dateEnd->format('d') === (int) $dateEnd->format('t')
-            ) {
+                && (int) $dateEnd->format('d') === (int) $dateEnd->format('t')) {
                 $periodType = 'monthly';
-            } else if ((int) $dateStart->format('m') === 1 && (int) $dateStart->format('d') === 1
-                && (int) $dateEnd->format('m') === 12 && (int) $dateEnd->format('d') === 31
-            ) {
+            } elseif ((int) $dateStart->format('m') === 1 && (int) $dateStart->format('d') === 1
+                && (int) $dateEnd->format('m') === 12 && (int) $dateEnd->format('d') === 31) {
                 $periodType = 'yearly';
             }
         }

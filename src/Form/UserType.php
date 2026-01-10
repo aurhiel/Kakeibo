@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Form;
 
 use App\Entity\User;
@@ -15,7 +18,7 @@ use Symfony\Component\Form\FormEvents;
 
 class UserType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         // $listener = function (FormEvent $event) use ($options)
         // {
@@ -65,44 +68,44 @@ class UserType extends AbstractType
             [ 'username'  => 'Nami Nabigeta' ],
         ];
 
-        $user = $fake_users[rand(0, (count($fake_users) - 1))];
+        $user = $fake_users[random_int(0, (count($fake_users) - 1))];
 
         $user_username  = str_replace(' ', '', $user['username']);
-        $user_email     = (isset($user['email'])) ? $user['email'] : strtolower(str_replace(' ', '.', $user['username']).'@gmail.com');
+        $user_email     = $user['email'] ?? strtolower(str_replace(' ', '.', $user['username']).'@gmail.com');
 
         $builder
-            ->add('username',       TextType::class,  array(
+            ->add('username',       TextType::class,  [
                 'label'     => 'form_user.username.label',
                 'attr'      => [ 'placeholder' => "ex: $user_username" ],
                 'disabled'  => $is_edit
-            ))
-            ->add('email',          EmailType::class, array(
+            ])
+            ->add('email',          EmailType::class, [
                 'label'     => 'form_user.email.label',
                 'attr'      => [ 'placeholder' => "ex: $user_email" ],
                 'disabled'  => $is_edit
-            ))
-            ->add('plainPassword',  RepeatedType::class, array(
+            ])
+            ->add('plainPassword',  RepeatedType::class, [
                 'type' => PasswordType::class,
-                'first_options'  => array(
+                'first_options'  => [
                     'label' => 'form_user.first_password.label',
-                    'attr' => array('value' => ($is_edit ? '0ld-pa$$wo|2d' : ''))
-                ),
-                'second_options' => array(
+                    'attr' => ['value' => ($is_edit ? '0ld-pa$$wo|2d' : '')]
+                ],
+                'second_options' => [
                     'label' => 'form_user.second_password.label',
-                    'attr' => array('value' => ($is_edit ? '0ld-pa$$wo|2d' : ''))
-                ),
-            ))
+                    'attr' => ['value' => ($is_edit ? '0ld-pa$$wo|2d' : '')]
+                ],
+            ])
         ;
 
         // Listener (eg. to fill email field on edit information)
         // $builder->addEventListener(FormEvents::PRE_SUBMIT, $listener);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'data_class'  => User::class,
             'type_form'   => 'add'
-        ));
+        ]);
     }
 }

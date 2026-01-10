@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -56,7 +58,7 @@ class BankAccount
     /**
     * According to transactions sum
     */
-    private $balance = null;
+    private $balance;
 
     /**
      * @ORM\OneToMany(targetEntity=TransactionAuto::class, mappedBy="bank_account", orphanRemoval=true)
@@ -68,7 +70,7 @@ class BankAccount
      */
     private $is_archived = false;
 
-    public function __construct($user)
+    public function __construct(?User $user)
     {
         $this->transactions = new ArrayCollection();
 
@@ -94,7 +96,7 @@ class BankAccount
     }
 
     /**
-     * @return Collection|Transaction[]
+     * @return Collection<int, Transaction>
      */
     public function getTransactions(): Collection
     {
@@ -126,13 +128,14 @@ class BankAccount
 
     public function getBalance(): float
     {
-        if (is_null($this->balance) === true) {
+        if (is_null($this->balance)) {
             $now = new \DateTime();
-            foreach ($this->transactions as $key => $transaction) {
+            foreach ($this->transactions as $transaction) {
                 // Add transaction only when < current date ($now)
                 //  (future transactions will be displayed elsewhere)
-                if ($transaction->getDate() <= $now)
+                if ($transaction->getDate() <= $now) {
                     $this->balance += $transaction->getAmount();
+                }
             }
         }
 
@@ -194,7 +197,7 @@ class BankAccount
     }
 
     /**
-     * @return Collection|TransactionAuto[]
+     * @return Collection<int, TransactionAuto>
      */
     public function getTransactionAutos(): Collection
     {
@@ -213,11 +216,9 @@ class BankAccount
 
     public function removeTransactionAuto(TransactionAuto $transactionAuto): self
     {
-        if ($this->transaction_autos->removeElement($transactionAuto)) {
-            // set the owning side to null (unless already changed)
-            if ($transactionAuto->getBankAccount() === $this) {
-                $transactionAuto->setBankAccount(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->transaction_autos->removeElement($transactionAuto) && $transactionAuto->getBankAccount() === $this) {
+            $transactionAuto->setBankAccount(null);
         }
 
         return $this;

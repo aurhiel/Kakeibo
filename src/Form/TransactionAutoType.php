@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Form;
 
 // Entities
@@ -28,7 +31,7 @@ class TransactionAutoType extends AbstractType
         $this->user = $security->getUser();
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $is_edit = ($options['type_form'] == 'edit');
         $user = $this->user;
@@ -42,7 +45,7 @@ class TransactionAutoType extends AbstractType
         $min_datetime = new \DateTime('now + 1 day');
         $date_start_attrs = ['min' => $min_datetime->format('Y-m-d'), 'value' => $min_datetime->format('Y-m-d')];
 
-        if ($is_edit == true) {
+        if ($is_edit) {
             // Set date start field as readonly if already launched
             if (!empty($options['data']->getDateLast())) {
                 $date_start_attrs['readonly'] = true;
@@ -103,12 +106,12 @@ class TransactionAutoType extends AbstractType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             // 'csrf_protection' => false, // NOTE : Remove CSRF protection to get ajax submit working
             'data_class' => TransactionAuto::class,
             'type_form' => 'add'
-        ));
+        ]);
     }
 }

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Form;
 
 // Entities
@@ -15,38 +18,36 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class BankAccountType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $is_edit = ($options['type_form'] == 'edit');
-
         $builder
-            ->add('label', TextType::class, array(
+            ->add('label', TextType::class, [
                 'label'         => 'form_bank_account.label.label',
-                'attr'          => array('placeholder' => 'form_bank_account.label.placeholder'),
-            ))
-            ->add('bank_brand', EntityType::class, array(
+                'attr'          => ['placeholder' => 'form_bank_account.label.placeholder'],
+            ])
+            ->add('bank_brand', EntityType::class, [
                 'class'         => BankBrand::class,
                 'label'         => 'form_bank_account.bank_brand.label',
                 'placeholder'   => 'form_bank_account.bank_brand.placeholder',
                 'choice_label'  => function ($bank_brand) {
                     return $bank_brand->getLabel();
                 }
-            ))
-            ->add('currency', EntityType::class, array(
+            ])
+            ->add('currency', EntityType::class, [
                 'class'         => Currency::class,
                 'label'         => 'form_bank_account.currency.label',
-                'choice_label'  => function ($currency) {
+                'choice_label'  => function ($currency): string {
                     return $currency->getLabel().' - '.$currency->getName();
                 }
-            ))
+            ])
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'data_class' => BankAccount::class,
             'type_form' => 'add'
-        ));
+        ]);
     }
 }

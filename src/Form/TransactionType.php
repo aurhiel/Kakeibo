@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Form;
 
 // Entities
@@ -28,9 +31,8 @@ class TransactionType extends AbstractType
         $this->user = $security->getUser();
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $is_edit = ($options['type_form'] == 'edit');
         $user = $this->user;
 
         $builder
@@ -88,12 +90,12 @@ class TransactionType extends AbstractType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             // 'csrf_protection' => false, // NOTE : Remove CSRF protection to get ajax submit working
             'data_class' => Transaction::class,
             'type_form' => 'add'
-        ));
+        ]);
     }
 }

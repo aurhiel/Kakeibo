@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataFixtures;
 
 // Entity
@@ -11,7 +13,7 @@ use Doctrine\Persistence\ObjectManager;
 
 class CurrencyFixtures extends Fixture
 {
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $currencies = [
             [ 'name' => "Euro",           'label' => "€", 'slug' => "EUR" ],

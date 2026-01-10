@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form;
 
 use App\Entity\BankAccount;
@@ -33,7 +35,7 @@ class BankTransferType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $user = $this->user;
-        $defaultBankAccountId = null !== $user->getDefaultBankAccount()
+        $defaultBankAccountId = $user->getDefaultBankAccount() instanceof BankAccount
             ? $user->getDefaultBankAccount()->getId()
             : null
         ;
@@ -81,7 +83,7 @@ class BankTransferType extends AbstractType
                 'placeholder' => 'form_bank_transfer.category.placeholder',
                 'attr' => [
                     'class' => 'custom-select',
-                    'data-form-default-value' => null !== $defaultCategory ? $defaultCategory->getId() : ''
+                    'data-form-default-value' => $defaultCategory instanceof Category ? $defaultCategory->getId() : ''
                 ],
                 'query_builder' => function (CategoryRepository $r) use ($user) {
                     return $r->createQueryBuilder('c')
@@ -117,7 +119,7 @@ class BankTransferType extends AbstractType
 
                     return $qb;
                 },
-                'choice_label' => function (BankAccount $bankAccount) {
+                'choice_label' => function (BankAccount $bankAccount): string {
                     return sprintf('%s (%s)', $bankAccount->getLabel(), $bankAccount->getBankBrand()->getLabel());
                 }
             ])

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\User;
@@ -39,8 +41,9 @@ class SecurityController extends AbstractController
       MailerInterface $mailer,
       UserRepository $userRepository
     ): Response {
-        if (true === $authChecker->isGranted('IS_AUTHENTICATED_FULLY'))
+        if (true === $authChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
             return $this->redirectToRoute('dashboard');
+        }
 
         /** @var Session $session */
         $session = $request->getSession();
@@ -67,7 +70,7 @@ class SecurityController extends AbstractController
                 $this->entityManager->persist($user);
 
                 // 6) User already exist ?
-                if(!empty($userRepository->loadUserByUsername($user->getUsername()))) {
+                if($userRepository->loadUserByUsername($user->getUsername()) instanceof User) {
                   $session->getFlashBag()->add('error', $this->translator->trans('page.register.messages.already_registered'));
                 } else {
                     // 7) Try or clear
@@ -128,8 +131,9 @@ class SecurityController extends AbstractController
         AuthenticationUtils $authenticationUtils,
         AuthorizationCheckerInterface $authChecker
     ): Response {
-        if (true === $authChecker->isGranted('IS_AUTHENTICATED_FULLY'))
+        if (true === $authChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
             return $this->redirectToRoute('dashboard');
+        }
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -137,11 +141,11 @@ class SecurityController extends AbstractController
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('security/login.html.twig', array(
+        return $this->render('security/login.html.twig', [
             'meta'          => [ 'title' => $this->translator->trans('page.login.title') ],
             'last_username' => $lastUsername,
             'error'         => $error,
-        ));
+        ]);
     }
 
     /**

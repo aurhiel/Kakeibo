@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataFixtures;
 
 // Entity
@@ -15,7 +17,7 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 class CategoryFixtures extends Fixture implements DependentFixtureInterface
 {
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $categories = [
             [ 'label' => 'Divers',          'slug' => 'misc',
@@ -78,8 +80,9 @@ class CategoryFixtures extends Fixture implements DependentFixtureInterface
                 ->setIsDefault(true)
                 ->setUser($user);
 
-            if (isset($data['regex']))
+            if (isset($data['regex'])) {
                 $category->setImportRegex($data['regex']);
+            }
 
             // Save
             $manager->persist($category);

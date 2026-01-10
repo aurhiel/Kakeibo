@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\BankAccount;
@@ -12,6 +14,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method BankAccount|null findOneBy(array $criteria, array $orderBy = null)
  * @method BankAccount[]    findAll()
  * @method BankAccount[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @extends ServiceEntityRepository<BankAccount>
  */
 class BankAccountRepository extends ServiceEntityRepository
 {

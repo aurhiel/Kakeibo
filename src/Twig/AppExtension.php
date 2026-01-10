@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Twig;
 
 use Twig\Extension\AbstractExtension;
@@ -15,19 +17,21 @@ class AppExtension extends AbstractExtension
         ];
     }
 
-    public function anonymize($string, $anonymizeCharacter = '*', $nbCharacVisible = 1)
+    public function anonymize($string, $anonymizeCharacter = '*', $nbCharacVisible = 1): string
     {
         $str_array = str_split($string);
 
         // Anonymize all string if it's smaller than the amount
         //  of characters visible
-        if (strlen($string) <= ($nbCharacVisible * 2))
+        if (strlen($string) <= ($nbCharacVisible * 2)) {
             $nbCharacVisible = 0;
+        }
 
         // Replace string characters
-        foreach ($str_array as $k => $character) {
-            if (($k + 1) > $nbCharacVisible && $k < (count($str_array) - $nbCharacVisible))
-              $str_array[$k] = $anonymizeCharacter;
+        foreach (array_keys($str_array) as $k) {
+            if (($k + 1) > $nbCharacVisible && $k < (count($str_array) - $nbCharacVisible)) {
+                $str_array[$k] = $anonymizeCharacter;
+            }
         }
 
         return implode('', $str_array);

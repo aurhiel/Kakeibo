@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -50,7 +53,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(name="is_active", type="boolean")
      */
-    private $isActive;
+    private $isActive = true;
 
     /**
      * @ORM\Column(type="string", length=64)
@@ -76,7 +79,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->isActive = true;
         // TODO add the user's Timezone
         $this->registerDate = new \DateTime();
         $this->categories = new ArrayCollection();
@@ -102,7 +104,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function setEmail($email)
+    public function setEmail($email): self
     {
         $this->email = $email;
 
@@ -115,7 +117,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->username;
     }
 
-    public function setUsername($username)
+    public function setUsername($username): void
     {
         $this->username = $username;
     }
@@ -131,7 +133,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->plainPassword;
     }
 
-    public function setPlainPassword($password)
+    public function setPlainPassword($password): self
     {
         $this->plainPassword = $password;
 
@@ -144,7 +146,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
-    public function setPassword($password)
+    public function setPassword($password): self
     {
         $this->password = $password;
 
@@ -160,10 +162,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     // Roles
     public function getRoles()
     {
-        return array(empty($this->role) ? 'ROLE_USER' : $this->role);
+        return [empty($this->role) ? 'ROLE_USER' : $this->role];
     }
 
-    public function setRole($role)
+    public function setRole($role): self
     {
         $this->role = $role;
 
@@ -176,17 +178,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     // Active/lock/expired methods
-    public function isAccountNonExpired()
+    public function isAccountNonExpired(): bool
     {
         return true;
     }
 
-    public function isAccountNonLocked()
+    public function isAccountNonLocked(): bool
     {
         return true;
     }
 
-    public function isCredentialsNonExpired()
+    public function isCredentialsNonExpired(): bool
     {
         return true;
     }
@@ -201,7 +203,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->isActive;
     }
 
-    public function setIsActive(bool $isActive)
+    public function setIsActive(bool $isActive): void
     {
         $this->isActive = $isActive;
     }
@@ -212,7 +214,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection|Category[]
+     * @return Collection<int, Category>
      */
     public function getCategories(): Collection
     {
@@ -243,7 +245,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection|BankAccount[]
+     * @return Collection<int, BankAccount>
      */
     public function getBankAccounts(): Collection
     {

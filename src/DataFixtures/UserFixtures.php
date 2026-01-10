@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataFixtures;
 
 // Entity
@@ -27,7 +29,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $this->hasher = $hasher;
     }
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         // Users
         $users = [
@@ -80,7 +82,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 
                 $user->setPassword($this->hasher->hashPassword($user, 'pass'));
 
-                if(isset($user_data['role']) && !empty($user_data['role'])) {
+                if(isset($user_data['role']) && (isset($user_data['role']) && ($user_data['role'] !== '' && $user_data['role'] !== '0'))) {
                     $user->setRole($user_data['role']);
                 } else {
                     $user->setRole('ROLE_USER');

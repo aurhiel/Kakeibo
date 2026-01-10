@@ -56,7 +56,7 @@ class BankAccount
     /**
     * According to transactions sum
     */
-    private $balance = null;
+    private $balance;
 
     /**
      * @ORM\OneToMany(targetEntity=TransactionAuto::class, mappedBy="bank_account", orphanRemoval=true)
@@ -126,13 +126,14 @@ class BankAccount
 
     public function getBalance(): float
     {
-        if (is_null($this->balance) === true) {
+        if (is_null($this->balance)) {
             $now = new \DateTime();
-            foreach ($this->transactions as $key => $transaction) {
+            foreach ($this->transactions as $transaction) {
                 // Add transaction only when < current date ($now)
                 //  (future transactions will be displayed elsewhere)
-                if ($transaction->getDate() <= $now)
+                if ($transaction->getDate() <= $now) {
                     $this->balance += $transaction->getAmount();
+                }
             }
         }
 
@@ -213,11 +214,9 @@ class BankAccount
 
     public function removeTransactionAuto(TransactionAuto $transactionAuto): self
     {
-        if ($this->transaction_autos->removeElement($transactionAuto)) {
-            // set the owning side to null (unless already changed)
-            if ($transactionAuto->getBankAccount() === $this) {
-                $transactionAuto->setBankAccount(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->transaction_autos->removeElement($transactionAuto) && $transactionAuto->getBankAccount() === $this) {
+            $transactionAuto->setBankAccount(null);
         }
 
         return $this;

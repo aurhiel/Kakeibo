@@ -17,8 +17,6 @@ class BankAccountType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $is_edit = ($options['type_form'] == 'edit');
-
         $builder
             ->add('label', TextType::class, array(
                 'label'         => 'form_bank_account.label.label',

@@ -43,18 +43,20 @@ class AutomatonController extends AbstractController
     public function index(?int $id, Request $request): Response
     {
         // Force user to create at least ONE bank account !
-        if (count($this->user->getBankAccounts()) < 1)
+        if (count($this->user->getBankAccounts()) < 1) {
             return $this->redirectToRoute('ignition-first-bank-account');
+        }
 
-        $is_edit = (!empty($id) && ((int) $id) > 0);
+        $is_edit = ($id !== null && $id !== 0 && ((int) $id) > 0);
         $return_data = [];
 
         // User has a bank account
         $default_bank_account = $this->user->getDefaultBankAccount();
 
         // Force user to add or import transaction(s) first
-        if (count($default_bank_account->getTransactions()) < 1)
+        if (count($default_bank_account->getTransactions()) < 1) {
             return $this->redirectToRoute('ignition-first-transaction');
+        }
 
         // Initialize default message & change entity if needed
         if($is_edit) {
@@ -130,8 +132,9 @@ class AutomatonController extends AbstractController
             }
 
             // Redirect to home after form submit to clear it
-            if ($trans_auto_form->isSubmitted())
+            if ($trans_auto_form->isSubmitted()) {
                 return $this->redirectToRoute('automaton');
+            }
 
             return $this->render('automaton/index.html.twig', [
                 'core_class'  => 'app-core--automaton app-core--merge-body-in-header',

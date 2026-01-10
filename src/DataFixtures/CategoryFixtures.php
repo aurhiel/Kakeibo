@@ -78,8 +78,9 @@ class CategoryFixtures extends Fixture implements DependentFixtureInterface
                 ->setIsDefault(true)
                 ->setUser($user);
 
-            if (isset($data['regex']))
+            if (isset($data['regex'])) {
                 $category->setImportRegex($data['regex']);
+            }
 
             // Save
             $manager->persist($category);

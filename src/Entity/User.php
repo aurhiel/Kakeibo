@@ -50,7 +50,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(name="is_active", type="boolean")
      */
-    private $isActive;
+    private $isActive = true;
 
     /**
      * @ORM\Column(type="string", length=64)
@@ -76,7 +76,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->isActive = true;
         // TODO add the user's Timezone
         $this->registerDate = new \DateTime();
         $this->categories = new ArrayCollection();

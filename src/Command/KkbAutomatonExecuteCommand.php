@@ -59,7 +59,7 @@ class KkbAutomatonExecuteCommand extends Command
         $r_trans_auto = $em->getRepository(TransactionAuto::class);
         $trans_to_exec = $r_trans_auto->findAllToExecuteByRepeatType($repeat_type);
 
-        if (true === $dry_run) {
+        if ($dry_run) {
             $io->warning('Command is running in dry mode, no changes will be applied');
         }
 
@@ -70,10 +70,8 @@ class KkbAutomatonExecuteCommand extends Command
             // Add section text & init progressbar
             $io->section('Adding new transactions:');
             $io->progressStart(count($trans_to_exec));
-
             // Get now DateTime to assign later
             $now = new \DateTime();
-
             // Loop on recurrent transactions
             foreach ($trans_to_exec as $trans_auto) {
                 // Create new transaction & fill data according to recurrent transaction values
@@ -94,9 +92,7 @@ class KkbAutomatonExecuteCommand extends Command
                 // Update progressbar
                 $io->progressAdvance();
             }
-
             $io->progressFinish();
-
             // Save new transactions in database & update recurrents transactions
             if (false === $dry_run) {
                 try {
@@ -105,19 +101,16 @@ class KkbAutomatonExecuteCommand extends Command
                     $error = $e->getMessage();
                 }
             }
-
             // Display error or success message
             if (!is_null($error)) {
                 $io->error('Something goes wrong during the adding of new transactions ! (' . $error . ')');
             } else {
                 $io->success('New transactions correctly added.');
             }
+        } elseif ($trans_to_exec === TransactionAuto::ERR_UNKNOWN_RTYPE) {
+            $io->error('Unknown recurrent transations repeat type (Given type: ' . $repeat_type . ', valid types: ' . implode(', ', TransactionAuto::RT_LIST) . ').');
         } else {
-            if ($trans_to_exec === TransactionAuto::ERR_UNKNOWN_RTYPE) {
-                $io->error('Unknown recurrent transations repeat type (Given type: ' . $repeat_type . ', valid types: ' . implode(', ', TransactionAuto::RT_LIST) . ').');
-            } else {
-                $io->section('No recurrent transactions to execute.');
-            }
+            $io->section('No recurrent transactions to execute.');
         }
 
         return is_null($error) ? Command::SUCCESS : Command::FAILURE;

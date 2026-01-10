@@ -51,8 +51,11 @@ class TransactionAutoRepository extends ServiceEntityRepository
             ->setParameter('bank_account', $bank_account);
 
         // WHERE: Incomes or Expenses ?
-        if ($spent_type == 'incomes') $qb->andWhere('ta.amount > 0');
-        else $qb->andWhere('ta.amount < 0');
+        if ($spent_type == 'incomes') {
+            $qb->andWhere('ta.amount > 0');
+        } else {
+            $qb->andWhere('ta.amount < 0');
+        }
 
         return $qb->getQuery()
             ->getSingleScalarResult();
@@ -66,7 +69,7 @@ class TransactionAutoRepository extends ServiceEntityRepository
         } else {
             // Retrieve date type to remove (day/week/month/year)
             //  according to repeat type
-            $date_last_remove = ($repeat_type == TransactionAuto::RT_DAILY) ? 'DAY' : str_replace('LY', '', $repeat_type);
+            $date_last_remove = ($repeat_type === TransactionAuto::RT_DAILY) ? 'DAY' : str_replace('LY', '', $repeat_type);
 
             return $this->createQueryBuilder('ta')
                 ->join('ta.bank_account', 'ba')

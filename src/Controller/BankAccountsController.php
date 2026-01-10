@@ -33,10 +33,11 @@ class BankAccountsController extends AbstractController
     public function index(?int $id, Request $request): Response
     {
         // Force user to create at least ONE bank account !
-        if (count($this->user->getBankAccounts()) < 1)
+        if (count($this->user->getBankAccounts()) < 1) {
             return $this->redirectToRoute('ignition-first-bank-account');
+        }
 
-        $is_edit = (!empty($id) && ((int) $id) > 0);
+        $is_edit = ($id !== null && $id !== 0 && ((int) $id) > 0);
         $return_data = [];
 
         if ($is_edit) {
@@ -80,8 +81,9 @@ class BankAccountsController extends AbstractController
                 $session->getFlashBag()->add($return_data['slug_status'], $return_data['message_status']);
             }
 
-            if ($form->isSubmitted())
+            if ($form->isSubmitted()) {
                 return $this->redirectToRoute('bank_accounts');
+            }
 
             return $this->render('bank-accounts/index.html.twig', [
                 'core_class'  => 'app-core--bank-accounts app-core--merge-body-in-header',
@@ -128,7 +130,7 @@ class BankAccountsController extends AbstractController
         } else {
             $return_data['message_status'] = $this->translator->trans(sprintf(
                 'form_bank_account.status.%s',
-                null !== $entity && $entity->isDefault() ? 'delete_default_nok' : 'unknown_entity',
+                $entity instanceof \App\Entity\BankAccount && $entity->isDefault() ? 'delete_default_nok' : 'unknown_entity',
             ));
         }
 

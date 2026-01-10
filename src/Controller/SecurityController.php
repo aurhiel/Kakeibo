@@ -39,8 +39,9 @@ class SecurityController extends AbstractController
       MailerInterface $mailer,
       UserRepository $userRepository
     ): Response {
-        if (true === $authChecker->isGranted('IS_AUTHENTICATED_FULLY'))
+        if (true === $authChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
             return $this->redirectToRoute('dashboard');
+        }
 
         /** @var Session $session */
         $session = $request->getSession();
@@ -67,7 +68,7 @@ class SecurityController extends AbstractController
                 $this->entityManager->persist($user);
 
                 // 6) User already exist ?
-                if(!empty($userRepository->loadUserByUsername($user->getUsername()))) {
+                if($userRepository->loadUserByUsername($user->getUsername()) instanceof \App\Entity\User) {
                   $session->getFlashBag()->add('error', $this->translator->trans('page.register.messages.already_registered'));
                 } else {
                     // 7) Try or clear
@@ -128,8 +129,9 @@ class SecurityController extends AbstractController
         AuthenticationUtils $authenticationUtils,
         AuthorizationCheckerInterface $authChecker
     ): Response {
-        if (true === $authChecker->isGranted('IS_AUTHENTICATED_FULLY'))
+        if (true === $authChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
             return $this->redirectToRoute('dashboard');
+        }
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();

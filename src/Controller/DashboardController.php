@@ -42,15 +42,17 @@ class DashboardController extends AbstractController
     public function index(): Response
     {
         // Force user to create at least ONE bank account !
-        if (count($this->user->getBankAccounts()) < 1)
+        if (count($this->user->getBankAccounts()) < 1) {
             return $this->redirectToRoute('ignition-first-bank-account');
+        }
 
         // User has a bank account
         $default_bank_account = $this->user->getDefaultBankAccount();
 
         // Force user to add or import transaction(s) first
-        if (count($default_bank_account->getTransactions()) < 1)
+        if (count($default_bank_account->getTransactions()) < 1) {
             return $this->redirectToRoute('ignition-first-transaction');
+        }
 
         $last_trans = $this->transcationRepository->findLastByBankAccount($default_bank_account, self::NB_LAST_TRANS);
         $date_start = date('Y-m-01');

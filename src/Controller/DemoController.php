@@ -26,8 +26,9 @@ class DemoController extends AbstractController
         $user = $security->getUser();
 
         // Force user to create at least ONE bank account !
-        if(count($user->getBankAccounts()) < 1)
+        if (count($user->getBankAccounts()) < 1) {
             return $this->redirectToRoute('ignition-first-bank-account');
+        }
 
         return $this->render('demo/index.html.twig', [
             'page_title' => '<span class="icon icon-save"></span> Demo',

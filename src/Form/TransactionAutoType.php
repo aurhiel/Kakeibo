@@ -42,7 +42,7 @@ class TransactionAutoType extends AbstractType
         $min_datetime = new \DateTime('now + 1 day');
         $date_start_attrs = ['min' => $min_datetime->format('Y-m-d'), 'value' => $min_datetime->format('Y-m-d')];
 
-        if ($is_edit == true) {
+        if ($is_edit) {
             // Set date start field as readonly if already launched
             if (!empty($options['data']->getDateLast())) {
                 $date_start_attrs['readonly'] = true;

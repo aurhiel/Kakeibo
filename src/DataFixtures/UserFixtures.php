@@ -80,7 +80,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 
                 $user->setPassword($this->hasher->hashPassword($user, 'pass'));
 
-                if(isset($user_data['role']) && !empty($user_data['role'])) {
+                if(isset($user_data['role']) && (isset($user_data['role']) && ($user_data['role'] !== '' && $user_data['role'] !== '0'))) {
                     $user->setRole($user_data['role']);
                 } else {
                     $user->setRole('ROLE_USER');

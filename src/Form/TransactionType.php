@@ -30,7 +30,6 @@ class TransactionType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $is_edit = ($options['type_form'] == 'edit');
         $user = $this->user;
 
         $builder

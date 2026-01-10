@@ -49,9 +49,10 @@ class TransactionRepository extends ServiceEntityRepository
             ->setParameter('bank_account', $bank_account);
 
         // WHERE: transaction's date start
-        if (!is_null($date_start))
+        if (!is_null($date_start)) {
             $qb->andWhere('t.date >= :date_start')
                 ->setParameter('date_start', $date_start);
+        }
         // WHERE: transaction's date end
         if (!is_null($date_end)) {
             if ($date_end == 'now') {
@@ -77,9 +78,10 @@ class TransactionRepository extends ServiceEntityRepository
             ->setParameter('bank_account', $bank_account);
 
         // WHERE: transaction's date start
-        if (!is_null($date_start))
+        if (!is_null($date_start)) {
             $qb->andWhere('t.date >= :date_start')
                 ->setParameter('date_start', $date_start);
+        }
         // WHERE: transaction's date end
         if (!is_null($date_end)) {
             if ($date_end == 'now') {
@@ -128,13 +130,17 @@ class TransactionRepository extends ServiceEntityRepository
             ->setParameter('bank_account', $bank_account);
 
         // WHERE: Incomes or Expenses ?
-        if ($spent_type == 'incomes') $qb->andWhere('t.amount > 0');
-        else $qb->andWhere('t.amount < 0');
+        if ($spent_type == 'incomes') {
+            $qb->andWhere('t.amount > 0');
+        } else {
+            $qb->andWhere('t.amount < 0');
+        }
 
         // WHERE: transaction's date start
-        if (!is_null($date_start))
+        if (!is_null($date_start)) {
             $qb->andWhere('t.date >= :date_start')
                 ->setParameter('date_start', $date_start);
+        }
         // WHERE: transaction's date end
         if (!is_null($date_end)) {
             if ($date_end == 'now') {
@@ -160,13 +166,17 @@ class TransactionRepository extends ServiceEntityRepository
             ->setParameter('bank_account', $bank_account);
 
         // WHERE: Incomes or Expenses ?
-        if ($spent_type == 'incomes') $qb->andWhere('t.amount > 0');
-        else $qb->andWhere('t.amount < 0');
+        if ($spent_type == 'incomes') {
+            $qb->andWhere('t.amount > 0');
+        } else {
+            $qb->andWhere('t.amount < 0');
+        }
 
         // WHERE: transaction's date start
-        if (!is_null($date_start))
+        if (!is_null($date_start)) {
             $qb->andWhere('t.date >= :date_start')
                 ->setParameter('date_start', $date_start);
+        }
         // WHERE: transaction's date end
         if (!is_null($date_end)) {
             if ($date_end == 'now') {

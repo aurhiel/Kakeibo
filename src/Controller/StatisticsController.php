@@ -145,7 +145,7 @@ class StatisticsController extends AbstractController
         ]);
     }
 
-    private function reindexByDate($transactions): array
+    private function reindexByDate(array $transactions): array
     {
         $tmp = [];
         foreach ($transactions as $trans) {
@@ -155,7 +155,7 @@ class StatisticsController extends AbstractController
         return $tmp;
     }
 
-    private function completeEmptyDate(&$transactions, $completer): void
+    private function completeEmptyDate(array &$transactions, $completer): void
     {
         foreach ($completer as $date => $comp) {
             if (!isset($transactions[$date])) {

@@ -15,7 +15,7 @@ class AppExtension extends AbstractExtension
         ];
     }
 
-    public function anonymize($string, $anonymizeCharacter = '*', $nbCharacVisible = 1)
+    public function anonymize($string, $anonymizeCharacter = '*', $nbCharacVisible = 1): string
     {
         $str_array = str_split($string);
 

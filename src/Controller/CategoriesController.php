@@ -101,7 +101,7 @@ class CategoriesController extends AbstractController
         }
     }
 
-    private function format_json(Category $category)
+    private function format_json(Category $category): array
     {
         return [
             'id'    => $category->getId(),

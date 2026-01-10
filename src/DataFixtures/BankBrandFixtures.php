@@ -11,7 +11,7 @@ use Doctrine\Persistence\ObjectManager;
 
 class BankBrandFixtures extends Fixture
 {
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $bank_brands = [
             [ 'label' => "BNP Paribas" ],

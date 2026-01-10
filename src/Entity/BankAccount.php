@@ -68,7 +68,7 @@ class BankAccount
      */
     private $is_archived = false;
 
-    public function __construct($user)
+    public function __construct(?User $user)
     {
         $this->transactions = new ArrayCollection();
 

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\BankAccount;
 use App\Entity\Category;
 use App\Entity\Transaction;
 use App\Entity\User;
@@ -562,7 +563,7 @@ class TransactionsController extends AbstractController
         ];
     }
 
-    private function format_json_bank_account($bank_account): array
+    private function format_json_bank_account(?BankAccount $bank_account): array
     {
         $currency = $bank_account->getCurrency();
         return [

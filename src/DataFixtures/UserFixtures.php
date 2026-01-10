@@ -27,7 +27,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $this->hasher = $hasher;
     }
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         // Users
         $users = [

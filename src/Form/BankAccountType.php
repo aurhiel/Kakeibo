@@ -15,7 +15,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class BankAccountType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('label', TextType::class, [
@@ -33,14 +33,14 @@ class BankAccountType extends AbstractType
             ->add('currency', EntityType::class, [
                 'class'         => Currency::class,
                 'label'         => 'form_bank_account.currency.label',
-                'choice_label'  => function ($currency) {
+                'choice_label'  => function ($currency): string {
                     return $currency->getLabel().' - '.$currency->getName();
                 }
             ])
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => BankAccount::class,

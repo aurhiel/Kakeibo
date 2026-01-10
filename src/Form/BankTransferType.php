@@ -117,7 +117,7 @@ class BankTransferType extends AbstractType
 
                     return $qb;
                 },
-                'choice_label' => function (BankAccount $bankAccount) {
+                'choice_label' => function (BankAccount $bankAccount): string {
                     return sprintf('%s (%s)', $bankAccount->getLabel(), $bankAccount->getBankBrand()->getLabel());
                 }
             ])

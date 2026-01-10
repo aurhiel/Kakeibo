@@ -24,7 +24,7 @@ class UserCrudController extends AbstractCrudController
         return Actions::new()
             ->addBatchAction(Action::BATCH_DELETE)
             ->add(Crud::PAGE_INDEX, Action::DELETE)
-            ->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
+            ->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action): Action {
                 return $action->setIcon('fa fa-trash')->setLabel(false);
             })
         ;

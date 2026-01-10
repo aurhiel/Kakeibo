@@ -15,7 +15,7 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 class CategoryFixtures extends Fixture implements DependentFixtureInterface
 {
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $categories = [
             [ 'label' => 'Divers',          'slug' => 'misc',

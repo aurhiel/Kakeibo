@@ -15,7 +15,7 @@ class Date extends FunctionNode
     {
         return "DATE(" . $sqlWalker->walkArithmeticPrimary($this->date) . ")";
     }
-    public function parse(Parser $parser)
+    public function parse(Parser $parser): void
     {
         $parser->match(Lexer::T_IDENTIFIER);
         $parser->match(Lexer::T_OPEN_PARENTHESIS);

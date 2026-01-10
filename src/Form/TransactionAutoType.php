@@ -28,7 +28,7 @@ class TransactionAutoType extends AbstractType
         $this->user = $security->getUser();
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $is_edit = ($options['type_form'] == 'edit');
         $user = $this->user;
@@ -103,7 +103,7 @@ class TransactionAutoType extends AbstractType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             // 'csrf_protection' => false, // NOTE : Remove CSRF protection to get ajax submit working

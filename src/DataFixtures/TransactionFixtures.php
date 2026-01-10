@@ -16,7 +16,7 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 class TransactionFixtures extends Fixture implements DependentFixtureInterface
 {
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         // Retrieve users list
         $r_users  = $manager->getRepository(User::class);

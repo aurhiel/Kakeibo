@@ -122,7 +122,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->username = $username;
     }
 
-    public function getUserIdentifier()
+    public function getUserIdentifier(): string
     {
         return $this->username;
     }
@@ -160,7 +160,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     // Roles
-    public function getRoles()
+    public function getRoles(): array
     {
         return [empty($this->role) ? 'ROLE_USER' : $this->role];
     }

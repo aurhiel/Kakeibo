@@ -155,9 +155,9 @@ class StatisticsController extends AbstractController
         return $tmp;
     }
 
-    private function completeEmptyDate(array &$transactions, $completer): void
+    private function completeEmptyDate(array &$transactions, array $completer): void
     {
-        foreach ($completer as $date => $comp) {
+        foreach (array_keys($completer) as $date) {
             if (!isset($transactions[$date])) {
                 $transactions[$date] = ['amount_sum' => 0, 'date' => $date];
             }

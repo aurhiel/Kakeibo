@@ -12,6 +12,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  * @method Transaction|null findOneBy(array $criteria, array $orderBy = null)
  * @method Transaction[]    findAll()
  * @method Transaction[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @extends ServiceEntityRepository<Transaction>
  */
 class TransactionRepository extends ServiceEntityRepository
 {

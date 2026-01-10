@@ -211,7 +211,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection|Category[]
+     * @return Collection<int, Category>
      */
     public function getCategories(): Collection
     {
@@ -242,7 +242,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection|BankAccount[]
+     * @return Collection<int, BankAccount>
      */
     public function getBankAccounts(): Collection
     {

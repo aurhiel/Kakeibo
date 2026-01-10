@@ -11,6 +11,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method BankBrand|null findOneBy(array $criteria, array $orderBy = null)
  * @method BankBrand[]    findAll()
  * @method BankBrand[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @extends ServiceEntityRepository<BankBrand>
  */
 class BankBrandRepository extends ServiceEntityRepository
 {

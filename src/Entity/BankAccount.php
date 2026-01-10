@@ -94,7 +94,7 @@ class BankAccount
     }
 
     /**
-     * @return Collection|Transaction[]
+     * @return Collection<int, Transaction>
      */
     public function getTransactions(): Collection
     {
@@ -195,7 +195,7 @@ class BankAccount
     }
 
     /**
-     * @return Collection|TransactionAuto[]
+     * @return Collection<int, TransactionAuto>
      */
     public function getTransactionAutos(): Collection
     {

@@ -11,6 +11,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method TransactionAuto|null findOneBy(array $criteria, array $orderBy = null)
  * @method TransactionAuto[]    findAll()
  * @method TransactionAuto[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @extends ServiceEntityRepository<TransactionAuto>
  */
 class TransactionAutoRepository extends ServiceEntityRepository
 {

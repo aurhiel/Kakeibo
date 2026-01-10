@@ -14,10 +14,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class CategoryType extends AbstractType
 {
-    public function __construct(ContainerInterface $container) {
-        $this->container = $container;
+    public function __construct(private ContainerInterface $container) {
     }
-    
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $icons = $this->container->getParameter('app.category_icons');

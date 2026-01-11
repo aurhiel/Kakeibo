@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -29,9 +29,7 @@ class BankAccountsController extends AbstractController
         $this->user = $security->getUser();
     }
 
-    /**
-     * @Route("/comptes-bancaires/{id}", name="bank_accounts", defaults={"id"=null})
-     */
+    #[Route('/comptes-bancaires/{id}', name: 'bank_accounts', defaults: ['id' => null])]
     public function index(?int $id, Request $request): Response
     {
         // Force user to create at least ONE bank account !
@@ -97,9 +95,7 @@ class BankAccountsController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/comptes-bancaires/delete/{id}", name="bank_accounts_delete")
-     */
+    #[Route('/comptes-bancaires/delete/{id}', name: 'bank_accounts_delete')]
     public function delete(int $id, Request $request): Response
     {
         $entity = $this->bankAccountRepository->findOneByIdAndUser($id, $this->user);
@@ -149,9 +145,7 @@ class BankAccountsController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/comptes-bancaires/toggle/{id}", name="bank_accounts_toggle")
-     */
+    #[Route('/comptes-bancaires/toggle/{id}', name: 'bank_accounts_toggle')]
     public function toggle(int $id, Request $request): Response
     {
         $entity = $this->bankAccountRepository->findOneByIdAndUser($id, $this->user);
@@ -196,9 +190,7 @@ class BankAccountsController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/comptes-bancaires/switch-default/{id}", name="bank_accounts_switch_default")
-     */
+    #[Route('/comptes-bancaires/switch-default/{id}', name: 'bank_accounts_switch_default')]
     public function switchDefault(int $id, Request $request): Response
     {
         $entity = $this->bankAccountRepository->findOneByIdAndUser($id, $this->user);

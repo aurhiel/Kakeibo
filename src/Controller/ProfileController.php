@@ -11,18 +11,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Security;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
-  * Require ROLE_USER for *every* controller method in this class.
-  *
-  * @IsGranted("ROLE_USER")
-  */
+#[IsGranted('ROLE_USER')]
 class ProfileController extends AbstractController
 {
     private readonly User $user;
@@ -35,9 +31,7 @@ class ProfileController extends AbstractController
         $this->user = $security->getUser();
     }
 
-    /**
-     * @Route("/profil", name="user_profile")
-     */
+    #[Route('/profil', name: 'user_profile')]
     public function profile(
         Request $request,
         UserPasswordHasherInterface $passwordHasher

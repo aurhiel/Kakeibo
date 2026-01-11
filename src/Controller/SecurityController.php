@@ -17,7 +17,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -31,9 +31,7 @@ class SecurityController extends AbstractController
     ) {
     }
 
-    /**
-     * @Route("/inscription", name="user_registration")
-     */
+    #[Route('/inscription', name: 'user_registration')]
     public function register(
       Request $request,
       AuthorizationCheckerInterface $authChecker,
@@ -123,10 +121,7 @@ class SecurityController extends AbstractController
         );
     }
 
-
-    /**
-     * @Route("/connexion", name="login")
-     */
+    #[Route('/connexion', name: 'login')]
     public function login(
         AuthenticationUtils $authenticationUtils,
         AuthorizationCheckerInterface $authChecker
@@ -148,9 +143,7 @@ class SecurityController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/logout", name="logout")
-     */
+    #[Route('/logout', name: 'logout')]
     public function logout(): void
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');

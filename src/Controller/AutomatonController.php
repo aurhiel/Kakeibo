@@ -14,17 +14,13 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
-  * Require ROLE_USER for *every* controller method in this class.
-  *
-  * @IsGranted("ROLE_USER")
-  */
+#[IsGranted('ROLE_USER')]
 class AutomatonController extends AbstractController
 {
     private readonly User $user;
@@ -39,9 +35,7 @@ class AutomatonController extends AbstractController
         $this->user = $security->getUser();
     }
 
-    /**
-     * @Route("/automaton/{id}", name="automaton", defaults={"id"=null})
-     */
+    #[Route('/automaton/{id}', name: 'automaton', defaults: ['id' => null])]
     public function index(?int $id, Request $request): Response
     {
         // Force user to create at least ONE bank account !
@@ -153,9 +147,7 @@ class AutomatonController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/trans-auto/delete/{id}", name="automaton_trans_auto_delete")
-     */
+    #[Route('/trans-auto/delete/{id}', name: 'automaton_trans_auto_delete')]
     public function trans_auto_delete(int $id, Request $request): Response
     {
         $trans_auto = $this->transactionAutoRepository->findOneByIdAndUser($id, $this->user);

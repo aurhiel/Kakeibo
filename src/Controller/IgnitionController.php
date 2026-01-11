@@ -29,11 +29,11 @@ class IgnitionController extends AbstractController
 {
     private const NB_STEPS = 2;
 
-    private User $user;
+    private readonly User $user;
 
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private TranslatorInterface $translator,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly TranslatorInterface $translator,
         Security $security,
     ) {
         $this->user = $security->getUser();
@@ -74,7 +74,7 @@ class IgnitionController extends AbstractController
 
                 // Redirect to first transaction
                 return $this->redirectToRoute('ignition-first-transaction');
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 $session->getFlashBag()->add('error', $this->translator->trans('form.errors.generic'));
                 $this->entityManager->clear();
             }
@@ -133,7 +133,7 @@ class IgnitionController extends AbstractController
 
                 // Redirect to Dashboard
                 return $this->redirectToRoute('dashboard');
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 $session->getFlashBag()->add('error', $this->translator->trans('form.errors.generic'));
                 $this->entityManager->clear();
             }

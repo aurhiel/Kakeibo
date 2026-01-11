@@ -12,18 +12,18 @@ class AppExtension extends AbstractExtension
     public function getFilters()
     {
         return [
-            new TwigFilter('anonymize', [$this, 'anonymize']),
-            new TwigFilter('intval',    fn ($value) => intval($value)),
+            new TwigFilter('anonymize', $this->anonymize(...)),
+            new TwigFilter('intval',    fn ($value): int => intval($value)),
         ];
     }
 
     public function anonymize($string, $anonymizeCharacter = '*', $nbCharacVisible = 1): string
     {
-        $str_array = str_split($string);
+        $str_array = str_split((string) $string);
 
         // Anonymize all string if it's smaller than the amount
         //  of characters visible
-        if (strlen($string) <= ($nbCharacVisible * 2)) {
+        if (strlen((string) $string) <= ($nbCharacVisible * 2)) {
             $nbCharacVisible = 0;
         }
 

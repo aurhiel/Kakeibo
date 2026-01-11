@@ -24,7 +24,7 @@ use Symfony\Component\Security\Core\Security;
 
 class TransactionAutoType extends AbstractType
 {
-    private User $user;
+    private readonly User $user;
 
     public function __construct(Security $security)
     {
@@ -91,17 +91,13 @@ class TransactionAutoType extends AbstractType
                 'label'         => 'form_trans_auto.category.label',
                 'placeholder'   => 'form_trans_auto.category.placeholder',
                 'attr'          => ['class' => 'custom-select'],
-                'query_builder' => function (CategoryRepository $r) use ($user) {
-                    return $r->createQueryBuilder('c')
-                        ->where('c.is_default = true')
-                        ->orWhere('c.user = :userId')
-                        ->setParameter('userId', $user->getId())
-                        // Order on theme name
-                        ->addOrderBy('c.label', 'ASC');
-                },
-                'choice_label'  => function ($category) {
-                    return $category->getLabel();
-                }
+                'query_builder' => fn(CategoryRepository $r) => $r->createQueryBuilder('c')
+                    ->where('c.is_default = true')
+                    ->orWhere('c.user = :userId')
+                    ->setParameter('userId', $user->getId())
+                    // Order on theme name
+                    ->addOrderBy('c.label', 'ASC'),
+                'choice_label'  => fn($category) => $category->getLabel()
             ])
         ;
     }

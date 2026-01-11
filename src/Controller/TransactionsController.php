@@ -33,14 +33,14 @@ class TransactionsController extends AbstractController
 {
     const NB_TRANSAC_BY_PAGE = 50;
 
-    private User $user;
+    private readonly User $user;
 
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private TransactionRepository $transactionRepository,
-        private CategoryRepository $categoryRepository,
-        private TranslatorInterface $translator,
-        private TransactionManager $transactionManager,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly TransactionRepository $transactionRepository,
+        private readonly CategoryRepository $categoryRepository,
+        private readonly TranslatorInterface $translator,
+        private readonly TransactionManager $transactionManager,
         Security $security,
     ) {
         $this->user = $security->getUser();
@@ -415,7 +415,7 @@ class TransactionsController extends AbstractController
 
                 // Retrieve bank code
                 if ($row === 1) {
-                    $bank_code = explode(' : ', $data[0]);
+                    $bank_code = explode(' : ', (string) $data[0]);
                     $bank_code = (isset($bank_code[1])) ? (int) $bank_code[1] : false;
                 }
 
@@ -430,12 +430,12 @@ class TransactionsController extends AbstractController
                             $credit   = (float) str_replace(',', '.', $data[4]);
                             $amount   = ($credit > 0) ? $credit : (($debit < 0) ? $debit : false);
                             $label    = trim($data[2]);
-                            $details  = trim($data[5]);
+                            $details  = trim((string) $data[5]);
                             $category = $this->findCategoryAccordingToLabel($categories, $label);
 
                             // Check amount before creating the new transaction
                             if ($amount !== false) {
-                                $date     = explode('/', $data[0]);
+                                $date     = explode('/', (string) $data[0]);
                                 $datetime = new \DateTime('20'.$date[2].'-'.$date[1].'-'.$date[0]);
                                 // $datetime->setTimestamp(strtotime('20'.$date[2].'-'.$date[1].'-'.$date[0]));
 
@@ -500,7 +500,7 @@ class TransactionsController extends AbstractController
             // Flush OK !
             $this->entityManager->flush();
             $session->getFlashBag()->add('success', 'Importation des transactions effectuée avec succès.');
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $this->entityManager->clear();
             $session->getFlashBag()->add('error', $this->translator->trans('form.errors.generic'));
         }

@@ -39,7 +39,7 @@ class TransactionAuto
 
     #[ORM\ManyToOne(targetEntity: BankAccount::class, inversedBy: 'transaction_autos')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?BankAccount $bank_account;
+    private ?BankAccount $bank_account = null;
 
     #[ORM\ManyToOne(targetEntity: Category::class)]
     #[ORM\JoinColumn(nullable: false)]
@@ -52,10 +52,10 @@ class TransactionAuto
     private \DateTimeInterface $date_start;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $date_last;
+    private ?\DateTimeInterface $date_last = null;
 
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
-    private ?string $details;
+    private ?string $details = null;
 
     #[ORM\Column(type: Types::BOOLEAN)]
     private bool $is_active;

@@ -25,11 +25,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
   */
 class ProfileController extends AbstractController
 {
-    private User $user;
+    private readonly User $user;
 
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private TranslatorInterface $translator,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly TranslatorInterface $translator,
         Security $security,
     ) {
         $this->user = $security->getUser();
@@ -58,7 +58,7 @@ class ProfileController extends AbstractController
             try {
                 $session->getFlashBag()->add('success', 'Modification(s) effectuée(s) avec succès.');
                 $this->entityManager->flush();
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 $session->getFlashBag()->add('error', $this->translator->trans('form.errors.generic'));
                 $this->entityManager->clear();
             }

@@ -27,12 +27,12 @@ class DashboardController extends AbstractController
 {
     const NB_LAST_TRANS = 20;
 
-    private ?User $user;
+    private readonly ?User $user;
 
     public function __construct(
-        private TranslatorInterface $translator,
-        private TransactionRepository $transcationRepository,
-        private CategoryRepository $categoryRepository,
+        private readonly TranslatorInterface $translator,
+        private readonly TransactionRepository $transcationRepository,
+        private readonly CategoryRepository $categoryRepository,
         Security $security,
     ) {
         $this->user = $security->getUser();

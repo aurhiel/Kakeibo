@@ -29,16 +29,12 @@ class BankAccountType extends AbstractType
                 'class'         => BankBrand::class,
                 'label'         => 'form_bank_account.bank_brand.label',
                 'placeholder'   => 'form_bank_account.bank_brand.placeholder',
-                'choice_label'  => function ($bank_brand) {
-                    return $bank_brand->getLabel();
-                }
+                'choice_label'  => fn($bank_brand) => $bank_brand->getLabel()
             ])
             ->add('currency', EntityType::class, [
                 'class'         => Currency::class,
                 'label'         => 'form_bank_account.currency.label',
-                'choice_label'  => function ($currency): string {
-                    return $currency->getLabel().' - '.$currency->getName();
-                }
+                'choice_label'  => fn($currency): string => $currency->getLabel().' - '.$currency->getName()
             ])
         ;
     }

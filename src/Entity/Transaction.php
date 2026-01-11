@@ -34,7 +34,7 @@ class Transaction
     private \DateTimeInterface $date;
 
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
-    private ?string $details;
+    private ?string $details = null;
 
     #[ORM\OneToOne(targetEntity: Transaction::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]

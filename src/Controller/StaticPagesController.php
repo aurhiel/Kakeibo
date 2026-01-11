@@ -12,7 +12,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class StaticPagesController extends AbstractController
 {
 
-    private $page_config = [];
+    private array $page_config = [];
 
     // ML: @Route("/{_locale}/{slug}.html", name="static_pages")
     /**

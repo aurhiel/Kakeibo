@@ -28,15 +28,15 @@ class BankAccount
 
     #[ORM\ManyToOne(targetEntity: BankBrand::class, fetch: 'EAGER')]
     #[ORM\JoinColumn(nullable: true)]
-    private $bank_brand;
+    private ?BankBrand $bank_brand = null;
 
     #[ORM\ManyToOne(targetEntity: Currency::class, fetch: 'EAGER')]
     #[ORM\JoinColumn(nullable: false)]
-    private $currency;
+    private ?Currency $currency = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, fetch: 'EAGER', inversedBy: 'bankAccounts')]
     #[ORM\JoinColumn(nullable: false)]
-    private $user;
+    private ?User $user = null;
 
     #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
     private bool$is_default = false;

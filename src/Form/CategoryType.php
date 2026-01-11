@@ -17,14 +17,14 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class CategoryType extends AbstractType
 {
-    public function __construct(private array $categoryIcons) {
+    public function __construct(private readonly array $categoryIcons) {
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         // Generate repeat type <select> options
         $icons_choices = array_combine(
-            array_map(static fn($slug) => "category.icons.$slug", $this->categoryIcons),
+            array_map(static fn($slug): string => "category.icons.$slug", $this->categoryIcons),
             $this->categoryIcons
         );
 

@@ -26,11 +26,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
   */
 class CategoriesController extends AbstractController
 {
-    private User $user;
+    private readonly User $user;
 
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private CategoryRepository $categoryRepository,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly CategoryRepository $categoryRepository,
         Security $security,
     ) {
         $this->user = $security->getUser();

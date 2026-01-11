@@ -29,14 +29,14 @@ class Category
     private string $icon;
 
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
-    private ?string $import_regex;
+    private ?string $import_regex = null;
 
     #[ORM\Column(type: Types::BOOLEAN)]
     private bool $is_default;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'categories')]
     #[ORM\JoinColumn(nullable: false)]
-    private $user;
+    private ?User $user = null;
 
     public function getId(): int
     {

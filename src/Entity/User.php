@@ -31,7 +31,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[Assert\NotBlank()]
     #[Assert\Length(max: 4096)]
-    private ?string $plainPassword;
+    private ?string $plainPassword = null;
 
     /**
      * The below length depends on the "algorithm" you use for hashing
@@ -87,7 +87,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function setEmail($email): self
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 
@@ -100,7 +100,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->username;
     }
 
-    public function setUsername($username): void
+    public function setUsername(string $username): void
     {
         $this->username = $username;
     }
@@ -116,7 +116,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->plainPassword;
     }
 
-    public function setPlainPassword($password): self
+    public function setPlainPassword(?string $password): self
     {
         $this->plainPassword = $password;
 
@@ -129,7 +129,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
-    public function setPassword($password): self
+    public function setPassword(string $password): self
     {
         $this->password = $password;
 
@@ -137,7 +137,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     // Salt
-    public function getSalt()
+    public function getSalt(): null
     {
         return null;
     }
@@ -148,7 +148,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return [!isset($this->role) || ($this->role === '' || $this->role === '0') ? 'ROLE_USER' : $this->role];
     }
 
-    public function setRole($role): self
+    public function setRole(string $role): self
     {
         $this->role = $role;
 
@@ -176,12 +176,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return true;
     }
 
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return $this->isActive;
     }
 
-    public function getIsActive()
+    public function getIsActive(): bool
     {
         return $this->isActive;
     }
@@ -240,7 +240,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getBankAccountsActive(): Collection
     {
-        return $this->bankAccounts->filter(static fn (BankAccount $bankAccount) => false === $bankAccount->isArchived());
+        return $this->bankAccounts->filter(static fn (BankAccount $bankAccount): bool => false === $bankAccount->isArchived());
     }
 
     public function addBankAccount(BankAccount $bankAccount): self

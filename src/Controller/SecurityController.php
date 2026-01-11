@@ -26,8 +26,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class SecurityController extends AbstractController
 {
     public function __construct(
-        private TranslatorInterface $translator,
-        private EntityManagerInterface $entityManager,
+        private readonly TranslatorInterface $translator,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -102,7 +102,7 @@ class SecurityController extends AbstractController
 
                         // Redirect to login page
                         return $this->redirectToRoute('login');
-                    } catch (\Exception $e) {
+                    } catch (\Exception) {
                         $session->getFlashBag()->add('error', $this->translator->trans('form.errors.generic'));
                         $this->entityManager->clear();
                     }

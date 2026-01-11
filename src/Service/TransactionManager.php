@@ -13,9 +13,9 @@ use Doctrine\ORM\EntityManagerInterface;
 class TransactionManager
 {
     public function __construct(
-        private BankAccountRepository $bankAccountRepository,
-        private CategoryRepository $categoryRepository,
-        private EntityManagerInterface $entityManager
+        private readonly BankAccountRepository $bankAccountRepository,
+        private readonly CategoryRepository $categoryRepository,
+        private readonly EntityManagerInterface $entityManager
     ) {
     }
 

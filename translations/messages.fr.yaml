@@ -150,6 +150,15 @@ page :
     title_update    : "Mise%plural% à jour"
     title_fix       : "Correction%plural% diverse%plural%"
     # VERSIONS
+    beta_0_8_2 :
+      title : "Version Beta 0.8.2"
+      date : "2026-01-11"
+      list_update :
+        item_1 : "Mise à jour de Symfony (5.4 > 6.4)."
+        item_2 : "Mise à jour de l'outil d'administration interne."
+      list_fix :
+        item_1 : "Retrait de plusieurs librairies plus utilisées suite à la mise à jour de Symfony."
+        item_2 : "Nettoyage d'ancienne manière de faire dans le code (annotations > attributes)."
     beta_0_8_1 :
       title : "Version Beta 0.8.1"
       date : "2026-01-10"

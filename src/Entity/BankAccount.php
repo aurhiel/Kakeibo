@@ -41,13 +41,14 @@ class BankAccount
     #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
     private bool$is_default = false;
 
-    private ?float $balance = null;
-
     #[ORM\OneToMany(mappedBy: 'bank_account', targetEntity: TransactionAuto::class, orphanRemoval: true)]
     private $transaction_autos;
 
     #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
     private $is_archived = false;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private string $balance = '0.00';
 
     public function __construct(?User $user)
     {
@@ -103,23 +104,6 @@ class BankAccount
         }
 
         return $this;
-    }
-
-    // TODO: Replace by SQL query !!
-    public function getBalance(): float
-    {
-        if (is_null($this->balance)) {
-            $now = new \DateTime();
-            foreach ($this->transactions as $transaction) {
-                // Add transaction only when < current date ($now)
-                //  (future transactions will be displayed elsewhere)
-                if ($transaction->getDate() <= $now) {
-                    $this->balance += $transaction->getAmount();
-                }
-            }
-        }
-
-        return (float) $this->balance;
     }
 
     public function getBankBrand(): ?BankBrand
@@ -224,6 +208,18 @@ class BankAccount
     public function toggleIsArchived(): self
     {
         $this->is_archived = !$this->is_archived;
+
+        return $this;
+    }
+
+    public function getBalance(): float
+    {
+        return (float) $this->balance;
+    }
+
+    public function setBalance(string $balance): static
+    {
+        $this->balance = $balance;
 
         return $this;
     }

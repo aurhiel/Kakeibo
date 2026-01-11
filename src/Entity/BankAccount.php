@@ -114,7 +114,6 @@ class BankAccount
                 // Add transaction only when < current date ($now)
                 //  (future transactions will be displayed elsewhere)
                 if ($transaction->getDate() <= $now) {
-                    dump('féchier');
                     $this->balance += $transaction->getAmount();
                 }
             }

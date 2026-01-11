@@ -13,32 +13,26 @@ use App\Service\Slugger;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-/**
-  * Require ROLE_USER for *every* controller method in this class.
-  *
-  * @IsGranted("ROLE_USER")
-  */
+#[IsGranted('ROLE_USER')]
 class CategoriesController extends AbstractController
 {
-    private User $user;
+    private readonly User $user;
 
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private CategoryRepository $categoryRepository,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly CategoryRepository $categoryRepository,
         Security $security,
     ) {
         $this->user = $security->getUser();
     }
 
-    /**
-     * @Route("/categories/manage", name="category_manage")
-     */
+    #[Route('/categories/manage', name: 'category_manage')]
     public function index(Request $request, Slugger $slugger): Response
     {
         $id_cat = (int) $request->request->get('id');

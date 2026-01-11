@@ -4,70 +4,49 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use App\Repository\BankAccountRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\BankAccountRepository")
- */
+#[ORM\Entity(BankAccountRepository::class)]
 class BankAccount
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: Types::INTEGER)]
+    private int $id;
 
-    /**
-     * @ORM\Column(type="string", length=128)
-     */
-    private $label;
+    #[ORM\Column(type: Types::STRING, length: 128)]
+    private string $label;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Transaction", mappedBy="bank_account", orphanRemoval=true)
-     * @ORM\JoinColumn(nullable=true)
-     * @ORM\OrderBy({"date" = "DESC", "id" = "DESC"})
-     */
-    private $transactions;
+    #[ORM\OneToMany(mappedBy: 'bank_account', targetEntity: Transaction::class, orphanRemoval: true)]
+    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\OrderBy(['date' => 'DESC', 'id' => 'DESC'])]
+    private Collection $transactions;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\BankBrand", fetch="EAGER")
-     * @ORM\JoinColumn(nullable=true)
-     */
-    private $bank_brand;
+    #[ORM\ManyToOne(targetEntity: BankBrand::class, fetch: 'EAGER')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?BankBrand $bank_brand = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Currency", fetch="EAGER")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $currency;
+    #[ORM\ManyToOne(targetEntity: Currency::class, fetch: 'EAGER')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Currency $currency = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="bankAccounts", fetch="EAGER")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $user;
+    #[ORM\ManyToOne(targetEntity: User::class, fetch: 'EAGER', inversedBy: 'bankAccounts')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=false)
-     */
-    private $is_default = false;
+    #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
+    private bool$is_default = false;
 
-    /**
-    * According to transactions sum
-    */
-    private $balance;
+    private ?float $balance = null;
 
-    /**
-     * @ORM\OneToMany(targetEntity=TransactionAuto::class, mappedBy="bank_account", orphanRemoval=true)
-     */
+    #[ORM\OneToMany(mappedBy: 'bank_account', targetEntity: TransactionAuto::class, orphanRemoval: true)]
     private $transaction_autos;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=false)
-     */
+    #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
     private $is_archived = false;
 
     public function __construct(?User $user)
@@ -78,7 +57,7 @@ class BankAccount
         $this->transaction_autos = new ArrayCollection();
     }
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -126,6 +105,7 @@ class BankAccount
         return $this;
     }
 
+    // TODO: Replace by SQL query !!
     public function getBalance(): float
     {
         if (is_null($this->balance)) {

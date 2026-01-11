@@ -14,34 +14,28 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
-  * Require ROLE_USER for *every* controller method in this class.
-  *
-  * @IsGranted("ROLE_USER")
-  */
+#[IsGranted('ROLE_USER')]
 class AutomatonController extends AbstractController
 {
-    private User $user;
+    private readonly User $user;
 
     public function __construct(
-        private TranslatorInterface $translator,
-        private EntityManagerInterface $entityManager,
-        private CategoryRepository $categoryRepository,
-        private TransactionAutoRepository $transactionAutoRepository,
+        private readonly TranslatorInterface $translator,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly CategoryRepository $categoryRepository,
+        private readonly TransactionAutoRepository $transactionAutoRepository,
         Security $security,
     ) {
         $this->user = $security->getUser();
     }
 
-    /**
-     * @Route("/automaton/{id}", name="automaton", defaults={"id"=null})
-     */
+    #[Route('/automaton/{id}', name: 'automaton', defaults: ['id' => null])]
     public function index(?int $id, Request $request): Response
     {
         // Force user to create at least ONE bank account !
@@ -153,9 +147,7 @@ class AutomatonController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/trans-auto/delete/{id}", name="automaton_trans_auto_delete")
-     */
+    #[Route('/trans-auto/delete/{id}', name: 'automaton_trans_auto_delete')]
     public function trans_auto_delete(int $id, Request $request): Response
     {
         $trans_auto = $this->transactionAutoRepository->findOneByIdAndUser($id, $this->user);

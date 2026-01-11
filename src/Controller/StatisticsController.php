@@ -11,34 +11,28 @@ use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
 use App\Repository\TransactionRepository;
 
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Component\Security\Core\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
-  * Require ROLE_USER for *every* controller method in this class.
-  *
-  * @IsGranted("ROLE_USER")
-  */
+#[IsGranted('ROLE_USER')]
 class StatisticsController extends AbstractController
 {
-    private User $user;
+    private readonly User $user;
 
     public function __construct(
-        private TranslatorInterface $translator,
-        private TransactionRepository $transcationRepository,
-        private CategoryRepository $categoryRepository,
+        private readonly TranslatorInterface $translator,
+        private readonly TransactionRepository $transcationRepository,
+        private readonly CategoryRepository $categoryRepository,
         Security $security,
     ) {
         $this->user = $security->getUser();
     }
 
-    /**
-     * @Route("/statistiques/{date_start}/{date_end}", name="statistics", defaults={"date_start"="current","date_end"="current"})
-     */
+    #[Route('/statistiques/{date_start}/{date_end}', name: 'statistics', defaults: ['date_start' => 'current', 'date_end' => 'current'])]
     public function index(string $date_start, string $date_end): Response
     {
         // Force user to create at least ONE bank account !

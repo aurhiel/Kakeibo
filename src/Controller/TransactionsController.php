@@ -16,39 +16,33 @@ use App\Repository\TransactionRepository;
 use App\Service\TransactionManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Component\Security\Core\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
-  * Require ROLE_USER for *every* controller method in this class.
-  *
-  * @IsGranted("ROLE_USER")
-  */
+#[IsGranted('ROLE_USER')]
 class TransactionsController extends AbstractController
 {
     const NB_TRANSAC_BY_PAGE = 50;
 
-    private User $user;
+    private readonly User $user;
 
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private TransactionRepository $transactionRepository,
-        private CategoryRepository $categoryRepository,
-        private TranslatorInterface $translator,
-        private TransactionManager $transactionManager,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly TransactionRepository $transactionRepository,
+        private readonly CategoryRepository $categoryRepository,
+        private readonly TranslatorInterface $translator,
+        private readonly TransactionManager $transactionManager,
         Security $security,
     ) {
         $this->user = $security->getUser();
     }
 
-    /**
-     * @Route("/transactions/manage", name="transaction_manage")
-     */
+    #[Route('/transactions/manage', name: 'transaction_manage')]
     public function manage(Request $request): Response
     {
         $id_trans = (int) $request->request->get('id');
@@ -129,9 +123,7 @@ class TransactionsController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/transactions/get/{id}", name="transaction_get")
-     */
+    #[Route('/transactions/get/{id}', name: 'transaction_get')]
     public function retrieve(int $id, Request $request): Response
     {
         $data = [
@@ -160,9 +152,7 @@ class TransactionsController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/transactions/delete/{id}", name="transaction_delete")
-     */
+    #[Route('/transactions/delete/{id}', name: 'transaction_delete')]
     public function delete(int $id, Request $request): Response
     {
         // Retrieve transaction with id AND user (for security)
@@ -217,9 +207,7 @@ class TransactionsController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/transactions/bank-transfer", name="transactions_bank_transfer")
-     */
+    #[Route('/transactions/bank-transfer', name: 'transactions_bank_transfer')]
     public function bankTransfer(Request $request): Response
     {
         $id_trans = (int) $request->request->get('id');
@@ -301,9 +289,7 @@ class TransactionsController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/transactions/{page}", name="transactions", defaults={"page"=1})
-     */
+    #[Route('/transactions/{page}', name: 'transactions', defaults: ['page' => 1])]
     public function index(int $page): Response
     {
         // Force user to create at least ONE bank account !
@@ -375,11 +361,10 @@ class TransactionsController extends AbstractController
     }
 
     /**
-     * @Route("/transactions/import-csv", name="transaction_import_csv")
-     * TODO: only tested with "Caisse d'épargne" CSV files,
-     *          need to do more test with other banks files
-     *          + custom import ? (TODO auto-detect fields + user validation)
+     * TODO: only tested with "Caisse d'épargne" CSV files, need to do more test with other banks files
+     *   + custom import ? (TODO auto-detect fields + user validation)
      */
+    #[Route('/transactions/import-csv', name: 'transaction_import_csv')]
     public function importCSV(Request $request): Response
     {
         // Force user to create at least ONE bank account !
@@ -415,7 +400,7 @@ class TransactionsController extends AbstractController
 
                 // Retrieve bank code
                 if ($row === 1) {
-                    $bank_code = explode(' : ', $data[0]);
+                    $bank_code = explode(' : ', (string) $data[0]);
                     $bank_code = (isset($bank_code[1])) ? (int) $bank_code[1] : false;
                 }
 
@@ -430,12 +415,12 @@ class TransactionsController extends AbstractController
                             $credit   = (float) str_replace(',', '.', $data[4]);
                             $amount   = ($credit > 0) ? $credit : (($debit < 0) ? $debit : false);
                             $label    = trim($data[2]);
-                            $details  = trim($data[5]);
+                            $details  = trim((string) $data[5]);
                             $category = $this->findCategoryAccordingToLabel($categories, $label);
 
                             // Check amount before creating the new transaction
                             if ($amount !== false) {
-                                $date     = explode('/', $data[0]);
+                                $date     = explode('/', (string) $data[0]);
                                 $datetime = new \DateTime('20'.$date[2].'-'.$date[1].'-'.$date[0]);
                                 // $datetime->setTimestamp(strtotime('20'.$date[2].'-'.$date[1].'-'.$date[0]));
 
@@ -500,7 +485,7 @@ class TransactionsController extends AbstractController
             // Flush OK !
             $this->entityManager->flush();
             $session->getFlashBag()->add('success', 'Importation des transactions effectuée avec succès.');
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $this->entityManager->clear();
             $session->getFlashBag()->add('error', $this->translator->trans('form.errors.generic'));
         }

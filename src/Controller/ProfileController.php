@@ -11,33 +11,27 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\SecurityBundle\Security;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
-  * Require ROLE_USER for *every* controller method in this class.
-  *
-  * @IsGranted("ROLE_USER")
-  */
+#[IsGranted('ROLE_USER')]
 class ProfileController extends AbstractController
 {
-    private User $user;
+    private readonly User $user;
 
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private TranslatorInterface $translator,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly TranslatorInterface $translator,
         Security $security,
     ) {
         $this->user = $security->getUser();
     }
 
-    /**
-     * @Route("/profil", name="user_profile")
-     */
+    #[Route('/profil', name: 'user_profile')]
     public function profile(
         Request $request,
         UserPasswordHasherInterface $passwordHasher
@@ -58,7 +52,7 @@ class ProfileController extends AbstractController
             try {
                 $session->getFlashBag()->add('success', 'Modification(s) effectuée(s) avec succès.');
                 $this->entityManager->flush();
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 $session->getFlashBag()->add('error', $this->translator->trans('form.errors.generic'));
                 $this->entityManager->clear();
             }

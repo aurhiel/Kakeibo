@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -12,12 +12,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class StaticPagesController extends AbstractController
 {
 
-    private $page_config = [];
+    private array $page_config = [];
 
     // ML: @Route("/{_locale}/{slug}.html", name="static_pages")
-    /**
-     * @Route("/{slug}.html", name="static_pages")
-     */
+    #[Route('/{slug}.html', name: 'static_pages')]
     public function index(string $slug, TranslatorInterface $translator): Response
     {
         // Get page config according to given slug

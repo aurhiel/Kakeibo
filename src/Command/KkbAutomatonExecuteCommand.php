@@ -23,8 +23,8 @@ class KkbAutomatonExecuteCommand extends Command
     protected static $defaultDescription = 'Parse users recurrent transactions and add transaction if needed.';
 
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private TransactionAutoRepository $transactionAutoRepository,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly TransactionAutoRepository $transactionAutoRepository,
         ?string $name = null,
     ) {
         parent::__construct($name);

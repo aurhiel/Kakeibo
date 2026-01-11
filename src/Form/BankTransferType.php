@@ -17,19 +17,17 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class BankTransferType extends AbstractType
 {
-    private User $user;
-    private CategoryRepository $categoryRepository;
+    private readonly User $user;
 
     public function __construct(
         Security $security,
-        CategoryRepository $categoryRepository
+        private readonly CategoryRepository $categoryRepository
     ) {
         $this->user = $security->getUser();
-        $this->categoryRepository = $categoryRepository;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -85,17 +83,12 @@ class BankTransferType extends AbstractType
                     'class' => 'custom-select',
                     'data-form-default-value' => $defaultCategory instanceof Category ? $defaultCategory->getId() : ''
                 ],
-                'query_builder' => function (CategoryRepository $r) use ($user) {
-                    return $r->createQueryBuilder('c')
-                        ->where('c.is_default = true')
-                        ->orWhere('c.user = :userId')
-                        ->setParameter('userId', $user->getId())
-                        ->addOrderBy('c.label', 'ASC')
-                    ;
-                },
-                'choice_label' => function ($category) {
-                    return $category->getLabel();
-                }
+                'query_builder' => fn(CategoryRepository $r) => $r->createQueryBuilder('c')
+                    ->where('c.is_default = true')
+                    ->orWhere('c.user = :userId')
+                    ->setParameter('userId', $user->getId())
+                    ->addOrderBy('c.label', 'ASC'),
+                'choice_label' => fn($category) => $category->getLabel()
             ])
             ->add('bank_account_to', EntityType::class, [
                 'mapped' => false,
@@ -119,9 +112,7 @@ class BankTransferType extends AbstractType
 
                     return $qb;
                 },
-                'choice_label' => function (BankAccount $bankAccount): string {
-                    return sprintf('%s (%s)', $bankAccount->getLabel(), $bankAccount->getBankBrand()->getLabel());
-                }
+                'choice_label' => fn(BankAccount $bankAccount): string => sprintf('%s (%s)', $bankAccount->getLabel(), $bankAccount->getBankBrand()->getLabel())
             ])
         ;
     }

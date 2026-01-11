@@ -9,11 +9,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-/**
-  * @IsGranted("ROLE_ADMIN", message="You are not allowed to access the admin dashboard.")
-  */
+#[IsGranted('ROLE_ADMIN', message: 'You are not allowed to access the admin dashboard.')]
 class UserCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
@@ -26,9 +24,7 @@ class UserCrudController extends AbstractCrudController
         return Actions::new()
             ->addBatchAction(Action::BATCH_DELETE)
             ->add(Crud::PAGE_INDEX, Action::DELETE)
-            ->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action): Action {
-                return $action->setIcon('fa fa-trash')->setLabel(false);
-            })
+            ->update(Crud::PAGE_INDEX, Action::DELETE, fn(Action $action): Action => $action->setIcon('fa fa-trash')->setLabel(false))
         ;
     }
 

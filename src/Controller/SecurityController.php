@@ -17,7 +17,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -26,14 +26,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class SecurityController extends AbstractController
 {
     public function __construct(
-        private TranslatorInterface $translator,
-        private EntityManagerInterface $entityManager,
+        private readonly TranslatorInterface $translator,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
-    /**
-     * @Route("/inscription", name="user_registration")
-     */
+    #[Route('/inscription', name: 'user_registration')]
     public function register(
       Request $request,
       AuthorizationCheckerInterface $authChecker,
@@ -41,7 +39,7 @@ class SecurityController extends AbstractController
       MailerInterface $mailer,
       UserRepository $userRepository
     ): Response {
-        if (true === $authChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if ($authChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
             return $this->redirectToRoute('dashboard');
         }
 
@@ -102,7 +100,7 @@ class SecurityController extends AbstractController
 
                         // Redirect to login page
                         return $this->redirectToRoute('login');
-                    } catch (\Exception $e) {
+                    } catch (\Exception) {
                         $session->getFlashBag()->add('error', $this->translator->trans('form.errors.generic'));
                         $this->entityManager->clear();
                     }
@@ -123,15 +121,12 @@ class SecurityController extends AbstractController
         );
     }
 
-
-    /**
-     * @Route("/connexion", name="login")
-     */
+    #[Route('/connexion', name: 'login')]
     public function login(
         AuthenticationUtils $authenticationUtils,
         AuthorizationCheckerInterface $authChecker
     ): Response {
-        if (true === $authChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if ($authChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
             return $this->redirectToRoute('dashboard');
         }
 
@@ -148,9 +143,7 @@ class SecurityController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/logout", name="logout")
-     */
+    #[Route('/logout', name: 'logout')]
     public function logout(): void
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');

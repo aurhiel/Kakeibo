@@ -4,89 +4,68 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use App\Repository\TransactionAutoRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=TransactionAutoRepository::class)
- */
+#[ORM\Entity(TransactionAutoRepository::class)]
 class TransactionAuto
 {
     // RT = Repeat Type
-    const RT_YEARLY   = 'YEARLY';
-    const RT_MONTHLY  = 'MONTHLY';
-    const RT_WEEKLY   = 'WEEKLY';
-    const RT_DAILY    = 'DAILY';
+    const RT_YEARLY = 'YEARLY';
+    const RT_MONTHLY = 'MONTHLY';
+    const RT_WEEKLY = 'WEEKLY';
+    const RT_DAILY = 'DAILY';
 
-    const RT_LIST     = [
-      self::RT_YEARLY,
-      self::RT_MONTHLY,
-      self::RT_WEEKLY,
-      self::RT_DAILY,
+    const RT_LIST = [
+        self::RT_YEARLY,
+        self::RT_MONTHLY,
+        self::RT_WEEKLY,
+        self::RT_DAILY,
     ];
 
     const ERR_UNKNOWN_RTYPE = -1;
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: Types::INTEGER)]
+    private int $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $label;
+    #[ORM\Column(type: Types::STRING, length: 255)]
+    private string $label;
 
-    /**
-     * @ORM\Column(type="float")
-     */
-    private $amount;
+    #[ORM\Column(type: Types::FLOAT)]
+    private float $amount;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=BankAccount::class, inversedBy="transaction_autos")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $bank_account;
+    #[ORM\ManyToOne(targetEntity: BankAccount::class, inversedBy: 'transaction_autos')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?BankAccount $bank_account;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Category::class)
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $category;
+    #[ORM\ManyToOne(targetEntity: Category::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private Category $category;
 
-    /**
-     * @ORM\Column(type="string", length=64)
-     */
-    private $repeat_type;
+    #[ORM\Column(type: Types::STRING, length: 64)]
+    private string $repeat_type;
 
-    /**
-     * @ORM\Column(type="date")
-     */
-    private $date_start;
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private \DateTimeInterface $date_start;
 
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
-    private $date_last;
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $date_last;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $details;
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
+    private ?string $details;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $is_active;
+    #[ORM\Column(type: Types::BOOLEAN)]
+    private bool $is_active;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function getLabel(): ?string
+    public function getLabel(): string
     {
         return $this->label;
     }
@@ -98,7 +77,7 @@ class TransactionAuto
         return $this;
     }
 
-    public function getAmount(): ?float
+    public function getAmount(): float
     {
         return $this->amount;
     }
@@ -110,7 +89,7 @@ class TransactionAuto
         return $this;
     }
 
-    public function getBankAccount(): ?BankAccount
+    public function getBankAccount(): BankAccount
     {
         return $this->bank_account;
     }
@@ -122,12 +101,12 @@ class TransactionAuto
         return $this;
     }
 
-    public function getCategory(): ?Category
+    public function getCategory(): Category
     {
         return $this->category;
     }
 
-    public function setCategory(?Category $category): self
+    public function setCategory(Category $category): self
     {
         $this->category = $category;
 
@@ -146,7 +125,7 @@ class TransactionAuto
         return $this;
     }
 
-    public function getDateStart(): ?\DateTimeInterface
+    public function getDateStart(): \DateTimeInterface
     {
         return $this->date_start;
     }
@@ -182,7 +161,7 @@ class TransactionAuto
         return $this;
     }
 
-    public function getIsActive(): ?bool
+    public function getIsActive(): bool
     {
         return $this->is_active;
     }

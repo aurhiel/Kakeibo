@@ -4,59 +4,43 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use App\Repository\TransactionRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\TransactionRepository")
- */
+#[ORM\Entity(TransactionRepository::class)]
 class Transaction
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: Types::INTEGER)]
+    private int $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private $label;
 
-    /**
-     * @ORM\Column(type="float")
-     */
-    private $amount;
+    #[ORM\Column(type: Types::FLOAT)]
+    private float $amount;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\BankAccount", inversedBy="transactions", fetch="EAGER")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $bank_account;
+    #[ORM\ManyToOne(targetEntity: BankAccount::class, fetch: 'EAGER', inversedBy: 'transactions')]
+    #[ORM\JoinColumn(nullable: false)]
+    private BankAccount $bank_account;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Category", fetch="EAGER")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $category;
+    #[ORM\ManyToOne(targetEntity: Category::class, fetch: 'EAGER')]
+    #[ORM\JoinColumn(nullable: false)]
+    private Category $category;
 
-    /**
-     * @ORM\Column(type="date")
-     */
-    private $date;
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private \DateTimeInterface $date;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $details;
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
+    private ?string $details;
 
-    /**
-     * @ORM\OneToOne(targetEntity=Transaction::class, cascade={"persist", "remove"}, fetch="EAGER")
-     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
-     */
-    private $bankTransferLinkedTransaction;
+    #[ORM\OneToOne(targetEntity: Transaction::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    private ?Transaction $bankTransferLinkedTransaction = null;
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -97,19 +81,19 @@ class Transaction
         return $this;
     }
 
-    public function getCategory(): ?Category
+    public function getCategory(): Category
     {
         return $this->category;
     }
 
-    public function setCategory(?Category $category): self
+    public function setCategory(Category $category): self
     {
         $this->category = $category;
 
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function getDate(): \DateTimeInterface
     {
         return $this->date;
     }

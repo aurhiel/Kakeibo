@@ -41,7 +41,7 @@ class SecurityController extends AbstractController
       MailerInterface $mailer,
       UserRepository $userRepository
     ): Response {
-        if (true === $authChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if ($authChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
             return $this->redirectToRoute('dashboard');
         }
 
@@ -131,7 +131,7 @@ class SecurityController extends AbstractController
         AuthenticationUtils $authenticationUtils,
         AuthorizationCheckerInterface $authChecker
     ): Response {
-        if (true === $authChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if ($authChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
             return $this->redirectToRoute('dashboard');
         }
 

@@ -4,57 +4,41 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use App\Repository\CategoryRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
- */
+#[ORM\Entity(CategoryRepository::class)]
 class Category
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: Types::INTEGER)]
+    private int $id;
 
-    /**
-     * @ORM\Column(type="string", length=128)
-     */
-    private $label;
+    #[ORM\Column(type: Types::STRING, length: 128)]
+    private string $label;
 
-    /**
-     * @ORM\Column(type="string", length=128)
-     */
-    private $slug;
+    #[ORM\Column(type: Types::STRING, length: 128)]
+    private string $slug;
 
-    /**
-     * @ORM\Column(type="string", length=32)
-     */
-    private $color;
+    #[ORM\Column(type: Types::STRING, length: 32)]
+    private string $color;
 
-    /**
-     * @ORM\Column(type="string", length=64)
-     */
-    private $icon;
+    #[ORM\Column(type: Types::STRING, length: 64)]
+    private string $icon;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $import_regex;
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
+    private ?string $import_regex;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $is_default;
+    #[ORM\Column(type: Types::BOOLEAN)]
+    private bool $is_default;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="categories")
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'categories')]
+    #[ORM\JoinColumn(nullable: false)]
     private $user;
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -71,7 +55,7 @@ class Category
         return $this;
     }
 
-    public function getIsDefault(): ?bool
+    public function getIsDefault(): bool
     {
         return $this->is_default;
     }

@@ -4,78 +4,61 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\Types;
+use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- */
+#[ORM\Entity(UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: Types::INTEGER)]
+    private int $id;
 
-    /**
-     * @ORM\Column(type="string", length=25, unique=true)
-     */
-    private $username;
+    #[ORM\Column(type: Types::STRING, length: 25, unique: true)]
+    private string $username;
 
-    /**
-     * @ORM\Column(type="string", length=190, unique=true)
-     * @Assert\Email()
-     */
-    private $email;
+    #[ORM\Column(type: Types::STRING, length: 190, unique: true)]
+    #[Assert\Email()]
+    private string $email;
 
-    /**
-     * @Assert\NotBlank()
-     * @Assert\Length(max=4096)
-     */
-    private $plainPassword;
+    #[Assert\NotBlank()]
+    #[Assert\Length(max: 4096)]
+    private ?string $plainPassword;
 
     /**
      * The below length depends on the "algorithm" you use for hashing
      * the password, but this works well with bcrypt.
-     *
-     * @ORM\Column(type="string", length=64)
      */
-    private $password;
+    #[ORM\Column(type: Types::STRING, length: 64)]
+    private string $password;
+
+    #[ORM\Column(name: 'is_active', type: Types::BOOLEAN)]
+    private bool $isActive = true;
+
+    #[ORM\Column(type: Types::STRING, length: 64)]
+    private string $role;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Assert\NotBlank()]
+    #[Assert\Type('\DateTimeInterface')]
+    private \DateTimeInterface $registerDate;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Category::class, cascade: ['remove'])]
+    private Collection $categories;
 
     /**
-     * @ORM\Column(name="is_active", type="boolean")
+     * @var Collection<int, BankAccount>&ArrayCollection<int, BankAccount>
      */
-    private $isActive = true;
-
-    /**
-     * @ORM\Column(type="string", length=64)
-     */
-    private $role;
-
-    /**
-     * @ORM\Column(type="datetime")
-     * @Assert\NotBlank()
-     * @Assert\Type("\DateTimeInterface")
-     */
-    private $registerDate;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Category", mappedBy="user", cascade={"remove"})
-     */
-    private $categories;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\BankAccount", mappedBy="user", cascade={"remove"}, orphanRemoval=true)
-     */
-    private $bankAccounts;
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: BankAccount::class, cascade: ['remove'], orphanRemoval: true)]
+    private Collection $bankAccounts;
 
     public function __construct()
     {
@@ -87,7 +70,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->salt = md5(uniqid('', true));
     }
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -99,7 +82,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     // Email
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -112,7 +95,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     // Username
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
@@ -128,7 +111,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     // Pain password
-    public function getPlainPassword()
+    public function getPlainPassword(): ?string
     {
         return $this->plainPassword;
     }
@@ -162,7 +145,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     // Roles
     public function getRoles(): array
     {
-        return [empty($this->role) ? 'ROLE_USER' : $this->role];
+        return [!isset($this->role) || ($this->role === '' || $this->role === '0') ? 'ROLE_USER' : $this->role];
     }
 
     public function setRole($role): self
@@ -290,11 +273,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getDefaultBankAccount(): ?BankAccount
     {
-        $criteria = Criteria::create();
-        $criteria->where(Criteria::expr()->eq('is_default', true));
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('is_default', true))
+            ->setMaxResults(1);
 
         $matches = $this->bankAccounts->matching($criteria);
 
-        return (count($matches) > 0) ? $matches->first() : null;
+        return $matches->isEmpty() ? null : $matches->first();
     }
 }

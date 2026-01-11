@@ -48,4 +48,18 @@ class BankAccountRepository extends ServiceEntityRepository
             ->execute()
         ;
     }
+
+    public function syncBalance(int $id): void
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $conn->executeQuery(
+            'UPDATE bank_account ba SET ba.balance = (
+                    SELECT COALESCE(SUM(t.amount), 0) FROM transaction t
+                        WHERE t.bank_account_id = :bankAccountId
+                )
+            WHERE ba.id = :bankAccountId',
+            ['bankAccountId' => $id],
+        );
+    }
 }

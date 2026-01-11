@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\EventListener;
 
+use App\Entity\BankAccount;
 use App\Entity\Transaction;
 use App\Repository\BankAccountRepository;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
@@ -26,7 +27,7 @@ class BankAccountBalanceListener
     {
         $bankAccount = $transaction->getBankAccount();
 
-        if ($bankAccount) {
+        if ($bankAccount instanceof BankAccount) {
             $this->bankAccountRepository->syncBalance($bankAccount->getId());
             $event->getObjectManager()->refresh($bankAccount);
         }

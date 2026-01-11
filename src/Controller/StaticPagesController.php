@@ -74,7 +74,7 @@ class StaticPagesController extends AbstractController
 
     private function is_config_valid(): bool
     {
-        return !empty($this->page_config)
+        return $this->page_config !== []
             && isset($this->page_config['data'])
             && isset($this->page_config['template'])
         ;

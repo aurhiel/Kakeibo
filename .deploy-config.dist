@@ -1,0 +1,12 @@
+SSH_USER="YOUR_SSH_USER"
+SSH_HOST="YOUR_SSH_HOST"
+
+REMOTE_BASE_DIR="/home/USER/apps/kakeibo"
+
+SYMLINK_PATH="/home/USER/public_html"
+
+# Directories to not delete
+SHARED_DIRS=("var/log" "public/uploads")
+
+# Amount of release directories to keep
+KEEP=5

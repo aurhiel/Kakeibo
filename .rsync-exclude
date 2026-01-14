@@ -1,0 +1,32 @@
+# Git & Tooling
+.git/
+.gitignore
+.deploy-config
+.deploy-config.*
+deploy.sh
+
+# Symfony / PHP
+/vendor/
+/var/cache/
+/var/log/
+/public/bundles/
+.env
+.env.local
+.env.*.local
+phpstan.dist.neon
+phpunit.xml.dist
+
+# Frontend
+/node_modules/
+/assets/
+yarn.lock
+package.json
+webpack.config.js
+
+# OS / Divers
+.DS_Store
+Thumbs.db
+
+# Fichiers spécifiques au serveur O2Switch
+.htaccess
+php.ini

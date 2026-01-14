@@ -34,3 +34,7 @@ yarn-error.log
 ###> phpstan/phpstan ###
 phpstan.neon
 ###< phpstan/phpstan ###
+
+###>deploy.sh ###
+.deploy-config
+###<deploy.sh ###

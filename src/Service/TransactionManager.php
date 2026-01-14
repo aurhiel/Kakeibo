@@ -4,39 +4,27 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Entity\BankAccount;
+use App\Entity\Category;
 use App\Entity\Transaction;
-use App\Entity\User;
-use App\Repository\BankAccountRepository;
-use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class TransactionManager
 {
     public function __construct(
-        private readonly BankAccountRepository $bankAccountRepository,
-        private readonly CategoryRepository $categoryRepository,
         private readonly EntityManagerInterface $entityManager
     ) {
     }
 
     public function handleBankTransfer(
-        User $user,
-        int $bankAccountIdFrom,
-        int $bankAccountIdTo,
-        int $categoryId,
+        BankAccount $bankAccountFrom,
+        BankAccount $bankAccountTo,
+        Category $category,
         float $amount,
         \DateTime $date,
         string $label,
         ?string $details = null,
-        ?int $idTransactionFrom = null
-    ): array {
-        // dump("handleBankTransfer( {$user->getId()}, $bankAccountIdFrom, $bankAccountIdTo, ... )");
-
-        $category = $this->categoryRepository->findOneByIdAndUser($categoryId, $user);
-        $bankAccountFrom = $this->bankAccountRepository->findOneByIdAndUser($bankAccountIdFrom, $user);
-
-        // TODO: Use $idTransactionFrom to retreive "from" & "to"
-
+    ): Transaction {
         $transactionFrom = (new Transaction())
             ->setBankAccount($bankAccountFrom)
             ->setCategory($category)
@@ -46,7 +34,6 @@ class TransactionManager
             ->setDetails($details)
         ;
 
-        $bankAccountTo = $this->bankAccountRepository->findOneByIdAndUser($bankAccountIdTo, $user);
         $transactionTo = (new Transaction())
             ->setBankAccount($bankAccountTo)
             ->setCategory($category)
@@ -64,9 +51,6 @@ class TransactionManager
 
         $this->entityManager->flush();
 
-        return [
-            $transactionFrom,
-            $transactionTo,
-        ];
+        return $transactionFrom;
     }
 }

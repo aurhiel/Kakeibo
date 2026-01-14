@@ -245,18 +245,16 @@ class TransactionsController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $data = $request->request->get('bank_transfer');
+                $data = $form->getData();
 
-                [$transactionFrom] = $this->transactionManager->handleBankTransfer(
-                    $this->user,
-                    $default_bank_account->getId(),
-                    (int) $data['bank_account_to'],
-                    (int) $data['category'],
-                    (float) $data['amount'],
-                    new \DateTime($data['date']),
-                    $data['label'],
-                    empty($data['details']) ? null : $data['details'],
-                    $is_edit ? $id_trans : null,
+                $transactionFrom = $this->transactionManager->handleBankTransfer(
+                    $default_bank_account,
+                    $form->get('bank_account_to')->getData(),
+                    $data->getCategory(),
+                    $data->getAmount(),
+                    $data->getDate(),
+                    $data->getLabel(),
+                    $data->getDetails(),
                 );
 
                 $return_data = [

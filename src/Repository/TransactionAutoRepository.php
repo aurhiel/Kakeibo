@@ -38,9 +38,14 @@ class TransactionAutoRepository extends ServiceEntityRepository
     public function findAllByBankAccount($bank_account)
     {
         return $this->createQueryBuilder('ta')
+            ->addSelect('(CASE WHEN ta.amount >= 0 THEN 1 ELSE 0 END) AS HIDDEN is_positive')
             ->andWhere('ta.bank_account = :bank_account')
             ->setParameter('bank_account', $bank_account)
             ->join('ta.bank_account', 'ba')
+            ->join('ta.category', 'c')
+            ->orderBy('is_positive', 'DESC')
+            ->addOrderBy('c.label', 'ASC')
+            ->addOrderBy('ta.amount', 'ASC')
             ->getQuery()
             ->getResult()
         ;

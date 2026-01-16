@@ -56,7 +56,7 @@ class BankAccountRepository extends ServiceEntityRepository
         $conn->executeQuery(
             'UPDATE bank_account ba SET ba.balance = (
                     SELECT COALESCE(SUM(t.amount), 0) FROM transaction t
-                        WHERE t.bank_account_id = :bankAccountId
+                        WHERE t.bank_account_id = :bankAccountId AND t.date <= NOW()
                 )
             WHERE ba.id = :bankAccountId',
             ['bankAccountId' => $id],

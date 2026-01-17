@@ -47,9 +47,6 @@ class BankAccount
     #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
     private $is_archived = false;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
-    private string $balance = '0.00';
-
     public function __construct(?User $user)
     {
         $this->transactions = new ArrayCollection();
@@ -208,18 +205,6 @@ class BankAccount
     public function toggleIsArchived(): self
     {
         $this->is_archived = !$this->is_archived;
-
-        return $this;
-    }
-
-    public function getBalance(): float
-    {
-        return (float) $this->balance;
-    }
-
-    public function setBalance(string $balance): static
-    {
-        $this->balance = $balance;
 
         return $this;
     }

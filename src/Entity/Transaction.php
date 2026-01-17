@@ -9,6 +9,7 @@ use App\Repository\TransactionRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(TransactionRepository::class)]
+#[ORM\Index(columns: ['bank_account_id', 'date'], name: 'idx_balance_lookup')]
 class Transaction
 {
     #[ORM\Id]

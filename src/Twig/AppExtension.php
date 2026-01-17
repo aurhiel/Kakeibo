@@ -4,15 +4,21 @@ declare(strict_types=1);
 
 namespace App\Twig;
 
+use App\Repository\TransactionRepository;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
 class AppExtension extends AbstractExtension
 {
+    public function __construct(private TransactionRepository $transactionRepository)
+    {
+    }
+
     public function getFilters()
     {
         return [
             new TwigFilter('anonymize', $this->anonymize(...)),
+            new TwigFilter('balance',   [$this, 'bankAccountBalance']),
             new TwigFilter('intval',    fn ($value): int => intval($value)),
         ];
     }
@@ -35,5 +41,10 @@ class AppExtension extends AbstractExtension
         }
 
         return implode('', $str_array);
+    }
+
+    public function bankAccountBalance($bankAccount): float
+    {
+        return $this->transactionRepository->findBalance($bankAccount);
     }
 }

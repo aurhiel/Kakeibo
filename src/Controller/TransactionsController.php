@@ -553,7 +553,7 @@ class TransactionsController extends AbstractController
         $currency = $bank_account->getCurrency();
         return [
             'id'        => $bank_account->getId(),
-            'balance'   => round($bank_account->getBalance(), 2),
+            'balance'   => $this->transactionRepository->findBalance($bank_account),
             'currency_entity' => [
                 'id'    => $currency->getId(),
                 'name'  => $currency->getName(),

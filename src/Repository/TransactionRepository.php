@@ -210,7 +210,7 @@ class TransactionRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findBalance($bank_account, $date_start = null, $date_end = null): float
+    public function findBalance($bank_account, $date_start = null, $date_end = 'now'): float
     {
         return $this->findTotal($bank_account, $date_start, $date_end, null);
     }

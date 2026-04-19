@@ -14,22 +14,28 @@ use Doctrine\Persistence\ObjectManager;
 
 // Order / dependencies
 use App\DataFixtures\UserFixtures;
+use App\Entity\BankAccount;
+use App\Repository\CategoryRepository;
+use App\Repository\UserRepository;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class TransactionFixtures extends Fixture implements DependentFixtureInterface
 {
+    public function __construct(
+        private readonly CategoryRepository $categoryRepository,
+        private readonly UserRepository $userRepository,
+        private readonly EntityManagerInterface $manager,
+    ) {
+    }
+
     public function load(ObjectManager $manager): void
     {
-        // Retrieve users list
-        $r_users  = $manager->getRepository(User::class);
-        $users    = $r_users->findAll();
-
-        // Retrieves categories
-        $r_categories   = $manager->getRepository(Category::class);
-        $categories     = $r_categories->findAllIndexedBy('slug');
+        $users = $this->userRepository->findAll();
+        $categories = $this->categoryRepository->findAllIndexedBy('slug');
 
         // Define transactions to use later
-        $trans_presets_default  = [
+        $trans_presets_default = [
             'daily' => [
                 [ 'label'     => 'Courses - Monoprix',  'min' => -100,
                   'category'  => 'food',                'max' => -15 ],
@@ -75,7 +81,7 @@ class TransactionFixtures extends Fixture implements DependentFixtureInterface
                   'category'  => 'charity',             'max' => -10 ],
             ]
         ];
-        $trans_presets_stark    = [
+        $trans_presets_stark = [
             'daily' => [
                 [ 'label'     => 'Courses - Monoprix',      'min' => -300,
                   'category'  => 'food',                    'max' => -100 ],
@@ -86,8 +92,8 @@ class TransactionFixtures extends Fixture implements DependentFixtureInterface
                 [ 'label'     => 'La Durée - Boulangerie',  'min' => -70,
                   'category'  => 'food',                    'max' => -25 ],
 
-                [ 'label'     => 'Essence - Total',         'min' => -100,
-                  'category'  => 'travel',                  'max' => -250 ],
+                [ 'label'     => 'Essence - Total',         'min' => -250,
+                  'category'  => 'travel',                  'max' => -100 ],
 
                 [ 'label'     => 'Costumes & chaussures',   'min' => -2600,
                   'category'  => 'clothes',                 'max' => -300 ],
@@ -114,7 +120,7 @@ class TransactionFixtures extends Fixture implements DependentFixtureInterface
         ];
 
         // Misc. variables
-        $now              = new \DateTime();
+        $now = new \DateTime();
         $trans_start_date = new \DateTime('-6 month');
 
         // Loop on each days from 1 month ago to now
@@ -123,63 +129,59 @@ class TransactionFixtures extends Fixture implements DependentFixtureInterface
             $curr_month = (int)$trans_start_date->format('n');
             $trans_date = clone $trans_start_date;
 
-            // Loop on each users in order to add new transactions to their
-            //  default bank account
+            // Loop on each users in order to add new transactions to their default bank account
             foreach ($users as $user) {
-                $bank_account   = $user->getDefaultBankAccount();
-                $trans_presets  = ($user->getUsername() == 'Tony.S') ? $trans_presets_stark : $trans_presets_default;
+                $bank_account = $user->getDefaultBankAccount();
+                $trans_presets = ($user->getUsername() == 'Tony.S') ? $trans_presets_stark : $trans_presets_default;
 
                 // Add monthly transactions
                 if ($old_month != $curr_month) {
                     foreach ($trans_presets['monthly'] as $trans_m) {
-                        $trans = new Transaction();
-                        $amount = ($trans_m['min'] == $trans_m['max']) ? $trans_m['max'] : random_int($trans_m['min'], $trans_m['max']);
-
-                        // Set transaction fields
-                        $trans->setLabel($trans_m['label'])
-                          ->setDate($trans_date)
-                          ->setAmount($amount)
-                          ->setCategory($categories[$trans_m['category']])
-                          ->setBankAccount($bank_account);
-
-                        // Save transaction
-                        $manager->persist($trans);
+                        $this->createTransaction($bank_account, $categories, $trans_date, $trans_m);
                     }
                 }
 
                 // Add daily transactions
                 $nb_trans_to_add = random_int(2, 4);
                 for ($i=0; $i < $nb_trans_to_add; ++$i) {
-                    // Retrieve a random daily transaction
-                    $trans_d = $trans_presets['daily'][random_int(0, count($trans_presets['daily']) - 1)];
-
-                    // Create new transaction
-                    $trans  = new Transaction();
-                    $amount = ($trans_d['min'] == $trans_d['max']) ? $trans_d['max'] : random_int($trans_d['min'], $trans_d['max']);
-
-                    // Set transaction fields
-                    $trans->setLabel($trans_d['label'])
-                      ->setDate($trans_date)
-                      ->setAmount($amount)
-                      ->setCategory($categories[$trans_d['category']])
-                      ->setBankAccount($bank_account);
-
-                    // Save transaction
-                    $manager->persist($trans);
+                    $this->createTransaction(
+                        $bank_account,
+                        $categories,
+                        $trans_date,
+                        // Retrieve a random daily transaction
+                        $trans_presets['daily'][random_int(0, count($trans_presets['daily']) - 1)],
+                    );
                 }
             }
 
             // Increment start date by +1 day & update old month
             $trans_start_date->add(new \DateInterval('P1D'));
             $old_month = $curr_month;
-
-            // dump($trans_start_date);
         }
 
-        // dump($categories);
-        // exit;
-
         $manager->flush();
+    }
+
+    private function createTransaction(BankAccount $bank_account, array $categories, \DateTime $trans_date, array $trans_data): void
+    {
+        $trans  = new Transaction();
+        $min = $trans_data['min'];
+        $max = $trans_data['max'];
+
+        $amount = match (true) {
+            $min === $max => $max,
+            $min > $max => random_int($max, $min),
+            default => random_int($min, $max),
+        };
+
+        $trans->setLabel($trans_data['label'])
+            ->setDate($trans_date)
+            ->setAmount($amount)
+            ->setCategory($categories[$trans_data['category']])
+            ->setBankAccount($bank_account)
+        ;
+
+        $this->manager->persist($trans);
     }
 
     public function getDependencies(): array

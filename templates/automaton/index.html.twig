@@ -32,81 +32,71 @@
       </div>
     </div>
     <div class="col-12 col-lg-6 col-xl-7">
-      <div class="card">
+    {% if trans_auto is not empty %}
+      <div class="card mb-4">
         {#<div class="card-header">
           <h3 class="h4 mb-0">{{ 'page.trans_auto.list.title'|trans }}</h3>
         </div>#}
-        {% if trans_auto is not empty %}
           <div class="list-with-actions list-transactions -no-scroll py-1">
           {% for ta in trans_auto %}
-            <div class="-item -item-transac" data-kb-id-transaction="{{ ta.id }}">
-              {# TRANS:CATEGORY/ICON & COLOR #}
-              <div class="col col-auto col-icon">
-                <span class="-transac-category avatar" title="{{ ta.category.label }}" data-toggle="tooltip" data-placement="top">
-                  <span class="avatar-text rounded-circle" style="background-color: {{ ta.category.color }};">
-                    <span class="icon icon-{{ ta.category.icon }}"></span>
-                  </span>
-                </span>
-              </div>
-              {# TRANS:TEXT #}
-              <div class="col col-text">
-                <span class="-transac-label">{{ ta.label }}</span>
-              {% if ta.details is not empty %}
-                <div class="-transac-details -more-info small text-muted">
-                  {{ ta.details }}
-                </div>
-              {% endif %}
-              </div>
-              {# TRANS:REPEAT TYPE & LAST|NEXT EXEC. #}
-              <div class="col col-repeat-type d-none d-sm-block d-lg-none d-xl-block text-right">
-                <input class="form-control form-control-sm" type="text" name="trans-auto-repeat-type" disabled="disabled" value="{{ ('global.repeat_types.' ~ ta.repeatType)|trans }}"/>
-                {% if ta.dateLast is not empty %}
-                  <span class="icon icon-help-circle" title="{{ 'page.trans_auto.list.last_exec'|trans({ '%date%': ta.dateLast|format_datetime('long', 'none') })|raw }}"
-                    data-toggle="tooltip" data-placement="left" data-html="true"></span>
-                {% else %}
-                  <span class="icon icon-help-circle" title="{{ 'page.trans_auto.list.next_exec'|trans({ '%date%': ta.dateStart|format_datetime('long', 'none') })|raw }}"
-                    data-toggle="tooltip" data-placement="left" data-html="true"></span>
-                {% endif %}
-              </div>
-              {# TRANS:AMOUNT/PRICE #}
-              <div class="col col-price">
-                {% include 'components/price.html.twig' with {
-                  amount        : ta.amount,
-                  currency      : ta.bankAccount.currency.label,
-                  custom_class  : '-transac-amount' } %}
-              </div>
-              {# TRANS:ACTIONS #}
-              <div class="col col-more">
-                <a class="btn btn-sm btn-pill btn-outline-secondary mr-1" href="{{ path('automaton', { id: ta.id }) }}">
-                  <span class="icon icon-edit"></span>
-                </a>
-                <button class="btn btn-sm btn-pill btn-outline-danger" type="button" data-confirm-href="{{ path('automaton_trans_auto_delete', { id: ta.id }) }}"
-                  data-confirm-title="Confirmer la suppression" data-confirm-theme="danger" data-confirm-btn-text="Supprimer"
-                    data-confirm-body="Êtes-vous sûr de vouloir supprimer la transaction récurrente : <br><b>&laquo;&nbsp;{{ ta.label }}&nbsp;&raquo;</b> ?"
-                      data-toggle="modal" data-target="#modal-confirm">
-                  <span class="icon icon-trash"></span>
-                </button>
-              </div>
-            </div>
+            {% include 'automaton/_trans-auto-item.html.twig' %}
           {% endfor %}
           </div>
-        {% else %}
-          <div class="card-body">
-            <div class="alert alert-secondary my-3">
-              {{ 'page.trans_auto.list.empty'|trans }}
-            </div>
-          </div>
-        {% endif %}
       </div>
 
-      <div class="mt-4">
-        {% include 'components/incomes-and-expenses.html.twig' with {
-          expenses: total_auto_expenses,
-          incomes: total_auto_incomes,
-          bank_account: app.user.getDefaultBankAccount(),
-          no_subtext: true
-        } %}
+      <div class="card">
+        <div class="card-header">
+          <h3 class="h5 mb-0">Totaux des récurrences par période</h3>
+        </div>
+        <div class="table-responsive">
+          <table class="table mb-0">
+            <thead>
+              <tr>
+                <th class="border-top-0"></th>
+                <th class="border-top-0 text-right">/ an</th>
+                <th class="border-top-0 text-right">/ mois</th>
+                <th class="border-top-0 text-right">/ semaine</th>
+                <th class="border-top-0 text-right">/ jour</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Revenus</td>
+                {% for total in total_auto_incomes %}
+                <td class="text-right text-nowrap">
+                  {% include 'components/price.html.twig' with {
+                    amount : total,
+                    currency : app.user.defaultBankAccount.currency.label } %}
+                </td>
+                {% endfor %}
+              </tr>
+              <tr>
+                <td>Dépenses</td>
+                {% for total in total_auto_expenses %}
+                <td class="text-right text-nowrap">
+                  {% include 'components/price.html.twig' with {
+                    amount : total,
+                    currency : app.user.defaultBankAccount.currency.label } %}
+                </td>
+                {% endfor %}
+              </tr>
+              <tr>
+                <td>Restant</td>
+                {% for total in total_auto_benefits %}
+                <td class="text-right text-nowrap">
+                  {% include 'components/price.html.twig' with {
+                    amount : total,
+                    currency : app.user.defaultBankAccount.currency.label } %}
+                </td>
+                {% endfor %}
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
+    {% else %}
+      <div class="alert alert-secondary">{{ 'page.trans_auto.list.empty'|trans }}</div>
+    {% endif %}
     </div>
   </div>
 </div>

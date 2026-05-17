@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\BankAccount;
 use App\Entity\TransactionAuto;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -22,7 +24,7 @@ class TransactionAutoRepository extends ServiceEntityRepository
         parent::__construct($registry, TransactionAuto::class);
     }
 
-    public function findOneByIdAndUser($id, $user)
+    public function findOneByIdAndUser(int $id, User $user)
     {
         return $this->createQueryBuilder('ta')
             ->andWhere('ta.id = :id')
@@ -35,7 +37,7 @@ class TransactionAutoRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findAllByBankAccount($bank_account)
+    public function findAllByBankAccount(BankAccount $bank_account)
     {
         return $this->createQueryBuilder('ta')
             ->addSelect('(CASE WHEN ta.amount >= 0 THEN 1 ELSE 0 END) AS HIDDEN is_positive')
@@ -51,22 +53,24 @@ class TransactionAutoRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findTotal($bank_account, $spent_type = 'incomes')
+    public function findTotalByRepeatType(BankAccount $bank_account, string $spent_type = 'incomes')
     {
         $qb = $this->createQueryBuilder('ta')
-            ->select('SUM(ta.amount) AS amount_sum')
+            ->select('ta.repeat_type, SUM(ta.amount) AS amount_sum')
             ->andWhere('ta.bank_account = :bank_account')
             ->setParameter('bank_account', $bank_account);
 
         // WHERE: Incomes or Expenses ?
-        if ($spent_type == 'incomes') {
+        if ($spent_type === 'incomes') {
             $qb->andWhere('ta.amount > 0');
         } else {
             $qb->andWhere('ta.amount < 0');
         }
 
+        $qb->groupBy('ta.repeat_type');
+
         return $qb->getQuery()
-            ->getSingleScalarResult();
+            ->getScalarResult();
     }
 
     public function findAllToExecuteByRepeatType(string $repeat_type)

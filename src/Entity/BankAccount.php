@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Enum\BalanceType;
 use Doctrine\DBAL\Types\Types;
 use App\Repository\BankAccountRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -41,8 +42,8 @@ class BankAccount
     #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
     private bool$is_default = false;
 
-    #[ORM\OneToMany(mappedBy: 'bank_account', targetEntity: TransactionAuto::class, orphanRemoval: true)]
-    private $transaction_autos;
+    #[ORM\OneToMany(mappedBy: 'bank_account', targetEntity: TransactionAuto::class, fetch: 'EAGER', orphanRemoval: true)]
+    private Collection $transaction_autos;
 
     #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
     private $is_archived = false;
@@ -183,6 +184,24 @@ class BankAccount
         }
 
         return $this;
+    }
+
+    public function getIncomingTransactionAutos(): Collection
+    {
+        $incomingDate = BalanceType::Incoming->toMaxDate();
+
+        return $this->getTransactionAutos()
+            ->filter(static fn($transAuto) => $transAuto->getDateNext() <= $incomingDate)
+        ;
+    }
+
+    public function sumIncomingTransactionAutos(): float
+    {
+        return array_reduce(
+            $this->getIncomingTransactionAutos()->toArray(),
+            fn(float $carry, $transAuto) => $carry + $transAuto->getAmount(),
+            0.0
+        );
     }
 
     public function getIsArchived(): bool

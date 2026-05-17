@@ -113,9 +113,13 @@ class AutomatonController extends AbstractController
         // Retrieve transactions auto
         $return_data['trans_auto'] = $this->transactionAutoRepository->findAllByBankAccount($default_bank_account);
 
-        // Retrieve total auto expenses & incomes
-        $return_data['total_auto_expenses'] = $this->transactionAutoRepository->findTotal($default_bank_account, 'expenses');
-        $return_data['total_auto_incomes'] = $this->transactionAutoRepository->findTotal($default_bank_account, 'incomes');
+        // Retrieve total auto expenses & incomes grouped by repeat type
+        $totalExpByRepeatType = $this->transactionAutoRepository->findTotalByRepeatType($default_bank_account, 'expenses');
+        $totalIncByRepeatType = $this->transactionAutoRepository->findTotalByRepeatType($default_bank_account, 'incomes');
+
+        $return_data['total_auto_expenses'] = $this->fillTotalOfEachRepeatType($totalExpByRepeatType);
+        $return_data['total_auto_incomes'] = $this->fillTotalOfEachRepeatType($totalIncByRepeatType);
+        $return_data['total_auto_benefits'] = array_map(static fn($inc, $exp) => $inc + $exp, $return_data['total_auto_incomes'], $return_data['total_auto_expenses']);
 
         if ($request->isXmlHttpRequest()) {
             return $this->json($return_data);
@@ -142,6 +146,7 @@ class AutomatonController extends AbstractController
                 'trans_auto'            => $return_data['trans_auto'],
                 'total_auto_expenses'   => $return_data['total_auto_expenses'],
                 'total_auto_incomes'    => $return_data['total_auto_incomes'],
+                'total_auto_benefits'   => $return_data['total_auto_benefits'],
                 'ta_repeat_types_list'  => TransactionAuto::RT_LIST,
             ]);
         }
@@ -195,5 +200,34 @@ class AutomatonController extends AbstractController
             // Redirect to previous page (= referer)
             return $this->redirect($request->headers->get('referer'));
         }
+    }
+
+    private function fillTotalOfEachRepeatType(array $totalsByRepeatType): array
+    {
+        $periodsPerYear = [
+            TransactionAuto::RT_YEARLY => 1,
+            TransactionAuto::RT_MONTHLY => 12,
+            TransactionAuto::RT_WEEKLY => 52,
+            TransactionAuto::RT_DAILY => 365,
+        ];
+
+        $result = array_fill_keys(array_keys($periodsPerYear), 0.0);
+
+        foreach ($totalsByRepeatType as $total) {
+            $type = $total['repeat_type'];
+            $amount = (float) $total['amount_sum'];
+
+            if (!isset($periodsPerYear[$type])) {
+                continue;
+            }
+
+            $annualAmount = $amount * $periodsPerYear[$type];
+
+            foreach ($periodsPerYear as $targetType => $frequency) {
+                $result[$targetType] += $annualAmount / $frequency;
+            }
+        }
+
+        return $result;
     }
 }

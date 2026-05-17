@@ -113,7 +113,7 @@ class TransactionAuto
         return $this;
     }
 
-    public function getRepeatType(): ?string
+    public function getRepeatType(): string
     {
         return $this->repeat_type;
     }
@@ -149,6 +149,22 @@ class TransactionAuto
         return $this;
     }
 
+    public function getDateNext(): \DateTimeInterface
+    {
+        if (null !== $this->getDateLast()) {
+            $nextDate = \DateTimeImmutable::createFromInterface($this->getDateLast());
+
+            return match ($this->getRepeatType()) {
+                self::RT_DAILY => $nextDate->modify('+1 day'),
+                self::RT_WEEKLY => $nextDate->modify('+1 week'),
+                self::RT_MONTHLY => $nextDate->modify('+1 month'),
+                self::RT_YEARLY => $nextDate->modify('+1 year'),
+            };
+        }
+
+        return $this->getDateStart();
+    }
+
     public function getDetails(): ?string
     {
         return $this->details;
@@ -171,5 +187,10 @@ class TransactionAuto
         $this->is_active = $is_active;
 
         return $this;
+    }
+
+    public function wasExecutedToday(): bool
+    {
+        return (new \DateTime())->format('Y-m-d') === $this->getDateLast()?->format('Y-m-d');
     }
 }

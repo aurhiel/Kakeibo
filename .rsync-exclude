@@ -1,0 +1,13 @@
+.git/
+.deploy-config
+deploy.sh
+/vendor/
+/var/
+/node_modules/
+/assets/
+/tests/
+.env.local
+.env.*.local
+.htaccess
+php.ini
+

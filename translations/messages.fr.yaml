@@ -89,6 +89,9 @@ page :
       nav_tab :
         expenses : "dépenses"
         incomes : "revenus"
+    bank_accounts_summary:
+      upcoming: "À venir"
+      help_text: "Transaction(s) à venir d'ici le :<br><b>%date%</b>"
   # PAGE:STATS
   statistics:
     meta :

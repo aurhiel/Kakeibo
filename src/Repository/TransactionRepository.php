@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\BankAccount;
 use App\Entity\Transaction;
+use App\Entity\User;
+use App\Enum\BalanceType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -23,7 +26,7 @@ class TransactionRepository extends ServiceEntityRepository
         parent::__construct($registry, Transaction::class);
     }
 
-    public function findOneByIdAndUser($id, $user): ?Transaction
+    public function findOneByIdAndUser(int $id, User $user): ?Transaction
     {
         return $this->createQueryBuilder('t')
             ->andWhere('t.id = :id')
@@ -44,7 +47,7 @@ class TransactionRepository extends ServiceEntityRepository
         ;
     }
 
-    public function countAllByBankAccountAndByDate($bank_account, $date_start = null, $date_end = null): int
+    public function countAllByBankAccountAndByDate(BankAccount $bank_account, $date_start = null, $date_end = null): int
     {
         $qb = $this->createQueryBuilder('t')
             ->select('COUNT(t.id) AS nb_transactions')
@@ -72,7 +75,7 @@ class TransactionRepository extends ServiceEntityRepository
     /**
      * @return Transaction[] Returns an array of Transaction objects
      */
-    public function findByBankAccountAndDateAndPage($bank_account, $date_start = null, $date_end = null, $page = null, $max_results = 25): array
+    public function findByBankAccountAndDateAndPage(BankAccount $bank_account, $date_start = null, $date_end = null, $page = null, $max_results = 25): array
     {
         $qb = $this->createQueryBuilder('t')
             ->orderBy('t.date', 'DESC')
@@ -111,7 +114,7 @@ class TransactionRepository extends ServiceEntityRepository
     /**
      * @return Transaction[] Returns an array of Transaction objects
      */
-    public function findLastByBankAccount($bank_account, $max_results = 10): array
+    public function findLastByBankAccount(BankAccount $bank_account, $max_results = 10): array
     {
         return $this->createQueryBuilder('t')
             ->andWhere('t.bank_account = :bank_account')
@@ -125,7 +128,7 @@ class TransactionRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findTotal($bank_account, $date_start = null, $date_end = null, $spent_type = 'incomes'): float
+    public function findTotal(BankAccount $bank_account, $date_start = null, $date_end = null, $spent_type = 'incomes'): float
     {
         $qb = $this->createQueryBuilder('t')
             ->select('SUM(t.amount) AS amount_sum')
@@ -163,7 +166,7 @@ class TransactionRepository extends ServiceEntityRepository
     /**
      * @return Transaction[] Returns an array of Transaction objects
      */
-    public function findTotalGroupBy($bank_account, $date_start = null, $date_end = null, $group_by = 'category', $spent_type = 'incomes'): array
+    public function findTotalGroupBy(BankAccount $bank_account, $date_start = null, $date_end = null, $group_by = 'category', $spent_type = 'incomes'): array
     {
         $qb = $this->createQueryBuilder('t')
             ->select('SUM(t.amount) AS amount_sum')
@@ -210,8 +213,12 @@ class TransactionRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findBalance($bank_account, $date_start = null, $date_end = 'now'): float
+    public function findBalance(BankAccount $bank_account, BalanceType $balance_type = BalanceType::Actual): float
     {
-        return $this->findTotal($bank_account, $date_start, $date_end, null);
+        return $this->findTotal(
+            $bank_account,
+            date_end: $balance_type->toMaxDate(),
+            spent_type: null,
+        );
     }
 }

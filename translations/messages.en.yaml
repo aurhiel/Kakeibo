@@ -90,6 +90,9 @@ page :
       nav_tab :
         expenses : "expenses"
         incomes : "incomes"
+    bank_accounts_summary:
+      upcoming: "Upcoming"
+      help_text: "Upcoming transaction(s) by:<br><b>%date%</b>"
   # PAGE:STATS
   statistics :
     meta :

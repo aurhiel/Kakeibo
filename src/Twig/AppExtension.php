@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Twig;
 
+use App\Entity\BankAccount;
+use App\Enum\BalanceType;
 use App\Repository\TransactionRepository;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -18,8 +20,9 @@ class AppExtension extends AbstractExtension
     {
         return [
             new TwigFilter('anonymize', $this->anonymize(...)),
-            new TwigFilter('balance',   [$this, 'bankAccountBalance']),
-            new TwigFilter('intval',    fn ($value): int => intval($value)),
+            new TwigFilter('balance', [$this, 'bankAccountBalance']),
+            new TwigFilter('incoming_transactions', [$this, 'bankAccountIncomingTransactions']),
+            new TwigFilter('intval', static fn ($value): int => intval($value)),
         ];
     }
 
@@ -27,8 +30,7 @@ class AppExtension extends AbstractExtension
     {
         $str_array = str_split((string) $string);
 
-        // Anonymize all string if it's smaller than the amount
-        //  of characters visible
+        // Anonymize all string if it's smaller than the amount of characters visible
         if (strlen((string) $string) <= ($nbCharacVisible * 2)) {
             $nbCharacVisible = 0;
         }
@@ -43,8 +45,29 @@ class AppExtension extends AbstractExtension
         return implode('', $str_array);
     }
 
-    public function bankAccountBalance($bankAccount): float
+    public function bankAccountBalance(BankAccount $bankAccount, string $balanceType = 'actual'): float
     {
-        return $this->transactionRepository->findBalance($bankAccount);
+        $balanceType = BalanceType::from($balanceType);
+        $balance = $this->transactionRepository->findBalance($bankAccount, $balanceType);
+
+        if (BalanceType::Incoming === $balanceType) {
+            $balance += $bankAccount->sumIncomingTransactionAutos();
+        }
+
+        return $balance;
+    }
+
+    public function bankAccountIncomingTransactions(BankAccount $bankAccount): array
+    {
+        $transactions = $bankAccount->getIncomingTransactionAutos();
+
+        return array_merge(
+            $transactions->toArray(),
+            $this->transactionRepository->findByBankAccountAndDateAndPage(
+                $bankAccount,
+                (new \DateTimeImmutable('tomorrow'))->format('Y-m-d'),
+                (new \DateTimeImmutable('+14 days'))->format('Y-m-d'),
+            ),
+        );
     }
 }

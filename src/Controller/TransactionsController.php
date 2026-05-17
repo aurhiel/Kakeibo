@@ -374,24 +374,24 @@ class TransactionsController extends AbstractController
 
         // defaults
         $bank_account_total = 0;
-        $file_total         = 0;
-        $row                = 1;
-        $bank_code          = false;
+        $file_total = 0;
+        $row = 1;
+        $bank_code = false;
+
+        // User has a bank account
+        $default_bank_account = $this->user->getDefaultBankAccount();
+
+        // Retrieve all categories
+        $categories = $this->categoryRepository->findAll();
+        // Default category
+        foreach($categories as $cat) {
+            // Retrieve default category
+            if ($cat->getSlug() == 'misc') {
+                $default_category = $cat;
+            }
+        }
 
         if (($handle = fopen($csv_path, "r")) !== false) {
-            // User has a bank account
-            $default_bank_account = $this->user->getDefaultBankAccount();
-
-            // Retrieve all categories
-            $categories = $this->categoryRepository->findAll();
-            // Default category
-            foreach($categories as $cat) {
-                // Retrieve default category
-                if ($cat->getSlug() == 'misc') {
-                    $default_category = $cat;
-                }
-            }
-
             // Loop on every CSV lines
             while (($data = fgetcsv($handle, 1000, ";")) !== false) {
                 $nb_fields = count($data);
@@ -532,16 +532,16 @@ class TransactionsController extends AbstractController
         }
 
         return [
-            'id'        => $transaction->getId(),
-            'date'      => $transaction->getDate()->format('Y-m-d'),
-            'amount'    => $transaction->getAmount(),
-            'label'     => $transaction->getLabel(),
-            'details'   => $transaction->getDetails(),
-            'category'  => $category->getId(),
+            'id' => $transaction->getId(),
+            'date' => $transaction->getDate()->format('Y-m-d'),
+            'amount' => $transaction->getAmount(),
+            'label' => $transaction->getLabel(),
+            'details' => $transaction->getDetails(),
+            'category' => $category->getId(),
             'category_entity' => [
-                'id'    => $category->getId(),
+                'id' => $category->getId(),
                 'label' => $category->getLabel(),
-                'icon'  => $category->getIcon(),
+                'icon' => $category->getIcon(),
                 'color' => $category->getColor(),
             ],
             'bank_transfer_linked_transaction' => $btltRaw,
@@ -552,13 +552,13 @@ class TransactionsController extends AbstractController
     {
         $currency = $bank_account->getCurrency();
         return [
-            'id'        => $bank_account->getId(),
-            'balance'   => $this->transactionRepository->findBalance($bank_account),
+            'id' => $bank_account->getId(),
+            'balance' => $this->transactionRepository->findBalance($bank_account),
             'currency_entity' => [
-                'id'    => $currency->getId(),
-                'name'  => $currency->getName(),
+                'id' => $currency->getId(),
+                'name' => $currency->getName(),
                 'label' => $currency->getLabel(),
-                'slug'  => $currency->getSlug()
+                'slug' => $currency->getSlug()
             ]
         ];
     }

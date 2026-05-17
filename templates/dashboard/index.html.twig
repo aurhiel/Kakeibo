@@ -1,5 +1,18 @@
 {% extends 'base.html.twig' %}
 
+{# Header #}
+{% block header %}
+  {% set bank_accounts = app.user.bankAccountsActive %}
+
+  <div class="app-header">
+    {% include 'components/header.html.twig' %}
+
+    <div class="container text-dark">
+      {% include 'dashboard/_bank-accounts-summary.html.twig' %}
+    </div>
+  </div>
+{% endblock %}
+
 {% block body %}
   <div class="container">
     <div class="row">

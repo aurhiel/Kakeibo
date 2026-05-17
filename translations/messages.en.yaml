@@ -121,7 +121,7 @@ page :
       col_amount : "Amount"
       col_actions : "Actions"
       next_exec : "Next exec. <b>%date%</b>"
-      last_exec : "Last exec. <b>%date%</b>"
+      first_exec : "First exec. <b>%date%</b>"
   # PAGE:BANK ACCOUNTS
   bank_accounts :
     title : "Bank accounts"

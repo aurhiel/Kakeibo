@@ -189,8 +189,19 @@ class TransactionAuto
         return $this;
     }
 
-    public function wasExecutedToday(): bool
+    public function wasExecutedDuringPeriod(): bool
     {
-        return (new \DateTime())->format('Y-m-d') === $this->getDateLast()?->format('Y-m-d');
+        if (null === $this->getDateLast()) {
+            return false;
+        }
+
+        $format = match ($this->getRepeatType()) {
+            self::RT_DAILY => 'Y-m-d',
+            self::RT_WEEKLY => 'o-W',
+            self::RT_MONTHLY => 'Y-m',
+            self::RT_YEARLY => 'Y',
+        };
+
+        return date($format) === $this->getDateLast()->format($format);
     }
 }

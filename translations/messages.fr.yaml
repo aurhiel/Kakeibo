@@ -120,7 +120,7 @@ page :
       col_amount : "Montant"
       col_actions : "Actions"
       next_exec : "Prochaine exéc. <b>%date%</b>"
-      last_exec : "Dernière exéc. <b>%date%</b>"
+      first_exec : "Première exéc. <b>%date%</b>"
   # PAGE:BANK ACCOUNTS
   bank_accounts :
     title : "Comptes bancaires"

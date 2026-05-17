@@ -16,8 +16,8 @@
     {% endif %}
 
     <div class="small">
-      <span class="icon icon-{{ ta.wasExecutedToday ? 'check-circle' : (ta.dateLast is not null ? 'clock' : 'play-circle') }} {{ ta.wasExecutedToday ? ' text-success' : '' }}"
-        title="{{ 'page.trans_auto.list.next_exec'|trans({ '%date%': ta.dateNext|format_datetime('long', 'none') })|raw }}"
+      <span class="icon icon-{{ ta.wasExecutedDuringPeriod ? 'check-circle text-success' : (ta.dateLast is not null ? 'clock' : 'play-circle') }}"
+        title="{{ ('page.trans_auto.list.' ~ (ta.dateLast is not null ? 'next_exec' : 'first_exec'))|trans({ '%date%': ta.dateNext|format_datetime('long', 'none') })|raw }}"
           data-toggle="tooltip" data-placement="right" data-html="true"></span>
       <b class="text-muted">{{ ('global.repeat_types.' ~ ta.repeatType)|trans }}</b>
     </div>

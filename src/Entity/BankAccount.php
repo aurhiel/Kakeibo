@@ -46,7 +46,10 @@ class BankAccount
     private Collection $transaction_autos;
 
     #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
-    private $is_archived = false;
+    private bool $is_archived = false;
+
+    #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
+    private bool $show_on_dashboard = true;
 
     public function __construct(?User $user)
     {
@@ -224,6 +227,18 @@ class BankAccount
     public function toggleIsArchived(): self
     {
         $this->is_archived = !$this->is_archived;
+
+        return $this;
+    }
+
+    public function showOnDashboard(): ?bool
+    {
+        return $this->show_on_dashboard;
+    }
+
+    public function setShowOnDashboard(bool $show_on_dashboard): static
+    {
+        $this->show_on_dashboard = $show_on_dashboard;
 
         return $this;
     }

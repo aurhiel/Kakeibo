@@ -1,16 +1,31 @@
-FROM phpdockerio/php:8.2-fpm
+FROM php:8.2-fpm
 WORKDIR "/application"
 
-# Force Timezone to "Europe/Paris"
+# 1. Force Timezone to "Europe/Paris"
 ENV TZ=Europe/Paris
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# Install selected extensions and other stuff
-RUN apt-get update \
-    && apt-get -y --no-install-recommends install php8.2-mysql php8.2-intl \
-    && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
+# 1. Install system tools
+RUN apt-get update && apt-get install -y \
+        sudo \
+        curl \
+        git \
+        gnupg \
+        unzip \
+        libicu-dev  \
+        libzip-dev \
+        apt-transport-https && \
+    apt-get clean; rm -rf /var/lib/apt/lists/*
 
-# Install git
-# RUN apt-get update \
-#    && apt-get -y install git \
-#    && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
+# 2. PHP Extensions
+RUN docker-php-ext-install pdo pdo_mysql zip intl
+
+# 3. Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
+    chmod +x /usr/local/bin/composer
+
+# 4. Create docker sudo user
+RUN useradd -ms /bin/bash docker && adduser docker sudo && \
+    echo "docker ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+USER docker

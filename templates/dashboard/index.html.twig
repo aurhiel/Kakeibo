@@ -2,13 +2,13 @@
 
 {# Header #}
 {% block header %}
-  {% set bank_accounts = app.user.bankAccountsActive %}
-
   <div class="app-header">
     {% include 'components/header.html.twig' %}
 
     <div class="container text-dark">
-      {% include 'dashboard/_bank-accounts-summary.html.twig' %}
+      {% include 'dashboard/_bank-accounts-summary.html.twig' with {
+        bank_accounts: app.user.bankAccountsForDashboard
+      } %}
     </div>
   </div>
 {% endblock %}
@@ -18,11 +18,11 @@
     <div class="row">
       <div class="col-12 col-md-7 col-xl-6 col-xxl-7">
         {% embed 'components/transactions/list.html.twig' with {
-          title         : 'page.dashboard.trans_list.title'|trans,
-          transactions  : last_transactions,
-          limit_max     : last_trans_amount,
-          date_start    : dashboard_date_start,
-          date_end      : dashboard_date_end,
+          title: 'page.dashboard.trans_list.title'|trans,
+          transactions: last_transactions,
+          limit_max: last_trans_amount,
+          date_start: dashboard_date_start,
+          date_end: dashboard_date_end,
         } %}
           {% block footer %}
             <div class="card-footer">
@@ -121,10 +121,10 @@
                   </div>
                   <script type="text/javascript">
                     var total_incomes = {
-                      labels    : [],
-                      datasets  : [{
+                      labels: [],
+                      datasets: [{
                         data: [],
-                        backgroundColor : [],
+                        backgroundColor: [],
                       }]
                     };
 
